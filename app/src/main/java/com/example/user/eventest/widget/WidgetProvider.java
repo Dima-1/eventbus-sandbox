@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.example.user.eventest.MainActivity;
 import com.example.user.eventest.R;
 
 import java.util.Arrays;
@@ -28,7 +29,6 @@ public class WidgetProvider extends AppWidgetProvider {
                          int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
 
-
         Log.d(TAG, "onUpdate " + Arrays.toString(appWidgetIds));
         for (int widgetID : appWidgetIds) {
             updateWidget(context, appWidgetManager, widgetID);
@@ -38,22 +38,17 @@ public class WidgetProvider extends AppWidgetProvider {
     static void updateWidget(Context context, AppWidgetManager appWidgetManager,
                              int widgetID) {
         try {
-            Context mainAppContext;
-
-            mainAppContext = context.createPackageContext("com.example.user.eventest", 0);
+            Context mainAppContext =
+                    context.createPackageContext("com.example.user.eventest", 0);
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mainAppContext);
-//            SharedPreferences pref = mainAppContext.getSharedPreferences(
-//                    "test_state", Context.MODE_PRIVATE);
-            String data = pref.getString("test_state", "No Value");
-            Log.d(TAG, "test_state " + data);
-            RemoteViews widgetView = new RemoteViews(context.getPackageName(),
-                    R.layout.widget);
-            widgetView.setTextViewText(R.id.tvCheck, data);
+            boolean prefTestState = pref.getBoolean(MainActivity.PREF_TEST_STATE, false);
+            Log.d(TAG, MainActivity.PREF_TEST_STATE + prefTestState);
+            RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
+            widgetView.setTextViewText(R.id.tvCheck, String.valueOf(prefTestState));
             Intent updateIntent = new Intent(context, WidgetProvider.class);
             updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetID});
             appWidgetManager.updateAppWidget(widgetID, widgetView);
-            //   pIntent = PendingIntent.getBroadcast(context, widgetID, updateIntent, 0);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("Not data shared", e.toString());
         }

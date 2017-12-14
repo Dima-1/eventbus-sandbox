@@ -14,12 +14,15 @@ import android.widget.Toast;
 import com.example.user.eventest.widget.WidgetProvider;
 
 public class MainActivity extends AppCompatActivity {
+    public final static String PREF_TEST_STATE = "test_state";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         CheckBox checkBox = findViewById(R.id.checkBox);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        checkBox.setChecked(prefs.getBoolean(PREF_TEST_STATE, false));
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveState(boolean isChecked) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("test_state", String.valueOf(isChecked));
+        editor.putBoolean(PREF_TEST_STATE, isChecked);
         editor.commit();
     }
 
