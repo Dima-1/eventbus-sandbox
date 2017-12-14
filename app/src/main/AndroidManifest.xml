@@ -18,7 +18,6 @@
         </activity>
         <receiver
             android:name=".widget.WidgetProvider"
-            android:icon="@drawable/widget_icon"
             android:label="@string/widget_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
