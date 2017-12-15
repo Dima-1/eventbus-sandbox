@@ -7,11 +7,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.example.user.eventest.eventbus.events.DataUpdateEvent;
 import com.example.user.eventest.widget.WidgetProvider;
+
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
@@ -30,9 +34,27 @@ public class MainActivity extends AppCompatActivity {
                         String.valueOf(isChecked), Toast.LENGTH_SHORT);
                 toast.show();
                 saveState(isChecked);
-                updateWidget();
+
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(DataUpdateEvent event) {
+        String TAG = "event receiver " + this.getClass().getName();
+        Log.d(TAG, event.getMessage());
+        updateWidget();
     }
 
     private void saveState(boolean isChecked) {
@@ -40,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(PREF_TEST_STATE, isChecked);
         editor.commit();
+        EventBus.getDefault().post(new DataUpdateEvent("saveState"));
     }
 
     private void updateWidget() {

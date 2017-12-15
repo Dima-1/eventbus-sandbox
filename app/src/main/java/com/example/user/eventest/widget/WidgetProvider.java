@@ -42,7 +42,7 @@ public class WidgetProvider extends AppWidgetProvider {
                     context.createPackageContext("com.example.user.eventest", 0);
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mainAppContext);
             boolean prefTestState = pref.getBoolean(MainActivity.PREF_TEST_STATE, false);
-            Log.d(TAG, MainActivity.PREF_TEST_STATE + prefTestState);
+            Log.d(TAG, MainActivity.PREF_TEST_STATE + " " + prefTestState);
             RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
             widgetView.setTextViewText(R.id.tvCheck, String.valueOf(prefTestState));
             Intent updateIntent = new Intent(context, WidgetProvider.class);
