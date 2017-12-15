@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,15 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(),
                         String.valueOf(isChecked), Toast.LENGTH_SHORT);
                 toast.show();
-                saveState(isChecked);
+                SaveStateAsyncTask task = new SaveStateAsyncTask(getApplicationContext());
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
+                if (task.getStatus() == AsyncTask.Status.RUNNING) {
+                    String TAG = "on click " + this.getClass().getName();
+                    Log.d(TAG, "AsyncTask.Status.RUNNING");
+                    UpdateWidgetAsyncTask taskWidget =
+                            new UpdateWidgetAsyncTask(getApplicationContext());
+                    taskWidget.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
 
             }
         });
@@ -55,14 +64,6 @@ public class MainActivity extends AppCompatActivity {
         String TAG = "event receiver " + this.getClass().getName();
         Log.d(TAG, event.getMessage());
         updateWidget();
-    }
-
-    private void saveState(boolean isChecked) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(PREF_TEST_STATE, isChecked);
-        editor.commit();
-        EventBus.getDefault().post(new DataUpdateEvent("saveState"));
     }
 
     private void updateWidget() {
