@@ -5,8 +5,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.example.user.eventest.eventbus.events.DataUpdateEvent;
 import com.example.user.eventest.widget.WidgetProvider;
+
+import de.greenrobot.event.EventBus;
 
 class UpdateWidgetAsyncTask extends AsyncTask<Void, Void, Void> {
 
@@ -18,22 +22,30 @@ class UpdateWidgetAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-//        updateWidget();
+        WidgetUpdateSubscriber backgroundReceiver = new WidgetUpdateSubscriber();
         return null;
     }
 
+    class WidgetUpdateSubscriber {
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
-//        EventBus.getDefault().post(new DataUpdateEvent("onPostExecute"));
-    }
+        WidgetUpdateSubscriber() {
+            EventBus.getDefault().register(this);
+        }
 
-    private void updateWidget() {
-        Intent intent = new Intent(context, WidgetProvider.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int[] ids = AppWidgetManager.getInstance(context)
-                .getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        context.sendBroadcast(intent);
+        public void onEvent(DataUpdateEvent event) {
+            String TAG = "event receiver " + this.getClass().getName();
+            Log.d(TAG, event.getMessage());
+            updateWidget();
+            EventBus.getDefault().unregister(this);
+        }
+
+        private void updateWidget() {
+            Intent intent = new Intent(context, WidgetProvider.class);
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            int[] ids = AppWidgetManager.getInstance(context)
+                    .getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            context.sendBroadcast(intent);
+        }
     }
 }

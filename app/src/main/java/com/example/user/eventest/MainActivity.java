@@ -13,10 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.example.user.eventest.eventbus.events.DataUpdateEvent;
 import com.example.user.eventest.widget.WidgetProvider;
-
-import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
@@ -36,13 +33,13 @@ public class MainActivity extends AppCompatActivity {
                 toast.show();
                 SaveStateAsyncTask task = new SaveStateAsyncTask(getApplicationContext());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
-                if (task.getStatus() == AsyncTask.Status.RUNNING) {
+                // if (task.getStatus() == AsyncTask.Status.RUNNING) {
                     String TAG = "on click " + this.getClass().getName();
                     Log.d(TAG, "AsyncTask.Status.RUNNING");
                     UpdateWidgetAsyncTask taskWidget =
                             new UpdateWidgetAsyncTask(getApplicationContext());
                     taskWidget.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
+                //}
 
             }
         });
@@ -51,20 +48,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        //    EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+        //      EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
-    public void onEvent(DataUpdateEvent event) {
-        String TAG = "event receiver " + this.getClass().getName();
-        Log.d(TAG, event.getMessage());
-        updateWidget();
-    }
+    //public void onEvent(DataUpdateEvent event) {
+    //  String TAG = "event receiver " + this.getClass().getName();
+    //  Log.d(TAG, event.getMessage());
+    //   updateWidget();
+    //}
 
     private void updateWidget() {
         Intent intent = new Intent(this, WidgetProvider.class);
