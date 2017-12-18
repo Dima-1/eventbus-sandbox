@@ -8,6 +8,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.CheckBox;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -18,20 +19,24 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.not;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityTestRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void mainActivityTest() {
+    public void checkBoxToggle() {
         ViewInteraction appCompatCheckBox = onView(
                 allOf(withId(R.id.checkBox), withText("CheckBox"),
                         childAtPosition(
@@ -40,7 +45,11 @@ public class MainActivityTest {
                                         0),
                                 1),
                         isDisplayed()));
+        CheckBox checkBox = mActivityTestRule.getActivity().findViewById(R.id.checkBox);
+        Boolean checkClick = checkBox.isChecked();
         appCompatCheckBox.perform(click());
+        Matcher<View> matcher = checkClick ? not(isChecked()) : isChecked();
+        onView(withId(R.id.checkBox)).check(matches(matcher));
     }
 
     private static Matcher<View> childAtPosition(

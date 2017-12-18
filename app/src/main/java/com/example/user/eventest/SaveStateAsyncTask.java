@@ -39,7 +39,7 @@ class SaveStateAsyncTask extends AsyncTask<Boolean, Void, Void> {
 
             Log.d("saveState", "StartDelay");
             try {
-                Thread.sleep(10000);
+                Thread.sleep(10 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
