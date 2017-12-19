@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -35,8 +36,8 @@ public class WidgetProvider extends AppWidgetProvider {
         }
     }
 
-    static void updateWidget(Context context, AppWidgetManager appWidgetManager,
-                             int widgetID) {
+    void updateWidget(Context context, AppWidgetManager appWidgetManager,
+                      int widgetID) {
         try {
             Context mainAppContext =
                     context.createPackageContext("com.example.user.eventest", 0);
@@ -49,10 +50,42 @@ public class WidgetProvider extends AppWidgetProvider {
             updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetID});
             appWidgetManager.updateAppWidget(widgetID, widgetView);
+
+            RemoteViews remoteViews = updateWidgetListView(context,
+                    widgetID);
+            appWidgetManager.updateAppWidget(widgetID,
+                    remoteViews);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("Not data shared", e.toString());
         }
     }
+
+    private RemoteViews updateWidgetListView(Context context,
+                                             int appWidgetId) {
+
+        //which layout to show on widget
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
+        //RemoteViews Service needed to provide adapter for ListView
+        Intent svcIntent = new Intent(context, WidgetService.class);
+        //passing app widget id to that RemoteViews Service
+        svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        //setting a unique Uri to the intent
+        //don't know its purpose to me right now
+        svcIntent.setData(Uri.parse(
+                svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        //setting adapter to listview of the widget
+        remoteViews.setRemoteAdapter(appWidgetId, R.id.listView,
+                svcIntent);
+        //setting an empty view in case of no data
+        remoteViews.setEmptyView(R.id.listView, R.id.tvBackground);
+        return remoteViews;
+    }
+
+
+
+
+
+
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
