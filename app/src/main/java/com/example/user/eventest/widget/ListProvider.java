@@ -4,22 +4,22 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
+import android.widget.RemoteViewsService.RemoteViewsFactory;
 
 import com.example.user.eventest.R;
 
 import java.util.ArrayList;
 
 /**
- * Created by User on 19.12.2017.
+ * Created on 19.12.2017.
  */
 
-class ListProvider implements RemoteViewsService.RemoteViewsFactory {
+class ListProvider implements RemoteViewsFactory {
     private ArrayList<ListItem> listItemList = new ArrayList<>();
     private Context context = null;
     private int appWidgetId;
 
-    public ListProvider(Context context, Intent intent) {
+    ListProvider(Context context, Intent intent) {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
@@ -65,7 +65,7 @@ class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     /*
@@ -91,7 +91,7 @@ class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     public class ListItem {
