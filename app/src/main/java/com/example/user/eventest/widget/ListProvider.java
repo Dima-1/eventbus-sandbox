@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 
 class ListProvider implements RemoteViewsFactory {
-    private ArrayList<ListItem> listItemList = new ArrayList<>();
+    private ArrayList<EventItem> eventItemList = new ArrayList<>();
     private Context context = null;
     private int appWidgetId;
 
@@ -29,13 +29,12 @@ class ListProvider implements RemoteViewsFactory {
 
     private void populateListItem() {
         for (int i = 0; i < 10; i++) {
-            ListItem listItem = new ListItem();
-            listItem.heading = "Heading" + i;
+            EventItem listItem = new EventItem();
+            listItem.event_date = "Heading" + i;
             listItem.content = i
-                    + " This is the content of the app widget listview.Nice content though";
-            listItemList.add(listItem);
+                    + " This is the content of the app widget listView. Nice content though";
+            eventItemList.add(listItem);
         }
-
     }
 
     @Override
@@ -55,7 +54,7 @@ class ListProvider implements RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        return listItemList.size();
+        return eventItemList.size();
     }
 
     @Override
@@ -68,17 +67,12 @@ class ListProvider implements RemoteViewsFactory {
         return true;
     }
 
-    /*
-    *Similar to getView of Adapter where instead of View
-    *we return RemoteViews
-    *
-    */
     @Override
     public RemoteViews getViewAt(int position) {
         final RemoteViews remoteView = new RemoteViews(
                 context.getPackageName(), R.layout.list_row);
-        ListItem listItem = listItemList.get(position);
-        remoteView.setTextViewText(R.id.heading, listItem.heading);
+        EventItem listItem = eventItemList.get(position);
+        remoteView.setTextViewText(R.id.tv_date, listItem.event_date);
         remoteView.setTextViewText(R.id.content, listItem.content);
 
         return remoteView;
@@ -94,7 +88,8 @@ class ListProvider implements RemoteViewsFactory {
         return 1;
     }
 
-    public class ListItem {
-        String heading, content;
+
+    public class EventItem {
+        String event_date, content;
     }
 }

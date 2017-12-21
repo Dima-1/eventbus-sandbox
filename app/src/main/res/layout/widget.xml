@@ -8,7 +8,7 @@
         android:id="@+id/tvBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#8700a2ff" />
+        android:background="#00a2ff" />
 
     <TextView
         android:id="@+id/tv"
@@ -32,6 +32,8 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvCheck"
+        android:layout_marginTop="15dp" />
 
 </RelativeLayout>

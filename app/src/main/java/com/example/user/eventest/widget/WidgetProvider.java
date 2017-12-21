@@ -39,9 +39,10 @@ public class WidgetProvider extends AppWidgetProvider {
     void updateWidget(Context context, AppWidgetManager appWidgetManager,
                       int widgetID) {
         try {
-            Context mainAppContext =
-                    context.createPackageContext("com.example.user.eventest", 0);
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mainAppContext);
+            Context mainAppContext = context
+                    .createPackageContext("com.example.user.eventest", 0);
+            SharedPreferences pref = PreferenceManager
+                    .getDefaultSharedPreferences(mainAppContext);
             boolean prefTestState = pref.getBoolean(MainActivity.PREF_TEST_STATE, false);
             Log.d(TAG, MainActivity.PREF_TEST_STATE + " " + prefTestState);
             RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
@@ -64,27 +65,21 @@ public class WidgetProvider extends AppWidgetProvider {
                                              int appWidgetId) {
 
         //which layout to show on widget
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
+        RemoteViews remoteViews =
+                new RemoteViews(context.getPackageName(), R.layout.widget);
         //RemoteViews Service needed to provide adapter for ListView
         Intent svcIntent = new Intent(context, WidgetService.class);
         //passing app widget id to that RemoteViews Service
         svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         //setting a unique Uri to the intent
         //don't know its purpose to me right now
-        svcIntent.setData(Uri.parse(
-                svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
         //setting adapter to listview of the widget
-        remoteViews.setRemoteAdapter(appWidgetId, R.id.listView,
-                svcIntent);
+        remoteViews.setRemoteAdapter(R.id.listView, svcIntent);
         //setting an empty view in case of no data
         remoteViews.setEmptyView(R.id.listView, R.id.tvBackground);
         return remoteViews;
     }
-
-
-
-
-
 
 
     @Override
