@@ -8,18 +8,21 @@ import android.widget.RemoteViewsService.RemoteViewsFactory;
 
 import com.example.user.eventest.R;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created on 19.12.2017.
  */
 
-class ListProvider implements RemoteViewsFactory {
+class ListWidgetProvider implements RemoteViewsFactory {
     private ArrayList<EventItem> eventItemList = new ArrayList<>();
     private Context context = null;
     private int appWidgetId;
 
-    ListProvider(Context context, Intent intent) {
+    ListWidgetProvider(Context context, Intent intent) {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
@@ -30,7 +33,13 @@ class ListProvider implements RemoteViewsFactory {
     private void populateListItem() {
         for (int i = 0; i < 10; i++) {
             EventItem listItem = new EventItem();
-            listItem.event_date = "Heading" + i;
+            DateFormat sdf = DateFormat.getDateInstance();
+            Date date = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DATE, i);
+            date = c.getTime();
+            listItem.event_date = sdf.format(date);
             listItem.content = i
                     + " This is the content of the app widget listView. Nice content though";
             eventItemList.add(listItem);
