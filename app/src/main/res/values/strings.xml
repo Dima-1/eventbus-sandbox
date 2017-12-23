@@ -7,4 +7,6 @@
     <string name="todo_icon">todo_icon</string>
     <string name="content">Content</string>
     <string name="date_event">Date</string>
+    <string name="note">Note</string>
+    <string name="date">Date</string>
 </resources>
