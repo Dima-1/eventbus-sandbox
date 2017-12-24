@@ -1,21 +1,19 @@
 package com.example.user.eventest;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,23 +22,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventsData eventsData = new EventsData(this);
         setContentView(R.layout.activity_main);
         final ListView lvEvents = findViewById(R.id.lvEvents);
         CheckBox checkBox = findViewById(R.id.checkBox);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         TextView textView = findViewById(R.id.tvDate);
+        EditText note = findViewById(R.id.etNote);
 
-        final ArrayList<String> list = new ArrayList<>();
-        for (int i = 0; i < 10; ++i) {
-            list.add(String.valueOf(i));
-        }
-
-        ArrayAdapter arrayAdapter =
-                new ArrayAdapter(this, R.layout.list_row, R.id.content, list);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                this, R.layout.list_row, R.id.content, eventsData.getAllData());
         lvEvents.setAdapter(arrayAdapter);
 
-        checkBox.setChecked(prefs.getBoolean(PREF_TEST_STATE, false));
+        checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
+        note.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
 
+            }
+        });
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),
                         String.valueOf(new Date().getTime()), Toast.LENGTH_SHORT).show();
-
             }
         });
     }
