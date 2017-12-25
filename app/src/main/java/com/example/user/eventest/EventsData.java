@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created on 24.12.2017.
@@ -16,13 +19,10 @@ class EventsData {
 
     EventsData(Context context) {
         this.context = context;
+        populateListItem();
     }
 
     ArrayList<Memo> getAllData() {
-        for (int i = 0; i < 10; ++i) {
-            Memo memo = new Memo("Date =" + String.valueOf(i), String.valueOf(i));
-            list.add(memo);
-        }
         return list;
     }
 
@@ -35,5 +35,19 @@ class EventsData {
 
     SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    private void populateListItem() {
+        for (int i = 0; i < 10; i++) {
+            DateFormat sdf = DateFormat.getDateInstance();
+            Date date = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DATE, i);
+            date = c.getTime();
+            Memo memo = new Memo(sdf.format(date),
+                    i + "Content for example " + String.valueOf(i));
+            list.add(memo);
+        }
     }
 }

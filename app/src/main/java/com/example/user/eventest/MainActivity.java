@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,8 +19,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
@@ -61,11 +60,12 @@ public class MainActivity extends AppCompatActivity {
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        String.valueOf(new Date().getTime()), Toast.LENGTH_SHORT).show();
+                DialogFragment dateTimeDialog = new DateTimeDialog();
+                dateTimeDialog.show(getSupportFragmentManager(), "datePicker");
             }
         });
     }
