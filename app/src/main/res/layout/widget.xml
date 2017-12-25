@@ -5,10 +5,10 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_background"
+        android:id="@+id/tvAllBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#00a2ff" />
+        android:background="#ffffff" />
 
     <TextView
         android:id="@+id/tvBackground"
@@ -17,7 +17,7 @@
         android:background="#00a2ff" />
 
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -30,13 +30,13 @@
         android:id="@+id/tvCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv"
+        android:layout_below="@+id/tvTitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:text="@string/checkbox" />
 
     <ListView
-        android:id="@+id/list_view"
+        android:id="@+id/lvItemList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tvCheck"

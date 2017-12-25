@@ -3,9 +3,14 @@ package com.example.user.eventest;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,28 +23,30 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
+    EventsData eventsData = new EventsData(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        EventsData eventsData = new EventsData(this);
         setContentView(R.layout.activity_main);
         final ListView lvEvents = findViewById(R.id.lvEvents);
         CheckBox checkBox = findViewById(R.id.checkBox);
         TextView textView = findViewById(R.id.tvDate);
         EditText note = findViewById(R.id.etNote);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                this, R.layout.list_row, R.id.content, eventsData.getAllData());
+        ArrayAdapter<Memo> arrayAdapter = new NoteAdapter(this);
         lvEvents.setAdapter(arrayAdapter);
 
         checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
-        note.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                eventsData.addNewData(String.valueOf(v.getText()));
+                return false;
             }
         });
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -62,4 +69,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    class NoteAdapter extends ArrayAdapter<Memo> {
+
+        NoteAdapter(@NonNull Context context) {
+            super(context, R.layout.list_row, eventsData.getAllData());
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext())
+                        .inflate(R.layout.list_row, parent, false);
+            } else {
+                Memo memo = getItem(position);
+                if (memo != null) {
+                    ((TextView) convertView.findViewById(R.id.tvContent)).setText(memo.getNote());
+                    ((TextView) convertView.findViewById(R.id.tvDate)).setText(memo.getDate());
+                }
+            }
+            return convertView;
+        }
+
+    }
+
 }
