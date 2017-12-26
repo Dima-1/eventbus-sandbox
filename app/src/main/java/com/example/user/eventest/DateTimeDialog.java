@@ -21,7 +21,9 @@ public class DateTimeDialog extends DialogFragment implements DatePickerDialog.O
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
-        return new DatePickerDialog(getActivity(), this, year, month, day);
+        Dialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
+        return dialog;
     }
 
     @Override
