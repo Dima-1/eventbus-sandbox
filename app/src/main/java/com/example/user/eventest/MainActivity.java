@@ -1,5 +1,6 @@
 package com.example.user.eventest;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,9 +24,14 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
     EventsData eventsData = new EventsData(this);
+    AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database").build();
+
+        Memo memo = new Memo("1", "2");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -42,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 eventsData.addNewData(String.valueOf(v.getText()));
+                Memo memo = new Memo("1", String.valueOf(v.getText()));
+                addMemo(db, memo);
                 return false;
             }
         });
@@ -70,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private static Memo addMemo(final AppDatabase db, Memo memo) {
+        db.getMemoDAO().insert(memo);
+        return memo;
+    }
     class NoteAdapter extends ArrayAdapter<Memo> {
 
         NoteAdapter(@NonNull Context context) {
