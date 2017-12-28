@@ -1,6 +1,5 @@
 package com.example.user.eventest;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -24,9 +23,7 @@ class EventsData {
     EventsData(Context context) {
         this.context = context;
         populateListItem();
-        db = Room.databaseBuilder(context,
-                AppDatabase.class, "database").build();
-
+        db = AppDatabase.getInstance(context);
     }
 
     ArrayList<Memo> getAllData() {

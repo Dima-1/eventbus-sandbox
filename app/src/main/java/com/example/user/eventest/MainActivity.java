@@ -22,11 +22,12 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
-    EventsData eventsData = new EventsData(this);
+    private EventsData eventsData;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        eventsData = new EventsData(this);
 
         Memo memo = new Memo("1", "2");
 
