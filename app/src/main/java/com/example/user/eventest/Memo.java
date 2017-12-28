@@ -10,7 +10,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class Memo {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int memoID;
     @ColumnInfo(name = "name")
     private String date;

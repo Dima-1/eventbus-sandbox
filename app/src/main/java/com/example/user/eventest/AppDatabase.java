@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 /*
  * Created by User on 27.12.2017.
  */
-@Database(entities = {Memo.class}, version = 1)
+@Database(entities = {Memo.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract MemoDAO getMemoDAO();
 
