@@ -17,13 +17,12 @@ import java.util.concurrent.ExecutionException;
 
 class EventsData {
     private Context context;
-    private ArrayList<Memo> list = new ArrayList<>();
     private AppDatabase db;
 
     EventsData(Context context) {
         this.context = context;
-        populateListItem();
         db = AppDatabase.getInstance(context);
+//        populateListItem();
     }
 
     ArrayList<Memo> getAllData() {
@@ -42,19 +41,8 @@ class EventsData {
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            return null;
         }
-    }
-
-//    ArrayList<Memo> getAllData() {
-//        return list;
-//    }
-
-    void addNewData(String data) {
-        if (data.length() > 0) {
-            Memo memo = new Memo(data);
-            list.add(memo);
-        }
+        return null;
     }
 
     SharedPreferences getPreferences() {
@@ -71,7 +59,7 @@ class EventsData {
             date = c.getTime();
             Memo memo = new Memo(sdf.format(date),
                     i + "Content for example " + String.valueOf(i));
-            list.add(memo);
+            addMemo(memo);
         }
     }
 

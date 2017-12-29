@@ -23,13 +23,12 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
     private EventsData eventsData;
+    private NoteAdapter arrayAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         eventsData = new EventsData(this);
-
-        Memo memo = new Memo("1", "2");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -38,20 +37,20 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.tvDate);
         EditText note = findViewById(R.id.etNote);
 
-        ArrayAdapter<Memo> arrayAdapter = new NoteAdapter(this);
+        arrayAdapter = new NoteAdapter(this);
         lvEvents.setAdapter(arrayAdapter);
 
-        checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
         note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                eventsData.addNewData(String.valueOf(v.getText()));
                 Memo memo = new Memo("1", String.valueOf(v.getText()));
                 eventsData.addMemo(memo);
+                arrayAdapter.refreshEvents();
                 return false;
             }
         });
 
+        checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 new SaveStateAsyncTask(context)
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
                 String TAG = "on click " + this.getClass().getName();
-                Log.d(TAG, "AsyncTask.Status.RUNNING");
+                Log.d(TAG, "UpdateWidgetAsyncTask");
                 new UpdateWidgetAsyncTask(context)
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     class NoteAdapter extends ArrayAdapter<Memo> {
 
         NoteAdapter(@NonNull Context context) {
@@ -90,16 +88,19 @@ public class MainActivity extends AppCompatActivity {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext())
                         .inflate(R.layout.list_row, parent, false);
-            } else {
-                Memo memo = getItem(position);
-                if (memo != null) {
-                    ((TextView) convertView.findViewById(R.id.tvContent)).setText(memo.getNote());
-                    ((TextView) convertView.findViewById(R.id.tvDate)).setText(memo.getDate());
-                }
+            }
+            Memo memo = getItem(position);
+            if (memo != null) {
+                ((TextView) convertView.findViewById(R.id.tvContent)).setText(memo.getNote());
+                ((TextView) convertView.findViewById(R.id.tvDate)).setText(memo.getDate());
             }
             return convertView;
         }
 
+        void refreshEvents() {
+            clear();
+            addAll(eventsData.getAllData());
+            notifyDataSetChanged();
+        }
     }
-
 }
