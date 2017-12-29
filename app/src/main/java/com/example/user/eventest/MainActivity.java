@@ -7,9 +7,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
         final ListView lvEvents = findViewById(R.id.lvEvents);
         CheckBox checkBox = findViewById(R.id.checkBox);
         TextView textView = findViewById(R.id.tvDate);
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
-
+        textView.setText(eventsData.getDate());
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
                 dateTimeDialog.show(getSupportFragmentManager(), "datePicker");
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.abmenu, menu);
+        return true;
     }
 
     class NoteAdapter extends ArrayAdapter<Memo> {

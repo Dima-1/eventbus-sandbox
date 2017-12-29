@@ -51,18 +51,22 @@ class EventsData {
 
     private void populateListItem() {
         for (int i = 0; i < 10; i++) {
-            DateFormat sdf = DateFormat.getDateInstance();
-            Date date = new Date();
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            c.add(Calendar.DATE, i);
-            date = c.getTime();
-            Memo memo = new Memo(sdf.format(date),
+
+            Memo memo = new Memo(getDate(),
                     i + "Content for example " + String.valueOf(i));
             addMemo(memo);
         }
     }
 
+    String getDate() {
+        DateFormat sdf = DateFormat.getDateInstance();
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        date = calendar.getTime();
+        return sdf.format(date);
+
+    }
     void addMemo(final Memo memo) {
         AsyncTask.execute(new Runnable() {
             @Override

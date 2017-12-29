@@ -6,21 +6,37 @@
     android:layout_height="match_parent"
     tools:context="com.example.user.eventest.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/back"
         android:gravity="fill_vertical"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
         android:text="@string/test_click"
+        app:layout_constraintBottom_toTopOf="@+id/lvEvents"
         app:layout_constraintEnd_toStartOf="@+id/checkBox"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
 
     <CheckBox
         android:id="@+id/checkBox"
@@ -29,23 +45,21 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/back"
         android:text="@string/checkbox"
         app:layout_constraintBottom_toTopOf="@+id/lvEvents"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
 
     <ListView
         android:id="@+id/lvEvents"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvDate"
+        app:layout_constraintBottom_toTopOf="@+id/etNote"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,13 +72,17 @@
         android:layout_height="46dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="fill_vertical"
         android:text="@string/date"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
         android:textColor="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/etNote"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lvEvents" />
 
     <EditText
         android:id="@+id/etNote"
@@ -73,13 +91,15 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:hint="@string/note"
         android:inputType="textPersonName"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvDate" />
+        app:layout_constraintStart_toEndOf="@+id/tvDate"
+        app:layout_constraintTop_toBottomOf="@+id/lvEvents" />
 
 
 </android.support.constraint.ConstraintLayout>
