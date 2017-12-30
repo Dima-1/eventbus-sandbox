@@ -10,12 +10,13 @@ import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
-import android.support.test.uiautomator.Until;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.uiautomator.Until.hasObject;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertTrue;
@@ -30,19 +31,21 @@ public class WidgetTest {
     private static final String TEST_PACKAGE = "com.example.user.eventest";
     private static final int LAUNCH_TIMEOUT = 5000;
     private UiDevice mDevice;
+    private boolean isWidgetSown;
 
     @Before
     public void startMainActivityFromHomeScreen() {
-        // Initialize UiDevice instance
+
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-        // Start from the home screen
         mDevice.pressHome();
+        isWidgetSown = mDevice.hasObject(By.pkg(TEST_PACKAGE)
+                .clazz("android.widget.RelativeLayout"));
 
         // Wait for launcher
         final String launcherPackage = mDevice.getLauncherPackageName();
         assertThat(launcherPackage, notNullValue());
-        mDevice.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)),
+        mDevice.wait(hasObject(By.pkg(launcherPackage).depth(0)),
                 LAUNCH_TIMEOUT);
 
         // Launch the app
@@ -56,12 +59,14 @@ public class WidgetTest {
         context.startActivity(intent);
 
         // Wait for the app to appear
-        mDevice.wait(Until.hasObject(By.pkg(TEST_PACKAGE).depth(0)),
+        mDevice.wait(hasObject(By.pkg(TEST_PACKAGE).depth(0)),
                 LAUNCH_TIMEOUT);
     }
 
     @Test
     public void ChangingWidgetWithDelay() throws InterruptedException, UiObjectNotFoundException {
+
+        Assume.assumeTrue("Widget is not shown", isWidgetSown);
 
         UiObject checkBox = mDevice.findObject(new UiSelector()
                 .text("CheckBox")
