@@ -20,10 +20,6 @@ public class Memo {
     Memo() {
     }
 
-    Memo(String data) {
-        this("", data);
-    }
-
     public Memo(String date, String data) {
         this.date = date;
         this.note = data;

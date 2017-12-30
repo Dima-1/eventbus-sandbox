@@ -49,14 +49,14 @@ class EventsData {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    private void populateListItem() {
+   /* private void populateListItem() {
         for (int i = 0; i < 10; i++) {
 
             Memo memo = new Memo(getDate(),
                     i + "Content for example " + String.valueOf(i));
             addMemo(memo);
         }
-    }
+    }*/
 
     String getDate() {
         DateFormat sdf = DateFormat.getDateInstance();

@@ -66,7 +66,7 @@ public class WidgetTest {
     @Test
     public void ChangingWidgetWithDelay() throws InterruptedException, UiObjectNotFoundException {
 
-        Assume.assumeTrue("Widget is not shown", isWidgetSown);
+        Assume.assumeTrue("Widget not on the home screen", isWidgetSown);
 
         UiObject checkBox = mDevice.findObject(new UiSelector()
                 .text("CheckBox")
