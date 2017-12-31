@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -25,7 +26,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
     private EventsData eventsData;
-    private NoteAdapter arrayAdapter;
+    private MemoAdapter memoAdapter;
 
 
     @Override
@@ -40,17 +41,40 @@ public class MainActivity extends AppCompatActivity {
         final ListView lvEvents = findViewById(R.id.lvEvents);
         CheckBox checkBox = findViewById(R.id.checkBox);
         TextView textView = findViewById(R.id.tvDate);
-        EditText note = findViewById(R.id.etNote);
+        final EditText note = findViewById(R.id.etNote);
 
-        arrayAdapter = new NoteAdapter(this);
-        lvEvents.setAdapter(arrayAdapter);
+        memoAdapter = new MemoAdapter(this);
+        lvEvents.setAdapter(memoAdapter);
+        lvEvents.setSelector(R.color.colorPrimaryDark);
+
+        lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> adapter, View v, int position, long id) {
+
+                Memo selItem = memoAdapter.getItem(position); //
+                String value = selItem != null ? selItem.getNote() : null; //getter method
+                Toast.makeText(getApplicationContext(),
+                        value, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
+
+                Memo selItem = memoAdapter.getItem(position); //
+                String value = selItem != null ? selItem.getNote() : null; //getter method
+                note.setText(value);
+            }
+        });
 
         note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 Memo memo = new Memo("1", String.valueOf(v.getText()));
                 eventsData.addMemo(memo);
-                arrayAdapter.refreshEvents();
+                memoAdapter.refreshEvents();
                 return false;
             }
         });
@@ -70,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
+
         textView.setText(eventsData.getDate());
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    class NoteAdapter extends ArrayAdapter<Memo> {
+    class MemoAdapter extends ArrayAdapter<Memo> {
 
-        NoteAdapter(@NonNull Context context) {
+        MemoAdapter(@NonNull Context context) {
             super(context, R.layout.list_row, eventsData.getAllData());
         }
 
