@@ -11,7 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 
+import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
+
+import java.text.DateFormat;
 import java.util.Calendar;
+
+import de.greenrobot.event.EventBus;
 
 public class DateTimeDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     @NonNull
@@ -28,7 +33,10 @@ public class DateTimeDialog extends DialogFragment implements DatePickerDialog.O
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
+        DateFormat sdf = DateFormat.getDateInstance();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+        EventBus.getDefault().post(new DatePickerUpdateEvent(sdf.format(calendar.getTime())));
     }
 }
 

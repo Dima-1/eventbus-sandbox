@@ -23,10 +23,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
+
+import de.greenrobot.event.EventBus;
+
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
+    private TextView date;
 
 
     @Override
@@ -40,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         final ListView lvEvents = findViewById(R.id.lvEvents);
         CheckBox checkBox = findViewById(R.id.checkBox);
-        TextView textView = findViewById(R.id.tvDate);
+        date = findViewById(R.id.tvDate);
         final EditText note = findViewById(R.id.etNote);
 
         memoAdapter = new MemoAdapter(this);
@@ -71,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
         note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Memo memo = new Memo("1", String.valueOf(v.getText()));
+            public boolean onEditorAction(TextView note, int actionId, KeyEvent event) {
+                Memo memo = new Memo(
+                        String.valueOf(date.getText()), String.valueOf(note.getText()));
                 eventsData.addMemo(memo);
                 memoAdapter.refreshEvents();
                 return false;
@@ -95,14 +101,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        textView.setText(eventsData.getDate());
-        textView.setOnClickListener(new View.OnClickListener() {
+        date.setText(eventsData.getDate());
+        date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment dateTimeDialog = new DateTimeDialog();
                 dateTimeDialog.show(getSupportFragmentManager(), "datePicker");
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEvent(DatePickerUpdateEvent event) {
+        String TAG = "event receiver " + this.getClass().getName();
+        Log.d(TAG, event.getMessage());
+        date.setText(event.getMessage());
     }
 
     @Override
