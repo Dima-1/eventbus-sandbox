@@ -22,6 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
@@ -63,7 +66,8 @@ public class MainActivityTest {
 
     @Test
     public void checkDateDialog() {
-        EventsData eventsData = new EventsData(mActivityTestRule.getActivity().getBaseContext());
+        EventsData eventsData =
+                new EventsData(mActivityTestRule.getActivity().getApplicationContext());
         onView(allOf(withId(R.id.tvDate), withText(eventsData.getDate()), isDisplayed()))
                 .perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
@@ -75,8 +79,14 @@ public class MainActivityTest {
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month + 1, day));
         onView(withId(android.R.id.button1)).perform(click());
-
-//            onView(withId(R.id.status)).check(matches(withText(year + "/" + month + "/" + day)));
+        DateFormat sdf = DateFormat.getDateInstance();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        onView(allOf(withId(R.id.tvDate), childAtPosition(
+                childAtPosition(
+                        withId(android.R.id.content),
+                        0),
+                4))).check(matches(withText(sdf.format(calendar.getTime()))));
 
 
     }

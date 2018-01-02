@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        eventsData = new EventsData(this);
+        eventsData = new EventsData(getApplicationContext());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         memoAdapter = new MemoAdapter(this);
         lvEvents.setAdapter(memoAdapter);
-        lvEvents.setSelector(R.color.colorPrimaryDark);
+        lvEvents.setSelector(R.color.colorMemoSelect);
 
         lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -68,9 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
 
-                Memo selItem = memoAdapter.getItem(position); //
-                String value = selItem != null ? selItem.getNote() : null; //getter method
-                note.setText(value);
+                Memo memo = memoAdapter.getItem(position);
+                String selectedMemoNote = memo != null ? memo.getNote() : null;
+                String selectedMemoDate = memo != null ? memo.getDate() : null;
+                note.setText(selectedMemoNote);
+                date.setText(selectedMemoDate);
             }
         });
 
