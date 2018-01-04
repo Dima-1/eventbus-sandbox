@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 Memo selItem = memoAdapter.getItem(position); //
                 String value = selItem != null ? selItem.getNote() : null; //getter method
                 Toast.makeText(getApplicationContext(),
-                        value, Toast.LENGTH_SHORT).show();
+                        String.valueOf(position) + ":" + value, Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
