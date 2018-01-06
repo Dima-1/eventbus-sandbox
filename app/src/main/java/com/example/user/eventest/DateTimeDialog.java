@@ -36,7 +36,7 @@ public class DateTimeDialog extends DialogFragment {
 
         LayoutInflater li = LayoutInflater.from(getActivity());
         final View promptsView = li.inflate(R.layout.date_time_picker, null);
-        final Button butDateTime = promptsView.findViewById(R.id.butDateTime);
+        final Button butDateTime = promptsView.findViewById(R.id.btnDateTime);
 
         butDateTime.setOnClickListener(new View.OnClickListener() {
             @Override

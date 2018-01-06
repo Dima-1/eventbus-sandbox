@@ -31,7 +31,7 @@ public class WidgetTest {
     private static final String TEST_PACKAGE = "com.example.user.eventest";
     private static final int LAUNCH_TIMEOUT = 5000;
     private UiDevice mDevice;
-    private boolean isWidgetSown;
+    private boolean isWidgetShown;
 
     @Before
     public void startMainActivityFromHomeScreen() {
@@ -39,7 +39,7 @@ public class WidgetTest {
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
         mDevice.pressHome();
-        isWidgetSown = mDevice.hasObject(By.pkg(TEST_PACKAGE)
+        isWidgetShown = mDevice.hasObject(By.pkg(TEST_PACKAGE)
                 .clazz("android.widget.RelativeLayout"));
 
         // Wait for launcher
@@ -66,7 +66,7 @@ public class WidgetTest {
     @Test
     public void ChangingWidgetWithDelay() throws InterruptedException, UiObjectNotFoundException {
 
-        Assume.assumeTrue("Widget not on the home screen", isWidgetSown);
+        Assume.assumeTrue("Widget not on the home screen", isWidgetShown);
 
         UiObject checkBox = mDevice.findObject(new UiSelector()
                 .text("CheckBox")

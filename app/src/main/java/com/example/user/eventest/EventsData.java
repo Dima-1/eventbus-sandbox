@@ -76,4 +76,14 @@ class EventsData {
         });
 
     }
+
+    void deleteMemo(final Memo memo) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.getMemoDAO().delete(memo);
+            }
+        });
+
+    }
 }

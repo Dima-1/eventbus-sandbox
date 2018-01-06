@@ -1,6 +1,7 @@
 package com.example.user.eventest;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -17,4 +18,7 @@ public interface MemoDAO {
 
     @Insert
     void insert(Memo memo);
+
+    @Delete
+    void delete(Memo memo);
 }
