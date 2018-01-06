@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
 
+import java.text.DateFormat;
+
 import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
     private TextView date;
+    private TextView time;
 
 
     @Override
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         final ListView lvEvents = findViewById(R.id.lvEvents);
         CheckBox checkBox = findViewById(R.id.checkBox);
         date = findViewById(R.id.tvDate);
+        time = findViewById(R.id.tvTime);
         final EditText note = findViewById(R.id.etNote);
 
         memoAdapter = new MemoAdapter(this);
@@ -127,8 +131,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onEvent(DatePickerUpdateEvent event) {
         String TAG = "event receiver " + this.getClass().getName();
-        Log.d(TAG, event.getMessage());
-        date.setText(event.getMessage());
+        Log.d(TAG, event.getMessage().getTime().toString());
+        date.setText(DateFormat.getDateInstance().format(event.getMessage().getTime()));
+        time.setText(DateFormat.getTimeInstance().format(event.getMessage().getTime()));
     }
 
     @Override

@@ -4,7 +4,6 @@ package com.example.user.eventest;
  * Created by User on 25.12.2017.
  */
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -16,15 +15,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 
-public class DateTimeDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class DateTimeDialog extends DialogFragment {
     boolean isDatePickerShown = false;
 
     @NonNull
@@ -36,7 +35,7 @@ public class DateTimeDialog extends DialogFragment implements DatePickerDialog.O
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         LayoutInflater li = LayoutInflater.from(getActivity());
-        final View promptsView = li.inflate(R.layout.date_time_pick, null);
+        final View promptsView = li.inflate(R.layout.date_time_picker, null);
         final Button butDateTime = promptsView.findViewById(R.id.butDateTime);
 
         butDateTime.setOnClickListener(new View.OnClickListener() {
@@ -46,10 +45,14 @@ public class DateTimeDialog extends DialogFragment implements DatePickerDialog.O
                     promptsView.findViewById(R.id.datePicker).setVisibility(View.INVISIBLE);
                     promptsView.findViewById(R.id.timePicker).setVisibility(View.VISIBLE);
                     butDateTime.setText(R.string.date);
+                    butDateTime.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_date_range_black_48px, 0, 0, 0);
                 } else {
                     promptsView.findViewById(R.id.datePicker).setVisibility(View.VISIBLE);
                     promptsView.findViewById(R.id.timePicker).setVisibility(View.INVISIBLE);
                     butDateTime.setText(R.string.time);
+                    butDateTime.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_access_time_black_48px, 0, 0, 0);
                 }
                 isDatePickerShown = !isDatePickerShown;
             }
@@ -62,9 +65,23 @@ public class DateTimeDialog extends DialogFragment implements DatePickerDialog.O
                 .setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // get user input and set it to result
-                                // edit text
-//                                        result.setText(userInput.getText());
+                                DatePicker datePicker = promptsView.findViewById(R.id.datePicker);
+                                TimePicker timePicker = promptsView.findViewById(R.id.timePicker);
+                                Calendar calendar = Calendar.getInstance();
+                                int dayOfMonth = datePicker.getDayOfMonth();
+                                int month = datePicker.getMonth() + 1;
+                                int year = datePicker.getYear();
+                                int hour;
+                                int minute;
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                                    hour = timePicker.getCurrentHour();
+                                    minute = timePicker.getCurrentMinute();
+                                } else {
+                                    hour = timePicker.getHour();
+                                    minute = timePicker.getMinute();
+                                }
+                                calendar.set(year, month, dayOfMonth, hour, minute);
+                                EventBus.getDefault().post(new DatePickerUpdateEvent(calendar));
                             }
                         })
                 .setNegativeButton("Cancel",
@@ -74,8 +91,7 @@ public class DateTimeDialog extends DialogFragment implements DatePickerDialog.O
                             }
                         });
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        return alertDialog;
+        return alertDialogBuilder.create();
 
     }
 
@@ -87,14 +103,6 @@ public class DateTimeDialog extends DialogFragment implements DatePickerDialog.O
             int height = getResources().getDimensionPixelSize(R.dimen.popup_height);
             getDialog().getWindow().setLayout(width, height);
         }
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        DateFormat sdf = DateFormat.getDateInstance();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, dayOfMonth);
-        EventBus.getDefault().post(new DatePickerUpdateEvent(sdf.format(calendar.getTime())));
     }
 }
 
