@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 String value = selItem != null ? selItem.getNote() : null; //getter method
                 Toast.makeText(getApplicationContext(),
                         String.valueOf(position) + ":" + value, Toast.LENGTH_SHORT).show();
+                Memo memo = memoAdapter.getItem(position);
+                eventsData.deleteMemo(memo);
+                memoAdapter.refreshEvents();
                 return false;
             }
         });

@@ -44,8 +44,7 @@
         android:layout_marginTop="8dp"
         android:gravity="fill_vertical"
         android:text="@string/date"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
         app:layout_constraintBottom_toTopOf="@+id/tvTime"
         app:layout_constraintEnd_toStartOf="@+id/etNote"
         app:layout_constraintHorizontal_bias="0.0"
@@ -55,7 +54,7 @@
 
     <TextView
         android:id="@+id/tvTime"
-        android:layout_width="100dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
