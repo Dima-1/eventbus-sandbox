@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -54,7 +56,7 @@ public class MainActivityTest {
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                2),
+                                6),
                         isDisplayed()));
         CheckBox checkBox = mActivityTestRule.getActivity().findViewById(R.id.checkBox);
         Boolean checkClick = checkBox.isChecked();
@@ -72,15 +74,16 @@ public class MainActivityTest {
                 withText(eventsData.getDate()),
                 isDisplayed()))
                 .perform(click());
-        onView(withClassName(Matchers.equalTo(DateTimeDialog.class.getName())))
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
                 .check(matches(isDisplayed()));
-
+        onView(allOf(withId(R.id.btnDateTime),
+                withText(R.string.date),
+                isDisplayed()))
+                .perform(click());
         int year = 2011;
         int month = 11;
         int day = 11;
-        // TODO: 06.01.2018 No views in hierarchy found matching:
-        // with class name:"com.example.user.eventest.DateTimeDialog"
-        onView(withClassName(Matchers.equalTo(DateTimeDialog.class.getName())))
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month + 1, day));
         onView(withId(android.R.id.button1)).perform(click());
         DateFormat sdf = DateFormat.getDateInstance();

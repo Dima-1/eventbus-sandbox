@@ -45,6 +45,26 @@ class EventsData {
         return null;
     }
 
+    Memo getConcreteMemo(final Memo memo) {
+        try {
+            return new AsyncTask<AppDatabase, Void, Memo>() {
+
+                @Override
+                protected Memo doInBackground(AppDatabase... v) {
+                    return db.getMemoDAO().getConcreteMemo(memo.getDate(), memo.getNote());
+                }
+
+                @Override
+                protected void onPostExecute(Memo memo) {
+                    super.onPostExecute(memo);
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
@@ -74,7 +94,6 @@ class EventsData {
                 db.getMemoDAO().insert(memo);
             }
         });
-
     }
 
     void deleteMemo(final Memo memo) {

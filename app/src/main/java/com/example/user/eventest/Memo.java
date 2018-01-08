@@ -12,7 +12,7 @@ public class Memo {
 
     @PrimaryKey(autoGenerate = true)
     private int memoID;
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "date")
     private String date;
     @ColumnInfo(name = "note")
     private String note;

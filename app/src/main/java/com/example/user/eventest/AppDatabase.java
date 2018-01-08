@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 /*
  * Created by User on 27.12.2017.
  */
-@Database(entities = {Memo.class}, version = 2)
+@Database(entities = {Memo.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "database.db";
     private static AppDatabase INSTANCE;
@@ -25,12 +25,31 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE Memo RENAME TO orig_Memo;");
+            database.execSQL("CREATE TABLE Memo (" +
+                    "memoID INTEGER PRIMARY KEY AUTOINCREMENT " +
+                    "NOT NULL," +
+                    "date   TEXT," +
+                    "note   TEXT" +
+                    ");");
+            database.execSQL("INSERT INTO Memo(memoID, date, note) " +
+                    "SELECT memoID, name, note " +
+                    "FROM orig_Memo; ");
+            database.execSQL("DROP TABLE orig_Memo;");
+
+        }
+    };
+
     static AppDatabase getInstance(Context context) {
         synchronized (sLock) {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, DATABASE_NAME)
                         .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_2_3)
                         .build();
             }
             return INSTANCE;

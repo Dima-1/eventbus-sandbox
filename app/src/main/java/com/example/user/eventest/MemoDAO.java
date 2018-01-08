@@ -16,6 +16,9 @@ public interface MemoDAO {
     @Query("SELECT * FROM memo")
     List<Memo> getAllMemo();
 
+    @Query("SELECT * FROM memo where date = :date and note = :note")
+    Memo getConcreteMemo(String date, String note);
+
     @Insert
     void insert(Memo memo);
 
