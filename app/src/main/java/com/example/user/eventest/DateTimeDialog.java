@@ -62,7 +62,8 @@ public class DateTimeDialog extends DialogFragment {
         alertDialogBuilder.setView(promptsView);
         alertDialogBuilder
                 .setCancelable(false)
-                .setPositiveButton("OK",
+                .setPositiveButton(R.string.OK
+                        ,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 DatePicker datePicker = promptsView.findViewById(R.id.datePicker);
@@ -84,7 +85,7 @@ public class DateTimeDialog extends DialogFragment {
                                 EventBus.getDefault().post(new DatePickerUpdateEvent(calendar));
                             }
                         })
-                .setNegativeButton("Cancel",
+                .setNegativeButton(R.string.cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();

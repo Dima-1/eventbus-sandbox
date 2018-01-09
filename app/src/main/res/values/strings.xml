@@ -12,4 +12,6 @@
     <string name="action_undo">undo</string>
     <string name="action_settings">settings</string>
     <string name="time">Time</string>
+    <string name="cancel">Cancel</string>
+    <string name="OK">OK</string>
 </resources>

@@ -74,12 +74,30 @@ public class MainActivityTest {
                 withText(eventsData.getDate()),
                 isDisplayed()))
                 .perform(click());
+        onView(allOf(withText(R.string.cancel), isDisplayed())).perform(click());
+        onView(allOf(withId(R.id.tvDate),
+                childAtPosition(childAtPosition(withId(android.R.id.content), 0), 2),
+                withText(eventsData.getDate()),
+                isDisplayed()))
+                .perform(click());
         onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
                 .check(matches(isDisplayed()));
         onView(allOf(withId(R.id.btnDateTime),
                 withText(R.string.date),
                 isDisplayed()))
                 .perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
+                .check(matches(isDisplayed()));
+        onView(allOf(withId(R.id.btnDateTime),
+                withText(R.string.time),
+                isDisplayed()))
+                .perform(click());
+        onView(allOf(withId(R.id.btnDateTime),
+                withText(R.string.date),
+                isDisplayed()))
+                .perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
+                .check(matches(isDisplayed()));
         int year = 2011;
         int month = 11;
         int day = 11;
