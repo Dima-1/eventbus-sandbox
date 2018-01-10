@@ -9,12 +9,14 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -55,8 +57,38 @@ public class MainActivity extends AppCompatActivity {
         memoAdapter = new MemoAdapter(this);
         lvEvents.setAdapter(memoAdapter);
         lvEvents.setSelector(R.color.colorMemoSelect);
+        lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
-        lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        lvEvents.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.action_mode_menu, menu);
+                return true;
+            }
+
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                mode.finish();
+                return false;
+            }
+
+            public void onDestroyActionMode(ActionMode mode) {
+            }
+
+            public void onItemCheckedStateChanged(ActionMode mode,
+                                                  int position, long id, boolean checked) {
+                String TAG = "ActionMode";
+                Log.d(TAG, "position = " + position + ", checked = "
+                        + checked);
+            }
+        });
+
+
+
+       /* lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             public boolean onItemLongClick(AdapterView<?> adapter, View v, int position, long id) {
 
@@ -69,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
                 memoAdapter.refreshEvents();
                 return false;
             }
-        });
+        });*/
 
-        lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      /*  lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
 
@@ -81,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 note.setText(selectedMemoNote);
                 date.setText(selectedMemoDate);
             }
-        });
+        });*/
 
         note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -142,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.abmenu, menu);
+
         return true;
     }
 
