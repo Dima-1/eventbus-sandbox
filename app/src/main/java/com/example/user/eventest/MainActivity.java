@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 import de.greenrobot.event.EventBus;
 
@@ -163,14 +164,14 @@ public class MainActivity extends AppCompatActivity {
     public void onEvent(DatePickerUpdateEvent event) {
         String TAG = "event receiver " + this.getClass().getName();
         Log.d(TAG, event.getMessage().getTime().toString());
-        date.setText(DateFormat.getDateInstance().format(event.getMessage().getTime()));
-        time.setText(DateFormat.getTimeInstance().format(event.getMessage().getTime()));
+        Date tmpDate = event.getMessage().getTime();
+        date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(tmpDate));
+        time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(tmpDate));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.abmenu, menu);
-
         return true;
     }
 }
