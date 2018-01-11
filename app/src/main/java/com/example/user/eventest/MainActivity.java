@@ -3,21 +3,17 @@ package com.example.user.eventest;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -54,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         time = findViewById(R.id.tvTime);
         final EditText note = findViewById(R.id.etNote);
 
-        memoAdapter = new MemoAdapter(this);
+        memoAdapter = new MemoAdapter(this, eventsData);
         lvEvents.setAdapter(memoAdapter);
         lvEvents.setSelector(R.color.colorMemoSelect);
         lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -80,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
             public void onItemCheckedStateChanged(ActionMode mode,
                                                   int position, long id, boolean checked) {
+                mode.setTitle(lvEvents.getCheckedItemCount() + "/" + lvEvents.getCount());
                 String TAG = "ActionMode";
-                Log.d(TAG, "position = " + position + ", checked = "
-                        + checked);
+                Log.d(TAG, "position = " + position + ", checked = " + checked);
             }
         });
 
@@ -103,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-      /*  lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
 
@@ -113,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 note.setText(selectedMemoNote);
                 date.setText(selectedMemoDate);
             }
-        });*/
+        });
 
         note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -176,34 +172,5 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.abmenu, menu);
 
         return true;
-    }
-
-    class MemoAdapter extends ArrayAdapter<Memo> {
-
-        MemoAdapter(@NonNull Context context) {
-            super(context, R.layout.list_row, eventsData.getAllData());
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext())
-                        .inflate(R.layout.list_row, parent, false);
-            }
-            Memo memo = getItem(position);
-            if (memo != null) {
-                ((TextView) convertView.findViewById(R.id.tvContent)).setText(memo.getNote());
-                ((TextView) convertView.findViewById(R.id.tvDate)).setText(memo.getDate());
-            }
-            return convertView;
-        }
-
-        void refreshEvents() {
-            clear();
-            addAll(eventsData.getAllData());
-            notifyDataSetChanged();
-        }
     }
 }
