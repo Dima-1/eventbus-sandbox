@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView note, int actionId, KeyEvent event) {
+                // TODO: 12.01.2018 date + time store
                 Memo memo = new Memo(
                         String.valueOf(date.getText()), String.valueOf(note.getText()));
                 eventsData.addMemo(memo);
@@ -143,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: 12.01.2018 set date picker from date view
                 DialogFragment dateTimeDialog = new DateTimeDialog();
                 dateTimeDialog.show(getSupportFragmentManager(), "datePicker");
             }

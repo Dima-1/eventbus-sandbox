@@ -79,7 +79,7 @@ class EventsData {
     }*/
 
     String getDate() {
-        DateFormat sdf = DateFormat.getDateInstance();
+        DateFormat sdf = DateFormat.getDateInstance(DateFormat.SHORT);
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

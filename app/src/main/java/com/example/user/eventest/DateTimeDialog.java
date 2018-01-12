@@ -70,7 +70,7 @@ public class DateTimeDialog extends DialogFragment {
                                 TimePicker timePicker = promptsView.findViewById(R.id.timePicker);
                                 Calendar calendar = Calendar.getInstance();
                                 int dayOfMonth = datePicker.getDayOfMonth();
-                                int month = datePicker.getMonth() + 1;
+                                int month = datePicker.getMonth();
                                 int year = datePicker.getYear();
                                 int hour;
                                 int minute;
