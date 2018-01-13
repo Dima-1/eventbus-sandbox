@@ -19,37 +19,60 @@ import android.widget.TimePicker;
 
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 
 import de.greenrobot.event.EventBus;
 
 public class DateTimeDialog extends DialogFragment {
+    private Date mDate;
     boolean isDatePickerShown = false;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
+        Bundle bundle = getArguments();
+        String date = bundle.getString("date", "");
+        String time = bundle.getString("time", "");
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        try {
+            mDate = dateFormat.parse(date + " " + time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.setTime(mDate);
         LayoutInflater li = LayoutInflater.from(getActivity());
-        final View promptsView = li.inflate(R.layout.date_time_picker, null);
-        final Button butDateTime = promptsView.findViewById(R.id.btnDateTime);
+        final View dateTimeLayout = li.inflate(R.layout.date_time_picker, null);
+        final Button butDateTime = dateTimeLayout.findViewById(R.id.btnDateTime);
+        DatePicker datePicker = dateTimeLayout.findViewById(R.id.datePicker);
+        datePicker.updateDate(
+                c.get(Calendar.YEAR),
+                c.get(Calendar.MONTH),
+                c.get(Calendar.DAY_OF_MONTH));
+        TimePicker timePicker = dateTimeLayout.findViewById(R.id.timePicker);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            timePicker.setCurrentHour(c.get(Calendar.HOUR));
+            timePicker.setCurrentMinute(c.get(Calendar.MINUTE));
+        } else {
+            timePicker.setHour(c.get(Calendar.HOUR));
+            timePicker.setMinute(c.get(Calendar.MINUTE));
+        }
 
         butDateTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isDatePickerShown) {
-                    promptsView.findViewById(R.id.datePicker).setVisibility(View.INVISIBLE);
-                    promptsView.findViewById(R.id.timePicker).setVisibility(View.VISIBLE);
+                    dateTimeLayout.findViewById(R.id.datePicker).setVisibility(View.INVISIBLE);
+                    dateTimeLayout.findViewById(R.id.timePicker).setVisibility(View.VISIBLE);
                     butDateTime.setText(R.string.date);
                     butDateTime.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_date_range_black_48px, 0, 0, 0);
                 } else {
-                    promptsView.findViewById(R.id.datePicker).setVisibility(View.VISIBLE);
-                    promptsView.findViewById(R.id.timePicker).setVisibility(View.INVISIBLE);
+                    dateTimeLayout.findViewById(R.id.datePicker).setVisibility(View.VISIBLE);
+                    dateTimeLayout.findViewById(R.id.timePicker).setVisibility(View.INVISIBLE);
                     butDateTime.setText(R.string.time);
                     butDateTime.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_access_time_black_48px, 0, 0, 0);
@@ -59,15 +82,15 @@ public class DateTimeDialog extends DialogFragment {
         });
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setView(promptsView);
+        alertDialogBuilder.setView(dateTimeLayout);
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton(R.string.OK
                         ,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                DatePicker datePicker = promptsView.findViewById(R.id.datePicker);
-                                TimePicker timePicker = promptsView.findViewById(R.id.timePicker);
+                                DatePicker datePicker = dateTimeLayout.findViewById(R.id.datePicker);
+                                TimePicker timePicker = dateTimeLayout.findViewById(R.id.timePicker);
                                 Calendar calendar = Calendar.getInstance();
                                 int dayOfMonth = datePicker.getDayOfMonth();
                                 int month = datePicker.getMonth();

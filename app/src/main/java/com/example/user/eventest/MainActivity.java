@@ -140,12 +140,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        date.setText(eventsData.getDate());
+        date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(eventsData.getDate()));
+        time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(eventsData.getDate()));
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 12.01.2018 set date picker from date view
+                Bundle bundle = new Bundle();
+                bundle.putString("date", date.getText().toString());
+                bundle.putString("time", time.getText().toString());
+
                 DialogFragment dateTimeDialog = new DateTimeDialog();
+                dateTimeDialog.setArguments(bundle);
                 dateTimeDialog.show(getSupportFragmentManager(), "datePicker");
             }
         });

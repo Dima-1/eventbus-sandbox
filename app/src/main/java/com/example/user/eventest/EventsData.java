@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -78,13 +76,9 @@ class EventsData {
         }
     }*/
 
-    String getDate() {
-        DateFormat sdf = DateFormat.getDateInstance(DateFormat.SHORT);
+    Date getDate() {
         Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        date = calendar.getTime();
-        return sdf.format(date);
+        return date;
 
     }
     void addMemo(final Memo memo) {

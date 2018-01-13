@@ -106,15 +106,17 @@ public class MainActivityTest {
     public void checkDateDialog() throws ReflectiveOperationException {
         EventsData eventsData =
                 new EventsData(mActivityTestRule.getActivity().getApplicationContext());
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+        String testDate = dateFormat.format(eventsData.getDate());
         onView(allOf(withId(R.id.tvDate),
                 childAtPosition(childAtPosition(withId(android.R.id.content), 0), 2),
-                withText(eventsData.getDate()),
+                withText(testDate),
                 isDisplayed()))
                 .perform(click());
         onView(allOf(withText(R.string.cancel), isDisplayed())).perform(click());
         onView(allOf(withId(R.id.tvDate),
                 childAtPosition(childAtPosition(withId(android.R.id.content), 0), 2),
-                withText(eventsData.getDate()),
+                withText(testDate),
                 isDisplayed()))
                 .perform(click());
         onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
