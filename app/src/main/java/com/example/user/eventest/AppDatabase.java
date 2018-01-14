@@ -13,19 +13,19 @@ import android.support.annotation.NonNull;
  */
 @Database(entities = {Memo.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
-    private static final String DATABASE_NAME = "database.db";
+    static final String DATABASE_NAME = "database.db";
     private static AppDatabase INSTANCE;
     private static final Object sLock = new Object();
 
     public abstract MemoDAO getMemoDAO();
 
-    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
         }
     };
 
-    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE Memo RENAME TO orig_Memo;");

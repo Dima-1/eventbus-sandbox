@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">eventest</string>
     <string name="checkbox">CheckBox</string>
     <string name="widget_label">AnEvent</string>
     <string name="widget_title">Widget title</string>
