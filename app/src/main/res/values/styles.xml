@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">@color/colorPrimary</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/multiple_selected_item</item>
     </style>
 
     <style name="DialogTheme" parent="Theme.AppCompat.Light.NoActionBar">

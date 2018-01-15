@@ -25,6 +25,9 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    /**
+     * Rename field note to date
+     */
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
