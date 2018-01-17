@@ -47,13 +47,13 @@ public class WidgetProvider extends AppWidgetProvider {
             Log.d(TAG, MainActivity.PREF_TEST_STATE + " " + prefTestState);
             RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
             widgetView.setTextViewText(R.id.tvCheck, String.valueOf(prefTestState));
+
             Intent updateIntent = new Intent(context, WidgetProvider.class);
             updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetID});
             appWidgetManager.updateAppWidget(widgetID, widgetView);
 
-            RemoteViews remoteViews = updateWidgetListView(context,
-                    widgetID);
+            RemoteViews remoteViews = updateWidgetListView(context, widgetID);
             appWidgetManager.updateAppWidget(widgetID,
                     remoteViews);
         } catch (PackageManager.NameNotFoundException e) {

@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
 
+import com.example.user.eventest.EventsData;
 import com.example.user.eventest.Memo;
 import com.example.user.eventest.R;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created on 19.12.2017.
@@ -22,27 +20,18 @@ class ListWidgetProvider implements RemoteViewsFactory {
     private ArrayList<Memo> eventItemList = new ArrayList<>();
     private Context context = null;
     private int appWidgetId;
+    private EventsData eventsData;
 
     ListWidgetProvider(Context context, Intent intent) {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-
+        eventsData = new EventsData(context);
 
     }
 
     private void populateListItem() {
-        for (int i = 0; i < 10; i++) {
-            DateFormat sdf = DateFormat.getDateInstance();
-            Date date = new Date();
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            c.add(Calendar.DATE, i);
-            date = c.getTime();
-            Memo memo = new Memo(sdf.format(date),
-                    i + " This is the content of the app widget listView. Nice content though");
-            eventItemList.add(memo);
-        }
+        eventItemList.addAll(eventsData.getAllData());
     }
 
     @Override
@@ -53,6 +42,8 @@ class ListWidgetProvider implements RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
+        eventItemList.clear();
+        populateListItem();
 
     }
 

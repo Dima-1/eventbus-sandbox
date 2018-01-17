@@ -13,17 +13,17 @@ import java.util.concurrent.ExecutionException;
  * Created on 24.12.2017.
  */
 
-class EventsData {
+public class EventsData {
     private Context context;
     private AppDatabase db;
 
-    EventsData(Context context) {
+    public EventsData(Context context) {
         this.context = context;
         db = AppDatabase.getInstance(context);
 //        populateListItem();
     }
 
-    ArrayList<Memo> getAllData() {
+    public ArrayList<Memo> getAllData() {
         try {
             return new AsyncTask<AppDatabase, Void, ArrayList<Memo>>() {
 
