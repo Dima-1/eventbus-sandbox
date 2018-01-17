@@ -28,7 +28,7 @@ class ListWidgetProvider implements RemoteViewsFactory {
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
 
-        populateListItem();
+
     }
 
     private void populateListItem() {
@@ -47,6 +47,7 @@ class ListWidgetProvider implements RemoteViewsFactory {
 
     @Override
     public void onCreate() {
+        populateListItem();
 
     }
 
@@ -78,9 +79,10 @@ class ListWidgetProvider implements RemoteViewsFactory {
     @Override
     public RemoteViews getViewAt(int position) {
         final RemoteViews remoteView = new RemoteViews(
-                context.getPackageName(), R.layout.list_row);
+                context.getPackageName(), R.layout.widget_list_row);
         Memo listItem = eventItemList.get(position);
         remoteView.setTextViewText(R.id.tvDate, listItem.getDate());
+        remoteView.setTextViewText(R.id.tvTime, listItem.getDate());
         remoteView.setTextViewText(R.id.tvContent, listItem.getNote());
 
         return remoteView;
