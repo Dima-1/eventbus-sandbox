@@ -23,6 +23,11 @@ class MemoAdapter extends ArrayAdapter<Memo> {
         this.eventsData = eventsData;
     }
 
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

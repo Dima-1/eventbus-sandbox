@@ -68,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                if (item.getItemId() == R.id.menuAmDelete) {
+                    Toast.makeText(getApplicationContext(),
+                            "delete", Toast.LENGTH_SHORT).show();
+                    for (long id : lvEvents.getCheckedItemIds()) {
+                        eventsData.deleteByMemoID(id);
+                    }
+
+                }
                 mode.finish();
                 return false;
             }

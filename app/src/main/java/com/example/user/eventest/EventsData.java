@@ -99,4 +99,14 @@ public class EventsData {
         });
 
     }
+
+    void deleteByMemoID(final long memoID) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.getMemoDAO().deleteByMemoId(memoID);
+            }
+        });
+
+    }
 }
