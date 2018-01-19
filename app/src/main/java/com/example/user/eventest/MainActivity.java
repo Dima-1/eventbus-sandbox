@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
+import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     for (long id : lvEvents.getCheckedItemIds()) {
                         eventsData.deleteByMemoID(id);
                     }
+                    memoAdapter.refreshEvents();
 
                 }
                 mode.finish();
@@ -126,8 +129,11 @@ public class MainActivity extends AppCompatActivity {
                 // TODO: 12.01.2018 date + time store
                 Memo memo = new Memo(
                         String.valueOf(date.getText()), String.valueOf(note.getText()));
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
+                }
                 eventsData.addMemo(memo);
-                memoAdapter.refreshEvents();
                 return false;
             }
         });
@@ -176,12 +182,16 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(DatePickerUpdateEvent event) {
+    public void onDatePickerUpdateEvent(DatePickerUpdateEvent event) {
         String TAG = "event receiver " + this.getClass().getName();
         Log.d(TAG, event.getMessage().getTime().toString());
         Date tmpDate = event.getMessage().getTime();
         date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(tmpDate));
         time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(tmpDate));
+    }
+
+    public void onMemoAdapterRefreshEvent(MemoAdapterRefreshEvent event) {
+        memoAdapter.refreshEvents();
     }
 
     @Override

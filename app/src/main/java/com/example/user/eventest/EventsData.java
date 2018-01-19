@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
+import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created on 24.12.2017.
@@ -20,7 +22,6 @@ public class EventsData {
     public EventsData(Context context) {
         this.context = context;
         db = AppDatabase.getInstance(context);
-//        populateListItem();
     }
 
     public ArrayList<Memo> getAllData() {
@@ -44,50 +45,69 @@ public class EventsData {
     }
 
     Memo getConcreteMemo(final Memo memo) {
+
         try {
-            return new AsyncTask<AppDatabase, Void, Memo>() {
-
-                @Override
-                protected Memo doInBackground(AppDatabase... v) {
-                    return db.getMemoDAO().getConcreteMemo(memo.getDate(), memo.getNote());
-                }
-
-                @Override
-                protected void onPostExecute(Memo memo) {
-                    super.onPostExecute(memo);
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
+            return new getConcreteMemoTask(memo,db)
+                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+
+    static class getConcreteMemoTask extends AsyncTask<AppDatabase, Void, Memo> {
+        private Memo memo;
+        private AppDatabase db;
+
+        getConcreteMemoTask(Memo memo, AppDatabase db) {
+            this.memo = memo;
+            this.db = db;
+        }
+
+        @Override
+        protected Memo doInBackground(AppDatabase... v) {
+            return db.getMemoDAO().getConcreteMemo(memo.getDate(), memo.getNote());
+        }
+
+        @Override
+        protected void onPostExecute(Memo memo) {
+            super.onPostExecute(memo);
+        }
+    }
+
     SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-   /* private void populateListItem() {
-        for (int i = 0; i < 10; i++) {
-
-            Memo memo = new Memo(getDate(),
-                    i + "Content for example " + String.valueOf(i));
-            addMemo(memo);
-        }
-    }*/
-
     Date getDate() {
-        Date date = new Date();
-        return date;
-
+        return new Date();
     }
-    void addMemo(final Memo memo) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                db.getMemoDAO().insert(memo);
-            }
-        });
+
+    void addMemo(Memo memo) {
+        new addMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    static class addMemoTask extends AsyncTask<Void, Void, Void> {
+        private Memo memo;
+        private AppDatabase db;
+
+        addMemoTask(Memo memo, AppDatabase db) {
+            this.memo = memo;
+            this.db = db;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            db.getMemoDAO().insert(memo);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            EventBus.getDefault().post(new MemoAdapterRefreshEvent());
+        }
     }
 
     void deleteMemo(final Memo memo) {
@@ -97,7 +117,6 @@ public class EventsData {
                 db.getMemoDAO().delete(memo);
             }
         });
-
     }
 
     void deleteByMemoID(final long memoID) {
@@ -105,6 +124,7 @@ public class EventsData {
             @Override
             public void run() {
                 db.getMemoDAO().deleteByMemoId(memoID);
+                EventBus.getDefault().post(new MemoAdapterRefreshEvent());
             }
         });
 
