@@ -4,6 +4,7 @@ package com.example.user.eventest;
  * Created by User on 25.12.2017.
  */
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -24,7 +26,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 public class DateTimeDialog extends DialogFragment {
     private Date mDate;
@@ -45,6 +47,7 @@ public class DateTimeDialog extends DialogFragment {
         }
         c.setTime(mDate);
         LayoutInflater li = LayoutInflater.from(getActivity());
+        @SuppressLint("InflateParams")
         final View dateTimeLayout = li.inflate(R.layout.date_time_picker, null);
         final Button butDateTime = dateTimeLayout.findViewById(R.id.btnDateTime);
         DatePicker datePicker = dateTimeLayout.findViewById(R.id.datePicker);
@@ -125,7 +128,10 @@ public class DateTimeDialog extends DialogFragment {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             int width = getResources().getDimensionPixelSize(R.dimen.popup_width);
             int height = getResources().getDimensionPixelSize(R.dimen.popup_height);
-            getDialog().getWindow().setLayout(width, height);
+            Window window = getDialog().getWindow();
+            if (window != null) {
+                window.setLayout(width, height);
+            }
         }
     }
 }

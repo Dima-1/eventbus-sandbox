@@ -25,10 +25,11 @@ import android.widget.Toast;
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
 import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.text.DateFormat;
 import java.util.Date;
-
-import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
@@ -182,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe
     public void onDatePickerUpdateEvent(DatePickerUpdateEvent event) {
         String TAG = "event receiver " + this.getClass().getName();
         Log.d(TAG, event.getMessage().getTime().toString());
@@ -190,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
         time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(tmpDate));
     }
 
+    @Subscribe
     public void onMemoAdapterRefreshEvent(MemoAdapterRefreshEvent event) {
         memoAdapter.refreshEvents();
     }

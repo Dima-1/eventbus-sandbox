@@ -10,7 +10,8 @@ import android.util.Log;
 import com.example.user.eventest.eventbus.events.DataUpdateEvent;
 import com.example.user.eventest.widget.WidgetProvider;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 class UpdateWidgetAsyncTask extends AsyncTask<Void, Void, Void> {
 
@@ -22,7 +23,7 @@ class UpdateWidgetAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        WidgetUpdateSubscriber backgroundReceiver = new WidgetUpdateSubscriber();
+        new WidgetUpdateSubscriber();
         return null;
     }
 
@@ -32,7 +33,8 @@ class UpdateWidgetAsyncTask extends AsyncTask<Void, Void, Void> {
             EventBus.getDefault().register(this);
         }
 
-        public void onEvent(DataUpdateEvent event) {
+        @Subscribe
+        public void onDataUpdateEvent(DataUpdateEvent event) {
             String TAG = "event receiver " + this.getClass().getName();
             Log.d(TAG, event.getMessage());
             updateWidget();

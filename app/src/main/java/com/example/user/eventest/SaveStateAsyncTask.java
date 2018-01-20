@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.example.user.eventest.eventbus.events.DataUpdateEvent;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 class SaveStateAsyncTask extends AsyncTask<Boolean, Void, Void> {
 
@@ -48,7 +48,7 @@ class SaveStateAsyncTask extends AsyncTask<Boolean, Void, Void> {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mainAppContext);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean(MainActivity.PREF_TEST_STATE, isChecked);
-            editor.commit();
+            editor.apply();
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

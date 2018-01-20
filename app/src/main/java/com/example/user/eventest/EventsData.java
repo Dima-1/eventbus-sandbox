@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
-import de.greenrobot.event.EventBus;
-
+import org.greenrobot.eventbus.EventBus;
 /**
  * Created on 24.12.2017.
  */
