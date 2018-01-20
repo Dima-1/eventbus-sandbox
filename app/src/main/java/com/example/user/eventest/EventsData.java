@@ -5,11 +5,14 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
+import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
-import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
-import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created on 24.12.2017.
  */
@@ -23,30 +26,46 @@ public class EventsData {
         db = AppDatabase.getInstance(context);
     }
 
+    SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    Date getDate() {
+        return new Date();
+    }
+
     public ArrayList<Memo> getAllData() {
         try {
-            return new AsyncTask<AppDatabase, Void, ArrayList<Memo>>() {
-
-                @Override
-                protected ArrayList<Memo> doInBackground(AppDatabase... v) {
-                    return new ArrayList<>(db.getMemoDAO().getAllMemo());
-                }
-
-                @Override
-                protected void onPostExecute(ArrayList<Memo> memos) {
-                    super.onPostExecute(memos);
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
+            return new GetAllMemos(db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    static class GetAllMemos extends AsyncTask<AppDatabase, Void, ArrayList<Memo>> {
+
+        private AppDatabase db;
+
+        GetAllMemos(AppDatabase db) {
+            this.db = db;
+        }
+
+        @Override
+        protected ArrayList<Memo> doInBackground(AppDatabase... appDatabases) {
+            return new ArrayList<>(db.getMemoDAO().getAllMemo());
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Memo> memos) {
+            super.onPostExecute(memos);
+        }
+    }
+
     Memo getConcreteMemo(final Memo memo) {
 
         try {
-            return new getConcreteMemoTask(memo,db)
+            return new GetConcreteMemoTask(memo, db)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -54,12 +73,11 @@ public class EventsData {
         return null;
     }
 
-
-    static class getConcreteMemoTask extends AsyncTask<AppDatabase, Void, Memo> {
+    static class GetConcreteMemoTask extends AsyncTask<AppDatabase, Void, Memo> {
         private Memo memo;
         private AppDatabase db;
 
-        getConcreteMemoTask(Memo memo, AppDatabase db) {
+        GetConcreteMemoTask(Memo memo, AppDatabase db) {
             this.memo = memo;
             this.db = db;
         }
@@ -75,29 +93,21 @@ public class EventsData {
         }
     }
 
-    SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    Date getDate() {
-        return new Date();
-    }
-
     void addMemo(Memo memo) {
-        new addMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    static class addMemoTask extends AsyncTask<Void, Void, Void> {
+    static class AddMemoTask extends AsyncTask<Void, Void, Void> {
         private Memo memo;
         private AppDatabase db;
 
-        addMemoTask(Memo memo, AppDatabase db) {
+        AddMemoTask(Memo memo, AppDatabase db) {
             this.memo = memo;
             this.db = db;
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(Void... v) {
             db.getMemoDAO().insert(memo);
             return null;
         }
@@ -119,13 +129,28 @@ public class EventsData {
     }
 
     void deleteByMemoID(final long memoID) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                db.getMemoDAO().deleteByMemoId(memoID);
-                EventBus.getDefault().post(new MemoAdapterRefreshEvent());
-            }
-        });
+        new DeleteMemoByIDTask(memoID, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
+    static class DeleteMemoByIDTask extends AsyncTask<Void, Void, Void> {
+        private long id;
+        private AppDatabase db;
+
+        DeleteMemoByIDTask(long id, AppDatabase db) {
+            this.id = id;
+            this.db = db;
+        }
+
+        @Override
+        protected Void doInBackground(Void... v) {
+            db.getMemoDAO().deleteByMemoId(id);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
+            EventBus.getDefault().post(new MemoAdapterRefreshEvent());
+        }
     }
 }

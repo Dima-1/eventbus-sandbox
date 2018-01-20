@@ -77,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
                     for (long id : lvEvents.getCheckedItemIds()) {
                         eventsData.deleteByMemoID(id);
                     }
-                    memoAdapter.refreshEvents();
-
                 }
                 mode.finish();
                 return false;
@@ -130,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 // TODO: 12.01.2018 date + time store
                 Memo memo = new Memo(
                         String.valueOf(date.getText()), String.valueOf(note.getText()));
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
                 }
