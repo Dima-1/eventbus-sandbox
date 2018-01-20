@@ -11,7 +11,7 @@ import android.arch.persistence.room.PrimaryKey;
 public class Memo {
 
     @PrimaryKey(autoGenerate = true)
-    private int memoID;
+    private long memoID;
     @ColumnInfo(name = "date")
     private String date;
     @ColumnInfo(name = "note")
@@ -25,11 +25,11 @@ public class Memo {
         this.note = data;
     }
 
-    int getMemoID() {
+    long getMemoID() {
         return memoID;
     }
 
-    void setMemoID(int memoID) {
+    void setMemoID(long memoID) {
         this.memoID = memoID;
     }
 

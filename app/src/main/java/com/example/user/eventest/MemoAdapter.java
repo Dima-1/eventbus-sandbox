@@ -28,6 +28,11 @@ class MemoAdapter extends ArrayAdapter<Memo> {
         return true;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return getItem(position).getMemoID();
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
