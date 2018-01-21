@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/multiple_selected_item</item>
+        <item name="android:datePickerStyle">@style/CustomDatePickerStyle</item>
+    </style>
+
+    <style name="CustomDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:headerDayOfMonthTextAppearance">
+            @style/headerDayOfMonthTextAppearance
+        </item>
+    </style>
+
+    <style name="headerDayOfMonthTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textSize">32sp</item>
+    </style>
+</resources>

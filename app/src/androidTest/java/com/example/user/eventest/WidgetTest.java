@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 
 public class WidgetTest {
 
-    private static final String TEST_PACKAGE = "com.example.user.eventest";
+    private static final String TEST_PACKAGE = BuildConfig.APPLICATION_ID;
     private static final int LAUNCH_TIMEOUT = 5000;
     private UiDevice mDevice;
     private boolean isWidgetShown;
