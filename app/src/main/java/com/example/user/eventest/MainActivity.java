@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         CheckBox checkBox = findViewById(R.id.checkBox);
         date = findViewById(R.id.tvDate);
         time = findViewById(R.id.tvTime);
+        View vDateTimeBackground = findViewById(R.id.vDateTimeBackground);
         final EditText note = findViewById(R.id.etNote);
 
         memoAdapter = new MemoAdapter(this, eventsData);
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
         date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(eventsData.getDate()));
         time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(eventsData.getDate()));
-        date.setOnClickListener(new View.OnClickListener() {
+        vDateTimeBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
