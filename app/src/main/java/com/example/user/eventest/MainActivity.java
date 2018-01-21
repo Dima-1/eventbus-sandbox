@@ -31,27 +31,37 @@ import org.greenrobot.eventbus.Subscribe;
 import java.text.DateFormat;
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
-    private TextView date;
-    private TextView time;
+    @BindView(R.id.tvDate)
+    TextView date;
+    @BindView(R.id.tvTime)
+    TextView time;
+    @BindView(R.id.vDateTimeBackground)
+    View dateTimeBackground;
+    @BindView(R.id.checkBox)
+    CheckBox checkBox;
+    @BindView(R.id.lvEvents)
+    ListView lvEvents;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        eventsData = new EventsData(getApplicationContext());
-
         super.onCreate(savedInstanceState);
+        eventsData = new EventsData(getApplicationContext());
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        final ListView lvEvents = findViewById(R.id.lvEvents);
-        CheckBox checkBox = findViewById(R.id.checkBox);
-        date = findViewById(R.id.tvDate);
-        time = findViewById(R.id.tvTime);
         final EditText note = findViewById(R.id.etNote);
 
         memoAdapter = new MemoAdapter(this, eventsData);
@@ -138,35 +148,50 @@ public class MainActivity extends AppCompatActivity {
         });
 
         checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Context context = getApplicationContext();
-                Toast.makeText(context,
-                        String.valueOf(isChecked), Toast.LENGTH_SHORT).show();
-                new SaveStateAsyncTask(context)
-                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
-                String TAG = "on click " + this.getClass().getName();
-                Log.d(TAG, "UpdateWidgetAsyncTask");
-                new UpdateWidgetAsyncTask(context)
-                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        });
+//        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                Context context = getApplicationContext();
+//                Toast.makeText(context,
+//                        String.valueOf(isChecked), Toast.LENGTH_SHORT).show();
+//                new SaveStateAsyncTask(context)
+//                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
+//                String TAG = "on click " + this.getClass().getName();
+//                Log.d(TAG, "UpdateWidgetAsyncTask");
+//                new UpdateWidgetAsyncTask(context)
+//                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            }
+//
+//
+//        });
 
         date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(eventsData.getDate()));
         time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(eventsData.getDate()));
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("date", date.getText().toString());
-                bundle.putString("time", time.getText().toString());
 
-                DialogFragment dateTimeDialog = new DateTimeDialog();
-                dateTimeDialog.setArguments(bundle);
-                dateTimeDialog.show(getSupportFragmentManager(), "datePicker");
-            }
-        });
+    }
+
+    @OnCheckedChanged(R.id.checkBox)
+    void checkBoxChangeWidget(CompoundButton buttonView, boolean isChecked) {
+        Context context = getApplicationContext();
+        Toast.makeText(context,
+                String.valueOf(isChecked), Toast.LENGTH_SHORT).show();
+        new SaveStateAsyncTask(context)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
+        String TAG = "on click " + this.getClass().getName();
+        Log.d(TAG, "UpdateWidgetAsyncTask");
+        new UpdateWidgetAsyncTask(context)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @OnClick(R.id.vDateTimeBackground)
+    void showDateTimeDialog() {
+        Bundle bundle = new Bundle();
+        bundle.putString("date", date.getText().toString());
+        bundle.putString("time", time.getText().toString());
+
+        DialogFragment dateTimeDialog = new DateTimeDialog();
+        dateTimeDialog.setArguments(bundle);
+        dateTimeDialog.show(getSupportFragmentManager(), "datePicker");
     }
 
     @Override
