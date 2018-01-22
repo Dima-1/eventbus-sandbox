@@ -44,6 +44,7 @@ public class ExampleInstrumentedTest {
     @Test
     public void getAllData_isCorrect() throws Exception {
         eventsData.addMemo(testMemo);
+        Thread.sleep(1000);
         ArrayList<Memo> arrayList = eventsData.getAllData();
         assertFalse("getAllData not return list of memo", arrayList.isEmpty());
     }

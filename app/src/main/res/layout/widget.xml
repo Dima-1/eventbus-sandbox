@@ -33,7 +33,8 @@
         android:layout_below="@+id/tvTitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:text="@string/checkbox" />
+        android:text="@string/checkbox"
+        android:textColor="#000" />
 
     <ListView
         android:id="@+id/lvItemList"

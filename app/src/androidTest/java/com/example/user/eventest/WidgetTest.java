@@ -2,6 +2,7 @@ package com.example.user.eventest;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
@@ -29,6 +30,7 @@ import static org.junit.Assert.assertTrue;
 public class WidgetTest {
 
     private static final String TEST_PACKAGE = BuildConfig.APPLICATION_ID;
+    private String TEST_LAUNCHER_PACKAGE;
     private static final int LAUNCH_TIMEOUT = 5000;
     private UiDevice mDevice;
     private boolean isWidgetShown;
@@ -36,11 +38,19 @@ public class WidgetTest {
     @Before
     public void startMainActivityFromHomeScreen() {
 
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+            TEST_LAUNCHER_PACKAGE = "com.android.launcher";
+        } else {
+            TEST_LAUNCHER_PACKAGE = TEST_PACKAGE;
+        }
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
         mDevice.pressHome();
-        isWidgetShown = mDevice.hasObject(By.pkg(TEST_PACKAGE)
-                .clazz("android.widget.RelativeLayout"));
+        isWidgetShown = mDevice.hasObject(By.pkg(TEST_LAUNCHER_PACKAGE)
+                .clazz(".RelativeLayout"));
+        boolean isTestPackageWidget = mDevice.hasObject(By.pkg(TEST_LAUNCHER_PACKAGE)
+                .clazz(".TextView").res(TEST_PACKAGE, "tvAllBackground"));
+        isWidgetShown &= isTestPackageWidget;
+
 
         // Wait for launcher
         final String launcherPackage = mDevice.getLauncherPackageName();
@@ -76,7 +86,7 @@ public class WidgetTest {
         checkBox.click();
         mDevice.pressHome();
 
-        UiObject alarmAlert = mDevice.findObject(new UiSelector().packageName(TEST_PACKAGE)
+        UiObject alarmAlert = mDevice.findObject(new UiSelector().packageName(TEST_LAUNCHER_PACKAGE)
                 .className("android.widget.TextView")
                 .text(newWidgetValue));
         assertTrue("Timeout while waiting for widget string changed",
