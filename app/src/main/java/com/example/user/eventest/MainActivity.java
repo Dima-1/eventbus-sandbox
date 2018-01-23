@@ -3,6 +3,7 @@ package com.example.user.eventest;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -35,6 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
+import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
@@ -44,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     TextView date;
     @BindView(R.id.tvTime)
     TextView time;
-    @BindView(R.id.vDateTimeBackground)
-    View dateTimeBackground;
     @BindView(R.id.checkBox)
     CheckBox checkBox;
     @BindView(R.id.lvEvents)
@@ -68,8 +69,16 @@ public class MainActivity extends AppCompatActivity {
         lvEvents.setAdapter(memoAdapter);
         lvEvents.setSelector(R.color.colorMemoSelect);
         lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lvEvents.setMultiChoiceModeListener(getMemoListMultiChoiceListener());
 
-        lvEvents.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+        checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
+        date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(eventsData.getDate()));
+        time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(eventsData.getDate()));
+    }
+
+    @NonNull
+    private MultiChoiceModeListener getMemoListMultiChoiceListener() {
+        return new MultiChoiceModeListener() {
 
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 mode.getMenuInflater().inflate(R.menu.action_mode_menu, menu);
@@ -101,73 +110,30 @@ public class MainActivity extends AppCompatActivity {
                 String TAG = "ActionMode";
                 Log.d(TAG, "position = " + position + ", checked = " + checked);
             }
-        });
+        };
+    }
+
+    @OnItemClick(R.id.lvEvents)
+    void getSelectedMemoToEdit(AdapterView<?> adapter, View v, int position, long id) {
+        Memo memo = memoAdapter.getItem(position);
+        String selectedMemoNote = memo != null ? memo.getNote() : null;
+        String selectedMemoDate = memo != null ? memo.getDate() : null;
+        note.setText(selectedMemoNote);
+        date.setText(selectedMemoDate);
+    }
 
 
-
-       /* lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            public boolean onItemLongClick(AdapterView<?> adapter, View v, int position, long id) {
-
-                Memo selItem = memoAdapter.getItem(position); //
-                String value = selItem != null ? selItem.getNote() : null; //getter method
-                Toast.makeText(getApplicationContext(),
-                        String.valueOf(position) + ":" + value, Toast.LENGTH_SHORT).show();
-                Memo memo = memoAdapter.getItem(position);
-                eventsData.deleteMemo(memo);
-                memoAdapter.refreshEvents();
-                return false;
-            }
-        });*/
-
-        lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-
-                Memo memo = memoAdapter.getItem(position);
-                String selectedMemoNote = memo != null ? memo.getNote() : null;
-                String selectedMemoDate = memo != null ? memo.getDate() : null;
-                note.setText(selectedMemoNote);
-                date.setText(selectedMemoDate);
-            }
-        });
-
-        note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView note, int actionId, KeyEvent event) {
-                // TODO: 12.01.2018 date + time store
-                Memo memo = new Memo(
-                        String.valueOf(date.getText()), String.valueOf(note.getText()));
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
-                }
-                eventsData.addMemo(memo);
-                return false;
-            }
-        });
-
-        checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
-//        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                Context context = getApplicationContext();
-//                Toast.makeText(context,
-//                        String.valueOf(isChecked), Toast.LENGTH_SHORT).show();
-//                new SaveStateAsyncTask(context)
-//                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
-//                String TAG = "on click " + this.getClass().getName();
-//                Log.d(TAG, "UpdateWidgetAsyncTask");
-//                new UpdateWidgetAsyncTask(context)
-//                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//            }
-//
-//
-//        });
-
-        date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(eventsData.getDate()));
-        time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(eventsData.getDate()));
-
+    @OnEditorAction(R.id.etNote)
+    boolean saveMemoAfterEdit(TextView note, int actionId, KeyEvent event) {
+        // TODO: 12.01.2018 date + time store
+        Memo memo = new Memo(
+                String.valueOf(date.getText()), String.valueOf(note.getText()));
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
+        }
+        eventsData.addMemo(memo);
+        return false;
     }
 
     @OnCheckedChanged(R.id.checkBox)
@@ -222,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.abmenu, menu);
+        getMenuInflater().inflate(R.menu.action_bar_menu, menu);
         return true;
     }
 }

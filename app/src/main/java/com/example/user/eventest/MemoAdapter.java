@@ -30,7 +30,8 @@ class MemoAdapter extends ArrayAdapter<Memo> {
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).getMemoID();
+        Memo memo = getItem(position);
+        return memo != null ? memo.getMemoID() : 0;
     }
 
     @NonNull
