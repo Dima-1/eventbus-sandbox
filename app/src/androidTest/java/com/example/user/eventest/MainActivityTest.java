@@ -103,7 +103,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void checkDateDialog() throws ReflectiveOperationException {
+    public void checkDateTimeDialog() throws ReflectiveOperationException {
         EventsData eventsData =
                 new EventsData(mActivityTestRule.getActivity().getApplicationContext());
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);

@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkBox;
     @BindView(R.id.lvEvents)
     ListView lvEvents;
+    @BindView(R.id.etNote)
+    EditText note;
 
 
     @Override
@@ -59,10 +61,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-
-        final EditText note = findViewById(R.id.etNote);
+        setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
 
         memoAdapter = new MemoAdapter(this, eventsData);
         lvEvents.setAdapter(memoAdapter);
