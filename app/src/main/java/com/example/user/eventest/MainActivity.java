@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
@@ -44,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     TextView date;
     @BindView(R.id.tvTime)
     TextView time;
-    @BindView(R.id.vDateTimeBackground)
-    View dateTimeBackground;
     @BindView(R.id.checkBox)
     CheckBox checkBox;
     @BindView(R.id.lvEvents)
@@ -132,42 +131,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        note.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView note, int actionId, KeyEvent event) {
-                // TODO: 12.01.2018 date + time store
-                Memo memo = new Memo(
-                        String.valueOf(date.getText()), String.valueOf(note.getText()));
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
-                }
-                eventsData.addMemo(memo);
-                return false;
-            }
-        });
-
         checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
-//        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                Context context = getApplicationContext();
-//                Toast.makeText(context,
-//                        String.valueOf(isChecked), Toast.LENGTH_SHORT).show();
-//                new SaveStateAsyncTask(context)
-//                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
-//                String TAG = "on click " + this.getClass().getName();
-//                Log.d(TAG, "UpdateWidgetAsyncTask");
-//                new UpdateWidgetAsyncTask(context)
-//                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//            }
-//
-//
-//        });
-
         date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(eventsData.getDate()));
         time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(eventsData.getDate()));
+    }
 
+
+    @OnEditorAction(R.id.etNote)
+    boolean saveMemoAfterEdit(TextView note, int actionId, KeyEvent event) {
+        // TODO: 12.01.2018 date + time store
+        Memo memo = new Memo(
+                String.valueOf(date.getText()), String.valueOf(note.getText()));
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
+        }
+        eventsData.addMemo(memo);
+        return false;
     }
 
     @OnCheckedChanged(R.id.checkBox)

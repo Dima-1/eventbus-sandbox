@@ -30,13 +30,13 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DateTimeDialog extends DialogFragment {
     private Date mDate;
     boolean isDatePickerShown = false;
     @BindView(R.id.btnDateTime)
     Button butDateTime;
-    private View dateTimeLayout;
     @BindView(R.id.datePicker)
     DatePicker datePicker;
     @BindView(R.id.timePicker)
@@ -46,7 +46,6 @@ public class DateTimeDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Calendar c = Calendar.getInstance();
         Bundle bundle = getArguments();
         String date = bundle.getString("date", "");
         String time = bundle.getString("time", "");
@@ -56,47 +55,24 @@ public class DateTimeDialog extends DialogFragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        c.setTime(mDate);
+
+        final Calendar calendarDate = Calendar.getInstance();
+        calendarDate.setTime(mDate);
         LayoutInflater li = LayoutInflater.from(getActivity());
-        dateTimeLayout = li.inflate(R.layout.date_time_picker, null);
+        View dateTimeLayout = li.inflate(R.layout.date_time_picker, null);
         ButterKnife.bind(this, dateTimeLayout);
 
-        updateDatePicker(c);
-
-        updateTimePicker(c);
-
-        butDateTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isDatePickerShown) {
-                    datePicker.setVisibility(View.INVISIBLE);
-                    timePicker.setVisibility(View.VISIBLE);
-                    butDateTime.setText(R.string.date);
-                    butDateTime.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_date_range_black_48px, 0, 0, 0);
-                } else {
-                    datePicker.setVisibility(View.VISIBLE);
-                    timePicker.setVisibility(View.INVISIBLE);
-                    butDateTime.setText(R.string.time);
-                    butDateTime.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_access_time_black_48px, 0, 0, 0);
-                }
-                isDatePickerShown = !isDatePickerShown;
-            }
-        });
+        updateDatePicker(calendarDate);
+        updateTimePicker(calendarDate);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder
                 .setView(dateTimeLayout)
                 .setCancelable(false)
-                .setPositiveButton(R.string.OK
-                        ,
+                .setPositiveButton(R.string.OK,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Calendar calendar = Calendar.getInstance();
-                                int dayOfMonth = datePicker.getDayOfMonth();
-                                int month = datePicker.getMonth();
-                                int year = datePicker.getYear();
                                 int hour;
                                 int minute;
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -106,7 +82,10 @@ public class DateTimeDialog extends DialogFragment {
                                     hour = timePicker.getHour();
                                     minute = timePicker.getMinute();
                                 }
-                                calendar.set(year, month, dayOfMonth, hour, minute);
+                                calendar.set(datePicker.getYear(),
+                                        datePicker.getMonth(),
+                                        datePicker.getDayOfMonth(),
+                                        hour, minute);
                                 EventBus.getDefault().post(new DatePickerUpdateEvent(calendar));
                             }
                         })
@@ -119,6 +98,24 @@ public class DateTimeDialog extends DialogFragment {
 
         return alertDialogBuilder.create();
 
+    }
+
+    @OnClick(R.id.btnDateTime)
+    void switchPickers() {
+        if (isDatePickerShown) {
+            datePicker.setVisibility(View.INVISIBLE);
+            timePicker.setVisibility(View.VISIBLE);
+            butDateTime.setText(R.string.date);
+            butDateTime.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_date_range_black_48px, 0, 0, 0);
+        } else {
+            datePicker.setVisibility(View.VISIBLE);
+            timePicker.setVisibility(View.INVISIBLE);
+            butDateTime.setText(R.string.time);
+            butDateTime.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_access_time_black_48px, 0, 0, 0);
+        }
+        isDatePickerShown = !isDatePickerShown;
     }
 
     private void updateTimePicker(Calendar c) {
