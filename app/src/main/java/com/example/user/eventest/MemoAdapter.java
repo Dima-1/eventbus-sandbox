@@ -43,8 +43,9 @@ class MemoAdapter extends ArrayAdapter<Memo> {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.list_row, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.tvDate = convertView.findViewById(R.id.tvDate);
             viewHolder.tvContent = convertView.findViewById(R.id.tvContent);
+            viewHolder.tvDate = convertView.findViewById(R.id.tvDate);
+            viewHolder.tvTime = convertView.findViewById(R.id.tvTime);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -52,7 +53,8 @@ class MemoAdapter extends ArrayAdapter<Memo> {
         Memo memo = getItem(position);
         if (memo != null) {
             viewHolder.tvContent.setText(memo.getNote());
-            viewHolder.tvDate.setText(memo.getDate());
+            viewHolder.tvDate.setText(memo.getDateString());
+            viewHolder.tvTime.setText(memo.getTimeString());
         }
         return convertView;
     }
@@ -66,5 +68,6 @@ class MemoAdapter extends ArrayAdapter<Memo> {
     static class ViewHolder {
         TextView tvContent;
         TextView tvDate;
+        TextView tvTime;
     }
 }

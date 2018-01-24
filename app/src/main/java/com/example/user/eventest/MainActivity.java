@@ -117,9 +117,11 @@ public class MainActivity extends AppCompatActivity {
     void getSelectedMemoToEdit(AdapterView<?> adapter, View v, int position, long id) {
         Memo memo = memoAdapter.getItem(position);
         String selectedMemoNote = memo != null ? memo.getNote() : null;
-        String selectedMemoDate = memo != null ? memo.getDate() : null;
+        String selectedMemoDate = memo != null ? memo.getDateString() : null;
+        String selectedMemoTime = memo != null ? memo.getTimeString() : null;
         note.setText(selectedMemoNote);
         date.setText(selectedMemoDate);
+        time.setText(selectedMemoTime);
     }
 
 
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     boolean saveMemoAfterEdit(TextView note, int actionId, KeyEvent event) {
         // TODO: 12.01.2018 date + time store
         Memo memo = new Memo(
-                String.valueOf(date.getText()), String.valueOf(note.getText()));
+                date.getText().toString(), note.getText().toString());
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(note.getWindowToken(), 0);

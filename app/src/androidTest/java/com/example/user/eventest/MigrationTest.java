@@ -7,14 +7,16 @@ import android.arch.persistence.room.testing.MigrationTestHelper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.user.eventest.room.AppDatabase;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
 
-import static com.example.user.eventest.AppDatabase.MIGRATION_1_2;
-import static com.example.user.eventest.AppDatabase.MIGRATION_2_3;
+import static com.example.user.eventest.room.AppDatabase.MIGRATION_1_2;
+import static com.example.user.eventest.room.AppDatabase.MIGRATION_2_3;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -36,16 +38,18 @@ public class MigrationTest {
         SupportSQLiteDatabase db =
                 testHelper.createDatabase(AppDatabase.DATABASE_NAME, 2);
         Memo testMemo = new Memo("21/12/32", "test");
+        String testDate = "2032-12-21 23:45:30";
+        String testNote = "test";
         db.execSQL("INSERT INTO Memo(name, note) " +
-                "VALUES ('" + testMemo.getDate() + "','" + testMemo.getNote() + "')");
+                "VALUES ('" + testDate + "','" + testNote + "')");
         db.close();
 
         testHelper.runMigrationsAndValidate(
                 AppDatabase.DATABASE_NAME, 3, true, MIGRATION_2_3);
         Memo dbMemo = getMigratedRoomDatabase().getMemoDAO()
-                .getConcreteMemo(testMemo.getDate(), testMemo.getNote());
+                .getConcreteMemo(testMemo.getDateString(), testMemo.getNote());
         assertEquals(dbMemo.getNote(), testMemo.getNote());
-        assertEquals(dbMemo.getDate(), testMemo.getDate());
+        assertEquals(dbMemo.getDateString(), testMemo.getDateString());
     }
 
     private AppDatabase getMigratedRoomDatabase() {

@@ -1,4 +1,4 @@
-package com.example.user.eventest;
+package com.example.user.eventest.room;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
@@ -8,18 +8,20 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.example.user.eventest.Memo;
+
 /*
  * Created by User on 27.12.2017.
  */
 @Database(entities = {Memo.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
-    static final String DATABASE_NAME = "database.db";
+    public static final String DATABASE_NAME = "database.db";
     private static AppDatabase INSTANCE;
     private static final Object sLock = new Object();
 
     public abstract MemoDAO getMemoDAO();
 
-    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
         }
@@ -28,7 +30,7 @@ public abstract class AppDatabase extends RoomDatabase {
     /**
      * Rename field note to date
      */
-    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE Memo RENAME TO orig_Memo;");
@@ -46,7 +48,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    static AppDatabase getInstance(Context context) {
+    public static AppDatabase getInstance(Context context) {
         synchronized (sLock) {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),

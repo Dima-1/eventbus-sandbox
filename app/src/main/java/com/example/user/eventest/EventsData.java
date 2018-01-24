@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
+import com.example.user.eventest.room.AppDatabase;
+import com.example.user.eventest.room.DateConverterDB;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -76,6 +78,7 @@ public class EventsData {
     static class GetConcreteMemoTask extends AsyncTask<AppDatabase, Void, Memo> {
         private Memo memo;
         private AppDatabase db;
+        DateConverterDB dateConverter;
 
         GetConcreteMemoTask(Memo memo, AppDatabase db) {
             this.memo = memo;
@@ -84,7 +87,8 @@ public class EventsData {
 
         @Override
         protected Memo doInBackground(AppDatabase... v) {
-            return db.getMemoDAO().getConcreteMemo(memo.getDate(), memo.getNote());
+            return db.getMemoDAO().getConcreteMemo(
+                    dateConverter.stringFromDate(memo.getDate()), memo.getNote());
         }
 
         @Override
