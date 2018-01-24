@@ -8,12 +8,15 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.example.user.eventest.room.AppDatabase;
+import com.example.user.eventest.room.DateConverterDB;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 import static com.example.user.eventest.room.AppDatabase.MIGRATION_1_2;
 import static com.example.user.eventest.room.AppDatabase.MIGRATION_2_3;
@@ -37,17 +40,21 @@ public class MigrationTest {
     public void testMigration() throws IOException {
         SupportSQLiteDatabase db =
                 testHelper.createDatabase(AppDatabase.DATABASE_NAME, 2);
-        Memo testMemo = new Memo("21/12/32", "test");
-        String testDate = "2032-12-21 23:45:30";
-        String testNote = "test";
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2032, 11, 21, 12, 30);
+        Date date = calendar.getTime();
+        Memo testMemo = new Memo(date, "test");
+        DateConverterDB dateConverterDB = new DateConverterDB();
         db.execSQL("INSERT INTO Memo(name, note) " +
-                "VALUES ('" + testDate + "','" + testNote + "')");
+                "VALUES ('" + dateConverterDB.stringFromDate(testMemo.getDate())
+                + "','" + testMemo.getNote() + "')");
         db.close();
 
         testHelper.runMigrationsAndValidate(
                 AppDatabase.DATABASE_NAME, 3, true, MIGRATION_2_3);
         Memo dbMemo = getMigratedRoomDatabase().getMemoDAO()
-                .getConcreteMemo(testMemo.getDateString(), testMemo.getNote());
+                .getConcreteMemo(dateConverterDB.stringFromDate(testMemo.getDate()), testMemo.getNote());
         assertEquals(dbMemo.getNote(), testMemo.getNote());
         assertEquals(dbMemo.getDateString(), testMemo.getDateString());
     }
