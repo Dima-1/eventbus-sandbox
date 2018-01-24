@@ -1,6 +1,5 @@
 package com.example.user.eventest;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -20,10 +19,8 @@ public class Memo {
 
     @PrimaryKey(autoGenerate = true)
     private long memoID;
-    @ColumnInfo(name = "date")
     @TypeConverters({DateConverterDB.class})
     private Date date;
-    @ColumnInfo(name = "note")
     private String note;
 
     @Ignore
@@ -42,6 +39,18 @@ public class Memo {
 
         try {
             this.date = dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        this.note = data;
+    }
+
+    public Memo(String date, String time, String data) {
+        DateFormat dateFormat = DateFormat
+                .getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
+        try {
+            this.date = dateFormat.parse(date + " " + time);
         } catch (ParseException e) {
             e.printStackTrace();
         }

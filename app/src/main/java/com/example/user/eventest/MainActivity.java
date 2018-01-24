@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     boolean saveMemoAfterEdit(TextView note, int actionId, KeyEvent event) {
         // TODO: 12.01.2018 date + time store
         Memo memo = new Memo(
-                date.getText().toString(), note.getText().toString());
+                date.getText().toString(), time.getText().toString(), note.getText().toString());
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
