@@ -78,7 +78,7 @@ public class EventsData {
     static class GetConcreteMemoTask extends AsyncTask<AppDatabase, Void, Memo> {
         private Memo memo;
         private AppDatabase db;
-        DateConverterDB dateConverter;
+        DateConverterDB dateConverter = new DateConverterDB();
 
         GetConcreteMemoTask(Memo memo, AppDatabase db) {
             this.memo = memo;

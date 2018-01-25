@@ -110,13 +110,13 @@ public class DateTimeDialog extends DialogFragment {
             timePicker.setVisibility(View.VISIBLE);
             butDateTime.setText(R.string.date);
             butDateTime.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_date_range_black_48px, 0, 0, 0);
+                    R.drawable.ic_date_range_black_24px, 0, 0, 0);
         } else {
             datePicker.setVisibility(View.VISIBLE);
             timePicker.setVisibility(View.INVISIBLE);
             butDateTime.setText(R.string.time);
             butDateTime.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_access_time_black_48px, 0, 0, 0);
+                    R.drawable.ic_access_time_black_24px, 0, 0, 0);
         }
         isDatePickerShown = !isDatePickerShown;
     }
