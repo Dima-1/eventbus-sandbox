@@ -61,7 +61,7 @@ public class MainActivityTest {
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                7),
+                                6),
                         isDisplayed()));
         CheckBox checkBox = mActivityTestRule.getActivity().findViewById(R.id.checkBox);
         Boolean checkClick = checkBox.isChecked();
