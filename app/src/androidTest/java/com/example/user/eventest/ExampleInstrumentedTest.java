@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -31,7 +32,10 @@ public class ExampleInstrumentedTest {
     @Before
     public void init() {
         eventsData = new EventsData(InstrumentationRegistry.getTargetContext());
-        testMemo = new Memo("10/10/10", "Memo " + Calendar.getInstance().getTimeInMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2010, 10, 10, 11, 12);
+        Date testDate = calendar.getTime();
+        testMemo = new Memo(testDate, "Memo " + Calendar.getInstance().getTimeInMillis());
     }
 
     @Test
@@ -52,14 +56,15 @@ public class ExampleInstrumentedTest {
     @Test
     public void addition_isCorrect() throws Exception {
         eventsData.addMemo(testMemo);
-        Thread.sleep(1000);
+        Thread.sleep(500);
 
         Memo readMemo = eventsData.getConcreteMemo(testMemo);
-        assertThat(testMemo.getDate(), equalTo(readMemo.getDate()));
+        assertThat(testMemo.getDateString(), equalTo(readMemo.getDateString()));
+        assertThat(testMemo.getTimeString(), equalTo(readMemo.getTimeString()));
         assertThat(testMemo.getNote(), equalTo(readMemo.getNote()));
 
         eventsData.deleteMemo(readMemo);
-        Thread.sleep(1000);
+        Thread.sleep(500);
         readMemo = eventsData.getConcreteMemo(testMemo);
         assertNull(readMemo);
     }
