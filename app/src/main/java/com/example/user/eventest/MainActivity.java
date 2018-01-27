@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
     ListView lvEvents;
     @BindView(R.id.etNote)
     EditText note;
+    @BindView(R.id.fabNewMemo)
+    FloatingActionButton fabNewMemo;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
 
     @Override
@@ -90,16 +97,27 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                int amountDeleted = lvEvents.getCheckedItemCount();
                 if (item.getItemId() == R.id.menuAmDelete) {
-                    Toast.makeText(getApplicationContext(),
-                            "delete", Toast.LENGTH_SHORT).show();
                     for (long id : lvEvents.getCheckedItemIds()) {
                         eventsData.deleteByMemoID(id);
                     }
                 }
                 mode.finish();
+                String plural = amountDeleted > 1 ? "s" : "";
+                Snackbar.make(coordinatorLayout, "Delete "
+                                + amountDeleted + " memo" + plural,
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction("UNDO", snackBarOnClickListener).show();
                 return false;
             }
+
+            View.OnClickListener snackBarOnClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
+                }
+            };
 
             public void onDestroyActionMode(ActionMode mode) {
             }
@@ -127,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnEditorAction(R.id.etNote)
     boolean saveMemoAfterEdit(TextView note, int actionId, KeyEvent event) {
-        // TODO: 12.01.2018 date + time store
         Memo memo = new Memo(
                 date.getText().toString(), time.getText().toString(), note.getText().toString());
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -160,6 +177,11 @@ public class MainActivity extends AppCompatActivity {
         DialogFragment dateTimeDialog = new DateTimeDialog();
         dateTimeDialog.setArguments(bundle);
         dateTimeDialog.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    @OnClick(R.id.fabNewMemo)
+    void newMemo(View view) {
+        Snackbar.make(view, "New memo created", Snackbar.LENGTH_LONG).show();
     }
 
     @Override
