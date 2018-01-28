@@ -10,7 +10,7 @@
         <item name="android:activatedBackgroundIndicator">@drawable/multiple_selected_item</item>
     </style>
 
-    <style name="DialogTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DateTimeDialogTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowEnterAnimation">@anim/grow_up</item>
         <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>

@@ -98,8 +98,10 @@ public class DateTimeDialog extends DialogFragment {
                                 dialog.cancel();
                             }
                         });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DateTimeDialogTheme;
 
-        return alertDialogBuilder.create();
+        return alertDialog;
 
     }
 
