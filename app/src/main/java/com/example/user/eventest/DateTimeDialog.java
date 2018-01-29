@@ -143,13 +143,15 @@ public class DateTimeDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            int width = getResources().getDimensionPixelSize(R.dimen.popup_width);
-            int height = getResources().getDimensionPixelSize(R.dimen.popup_height);
-            Window window = getDialog().getWindow();
-            if (window != null) {
-                window.setLayout(width, height);
-            }
+        setDialogSizeByAPI();
+    }
+
+    private void setDialogSizeByAPI() {
+        int width = getResources().getDimensionPixelSize(R.dimen.popup_width);
+        int height = getResources().getDimensionPixelSize(R.dimen.popup_height);
+        Window window = getDialog().getWindow();
+        if (window != null) {
+            window.setLayout(width, height);
         }
     }
 
