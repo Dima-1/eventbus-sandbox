@@ -15,8 +15,6 @@ android:
     - android-$EMULATOR_API
     - sys-img-armeabi-v7a-android-$EMULATOR_API
     - extra-android-m2repository
-    licenses:
-    - ".+"
 
 before_install:
   - yes | sdkmanager "platforms;android-26"
