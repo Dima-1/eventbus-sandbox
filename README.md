@@ -5,4 +5,5 @@
 
 Testing EventBus.<br>
 Was used Room Persistence library and ButterKnife library.
+Espresso tests.
 
