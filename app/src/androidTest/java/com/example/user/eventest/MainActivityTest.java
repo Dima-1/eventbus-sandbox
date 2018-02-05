@@ -2,7 +2,6 @@ package com.example.user.eventest;
 
 
 import android.content.Context;
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -10,7 +9,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -35,14 +33,12 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.not;
 
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -53,22 +49,6 @@ public class MainActivityTest {
     public ActivityTestRule<MainActivity> mActivityTestRule =
             new ActivityTestRule<>(MainActivity.class);
 
-    @Test
-    public void checkBoxToggle() {
-        ViewInteraction appCompatCheckBox = onView(
-                allOf(withId(R.id.checkBox), withText("CheckBox"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                6),
-                        isDisplayed()));
-        CheckBox checkBox = mActivityTestRule.getActivity().findViewById(R.id.checkBox);
-        Boolean checkClick = checkBox.isChecked();
-        appCompatCheckBox.perform(click());
-        Matcher<View> matcher = checkClick ? not(isChecked()) : isChecked();
-        onView(withId(R.id.checkBox)).check(matches(matcher));
-    }
 
     @Test
     public void checkListViewAndToolbar() {

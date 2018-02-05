@@ -1,7 +1,6 @@
 package com.example.user.eventest;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -19,8 +18,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,7 +34,6 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnItemClick;
@@ -50,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
     TextView date;
     @BindView(R.id.tvTime)
     TextView time;
-    @BindView(R.id.checkBox)
-    CheckBox checkBox;
     @BindView(R.id.lvEvents)
     ListView lvEvents;
     @BindView(R.id.etNote)
@@ -78,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lvEvents.setMultiChoiceModeListener(getMemoListMultiChoiceListener());
 
-        checkBox.setChecked(eventsData.getPreferences().getBoolean(PREF_TEST_STATE, false));
         date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(eventsData.getDate()));
         time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(eventsData.getDate()));
     }
@@ -155,18 +148,6 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    @OnCheckedChanged(R.id.checkBox)
-    void checkBoxChangeWidget(CompoundButton buttonView, boolean isChecked) {
-        Context context = getApplicationContext();
-        Toast.makeText(context,
-                String.valueOf(isChecked), Toast.LENGTH_SHORT).show();
-        new SaveStateAsyncTask(context)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isChecked);
-        String TAG = "on click " + this.getClass().getName();
-        Log.d(TAG, "UpdateWidgetAsyncTask");
-        new UpdateWidgetAsyncTask(context)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
 
     @OnClick(R.id.vDateTimeBackground)
     void showDateTimeDialog() {
