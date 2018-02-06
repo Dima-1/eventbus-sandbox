@@ -54,8 +54,7 @@ public class WidgetProvider extends AppWidgetProvider {
             appWidgetManager.updateAppWidget(widgetID, widgetView);
 
             RemoteViews remoteViews = updateWidgetListView(context, widgetID);
-            appWidgetManager.updateAppWidget(widgetID,
-                    remoteViews);
+            appWidgetManager.updateAppWidget(widgetID, remoteViews);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("Not data shared", e.toString());
         }
