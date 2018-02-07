@@ -137,7 +137,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     @OnEditorAction(R.id.etNote)
-    boolean saveMemoAfterEdit(TextView note, int actionId, KeyEvent event) {
+    boolean onEditorAction(TextView note, int actionId, KeyEvent event) {
+        saveMemoAfterEdit(note);
+        return false;
+    }
+
+    private void saveMemoAfterEdit(TextView note) {
         Memo memo = new Memo(
                 date.getText().toString(), time.getText().toString(), note.getText().toString());
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -145,9 +150,7 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
         }
         eventsData.addMemo(memo);
-        return false;
     }
-
 
     @OnClick(R.id.vDateTimeBackground)
     void showDateTimeDialog() {
@@ -162,7 +165,12 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.fabNewMemo)
     void newMemo(View view) {
-        Snackbar.make(view, "New memo created", Snackbar.LENGTH_LONG).show();
+        if (note.hasFocus()) {
+            saveMemoAfterEdit(note);
+            note.clearFocus();
+        } else {
+            Snackbar.make(view, "New memo created", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
