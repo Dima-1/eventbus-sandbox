@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 date.getText().toString(), time.getText().toString(), note.getText().toString());
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.hideSoftInputFromWindow(note.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
         }
         eventsData.addMemo(memo);
     }
