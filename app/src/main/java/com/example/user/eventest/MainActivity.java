@@ -1,6 +1,7 @@
 package com.example.user.eventest;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -150,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
         }
         eventsData.addMemo(memo);
+
+        new UpdateWidgetAsyncTask(this)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @OnClick(R.id.vDateTimeBackground)

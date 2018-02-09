@@ -35,7 +35,7 @@ class SaveStateAsyncTask extends AsyncTask<Boolean, Void, Void> {
     private void saveState(boolean isChecked) {
         try {
             Context mainAppContext =
-                    context.createPackageContext("com.example.user.eventest", 0);
+                    context.createPackageContext(BuildConfig.APPLICATION_ID, 0);
 
             Log.d("saveState", "StartDelay");
             try {

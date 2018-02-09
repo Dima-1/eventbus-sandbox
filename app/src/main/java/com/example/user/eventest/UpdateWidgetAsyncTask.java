@@ -5,9 +5,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.example.user.eventest.eventbus.events.DataUpdateEvent;
+import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
 import com.example.user.eventest.widget.WidgetProvider;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,9 +33,8 @@ class UpdateWidgetAsyncTask extends AsyncTask<Void, Void, Void> {
         }
 
         @Subscribe
-        public void onDataUpdateEvent(DataUpdateEvent event) {
+        public void onDataUpdateEvent(MemoAdapterRefreshEvent event) {
             String TAG = "event receiver " + this.getClass().getName();
-            Log.d(TAG, event.getMessage());
             updateWidget();
             EventBus.getDefault().unregister(this);
         }
