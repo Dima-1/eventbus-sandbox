@@ -26,21 +26,11 @@
         android:textColor="#000"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tvCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTitle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:text="@string/checkbox"
-        android:textColor="#000" />
-
     <ListView
         android:id="@+id/lvItemList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tvCheck"
+        android:layout_below="@+id/tvTitle"
         android:layout_marginTop="15dp" />
 
 </RelativeLayout>

@@ -73,7 +73,7 @@ class ListWidgetProvider implements RemoteViewsFactory {
                 context.getPackageName(), R.layout.widget_list_row);
         Memo listItem = eventItemList.get(position);
         remoteView.setTextViewText(R.id.tvDate, listItem.getDateString());
-        remoteView.setTextViewText(R.id.tvTime, listItem.getDateString());
+        remoteView.setTextViewText(R.id.tvTime, listItem.getTimeString());
         remoteView.setTextViewText(R.id.tvContent, listItem.getNote());
 
         return remoteView;

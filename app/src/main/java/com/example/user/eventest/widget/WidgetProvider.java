@@ -4,14 +4,10 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.example.user.eventest.MainActivity;
 import com.example.user.eventest.R;
 
 import java.util.Arrays;
@@ -38,26 +34,14 @@ public class WidgetProvider extends AppWidgetProvider {
 
     void updateWidget(Context context, AppWidgetManager appWidgetManager,
                       int widgetID) {
-        try {
-            Context mainAppContext = context
-                    .createPackageContext("com.example.user.eventest", 0);
-            SharedPreferences pref = PreferenceManager
-                    .getDefaultSharedPreferences(mainAppContext);
-            boolean prefTestState = pref.getBoolean(MainActivity.PREF_TEST_STATE, false);
-            Log.d(TAG, MainActivity.PREF_TEST_STATE + " " + prefTestState);
-            RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
-            widgetView.setTextViewText(R.id.tvCheck, String.valueOf(prefTestState));
 
             Intent updateIntent = new Intent(context, WidgetProvider.class);
             updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetID});
-            appWidgetManager.updateAppWidget(widgetID, widgetView);
 
             RemoteViews remoteViews = updateWidgetListView(context, widgetID);
             appWidgetManager.updateAppWidget(widgetID, remoteViews);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString());
-        }
+
     }
 
     private RemoteViews updateWidgetListView(Context context,
