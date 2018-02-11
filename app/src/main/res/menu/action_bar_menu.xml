@@ -8,10 +8,14 @@
         android:title="@string/action_edit"
         app:showAsAction="ifRoom" />
 
-    <!-- Settings, should always be in the overflow -->
     <item
         android:id="@+id/menuSettings"
         android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menuAbout"
+        android:title="@string/about"
         app:showAsAction="never" />
 
 </menu>

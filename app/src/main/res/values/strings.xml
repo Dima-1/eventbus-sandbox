@@ -14,4 +14,6 @@
     <string name="cancel">Cancel</string>
     <string name="OK">OK</string>
     <string name="action_edit">edit</string>
+    <string name="about">About</string>
+    <string name="version">Version:</string>
 </resources>
