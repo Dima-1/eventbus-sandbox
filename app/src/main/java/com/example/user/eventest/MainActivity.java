@@ -1,6 +1,7 @@
 package com.example.user.eventest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -213,16 +214,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.menuAbout) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.about).setMessage(R.string.about)
-                    .setMessage(getString(R.string.version)
-                            + BuildConfig.VERSION_NAME + " "
-                            + BuildConfig.VERSION_CODE);
-            AlertDialog dialog = builder.create();
-            dialog.show();
+        switch (item.getItemId()) {
+            case R.id.menuAbout:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.about).setMessage(R.string.about)
+                        .setMessage(getString(R.string.version)
+                                + BuildConfig.VERSION_NAME + " "
+                                + BuildConfig.VERSION_CODE);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return true;
+            case R.id.menuSettings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }
