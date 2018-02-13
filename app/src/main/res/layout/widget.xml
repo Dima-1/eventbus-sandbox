@@ -8,22 +8,24 @@
         android:id="@+id/tvAllBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff" />
+        android:background="@android:color/white" />
 
     <TextView
         android:id="@+id/tvBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#00a2ff" />
+        android:background="@android:color/white" />
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
         android:gravity="center"
+        android:padding="2dp"
         android:text="@string/widget_title"
-        android:textColor="#000"
+        android:textColor="@android:color/white"
         android:textSize="18sp" />
 
     <ListView
@@ -31,6 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tvTitle"
-        android:layout_marginTop="15dp" />
+        android:dividerHeight="1dp"
+        android:divider="#bdbdbd"
+        android:layout_marginTop="4dp" />
 
 </RelativeLayout>
