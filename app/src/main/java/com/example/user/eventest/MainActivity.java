@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabNewMemo;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    private boolean visible;
 
 
     @Override
@@ -175,6 +176,10 @@ public class MainActivity extends AppCompatActivity {
             saveMemoAfterEdit(note);
             note.clearFocus();
         } else {
+            visible = !visible;
+            note.setVisibility(visible ? View.VISIBLE : View.GONE);
+            time.setVisibility(visible ? View.VISIBLE : View.GONE);
+            date.setVisibility(visible ? View.VISIBLE : View.GONE);
             Snackbar.make(view, "New memo created", Snackbar.LENGTH_LONG).show();
         }
     }
