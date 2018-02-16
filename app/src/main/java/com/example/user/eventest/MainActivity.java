@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private MemoAdapter memoAdapter;
     @BindView(R.id.tvDate)
     TextView date;
+    @BindView(R.id.vDateTimeBackground)
+    View vDateTimeBackground;
     @BindView(R.id.tvTime)
     TextView time;
     @BindView(R.id.lvEvents)
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         eventsData = new EventsData(getApplicationContext());
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
 
         setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
@@ -175,11 +177,16 @@ public class MainActivity extends AppCompatActivity {
         if (note.hasFocus()) {
             saveMemoAfterEdit(note);
             note.clearFocus();
+            note.setVisibility(View.GONE);
+            time.setVisibility(View.GONE);
+            date.setVisibility(View.GONE);
+            vDateTimeBackground.setVisibility(View.GONE);
         } else {
             visible = !visible;
-            note.setVisibility(visible ? View.VISIBLE : View.GONE);
-            time.setVisibility(visible ? View.VISIBLE : View.GONE);
-            date.setVisibility(visible ? View.VISIBLE : View.GONE);
+            note.setVisibility(View.VISIBLE);
+            time.setVisibility(View.VISIBLE);
+            date.setVisibility(View.VISIBLE);
+            vDateTimeBackground.setVisibility(View.VISIBLE);
             Snackbar.make(view, "New memo created", Snackbar.LENGTH_LONG).show();
         }
     }
