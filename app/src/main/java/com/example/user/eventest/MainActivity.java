@@ -184,10 +184,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             visible = !visible;
             note.setVisibility(View.VISIBLE);
+            note.requestFocus();
             time.setVisibility(View.VISIBLE);
             date.setVisibility(View.VISIBLE);
             vDateTimeBackground.setVisibility(View.VISIBLE);
             Snackbar.make(view, "New memo created", Snackbar.LENGTH_LONG).show();
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
+            }
         }
     }
 
