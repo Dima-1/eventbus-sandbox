@@ -9,6 +9,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -59,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabNewMemo;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
-    private boolean visible;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,19 +180,21 @@ public class MainActivity extends AppCompatActivity {
             time.setVisibility(View.GONE);
             date.setVisibility(View.GONE);
             vDateTimeBackground.setVisibility(View.GONE);
+            fabNewMemo.setImageDrawable(
+                    ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px));
         } else {
-            visible = !visible;
             note.setVisibility(View.VISIBLE);
             note.requestFocus();
             time.setVisibility(View.VISIBLE);
             date.setVisibility(View.VISIBLE);
             vDateTimeBackground.setVisibility(View.VISIBLE);
-            Snackbar.make(view, "New memo created", Snackbar.LENGTH_LONG).show();
             InputMethodManager inputMethodManager =
                     (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             if (inputMethodManager != null) {
                 inputMethodManager.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
             }
+            fabNewMemo.setImageDrawable(
+                    ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
         }
     }
 
