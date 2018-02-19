@@ -83,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
     @NonNull
     private MultiChoiceModeListener getMemoListMultiChoiceListener() {
-        return new MultiChoiceModeListener() {
 
+        return new MultiChoiceModeListener() {
+            boolean checked = false;
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 mode.getMenuInflater().inflate(R.menu.action_mode_menu, menu);
                 return true;
@@ -96,17 +97,26 @@ public class MainActivity extends AppCompatActivity {
 
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 int amountDeleted = lvEvents.getCheckedItemCount();
-                if (item.getItemId() == R.id.menuAmDelete) {
-                    for (long id : lvEvents.getCheckedItemIds()) {
-                        eventsData.deleteByMemoID(id);
-                    }
+//                if (item.getItemId() == R.id.menuAmDelete) {
+                switch (item.getItemId()) {
+                    case R.id.menuAmDelete:
+                        for (long id : lvEvents.getCheckedItemIds()) {
+                            eventsData.deleteByMemoID(id);
+                        }
+                        mode.finish();
+                        String plural = amountDeleted > 1 ? "s" : "";
+                        Snackbar.make(coordinatorLayout, "Delete "
+                                        + amountDeleted + " memo" + plural,
+                                Snackbar.LENGTH_INDEFINITE)
+                                .setAction("UNDO", snackBarOnClickListener).show();
+                        return false;
+
+                    case R.id.menuAmSelectAll:
+                        checked = !checked;
+                        for (int i = 0; i < lvEvents.getCount(); i++)
+                            lvEvents.setItemChecked(i, checked);
+                        return false;
                 }
-                mode.finish();
-                String plural = amountDeleted > 1 ? "s" : "";
-                Snackbar.make(coordinatorLayout, "Delete "
-                                + amountDeleted + " memo" + plural,
-                        Snackbar.LENGTH_INDEFINITE)
-                        .setAction("UNDO", snackBarOnClickListener).show();
                 return false;
             }
 
