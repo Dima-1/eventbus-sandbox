@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         Snackbar.make(coordinatorLayout, "Delete "
                                         + amountDeleted + " memo" + plural,
                                 Snackbar.LENGTH_INDEFINITE)
-                                .setAction("UNDO", snackBarOnClickListener).show();
+                                .setAction("UNDO", snackBarUndoOnClickListener).show();
                         return false;
 
                     case R.id.menuAmSelectAll:
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
 
-            View.OnClickListener snackBarOnClickListener = new View.OnClickListener() {
+            View.OnClickListener snackBarUndoOnClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
@@ -193,19 +193,23 @@ public class MainActivity extends AppCompatActivity {
             fabNewMemo.setImageDrawable(
                     ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px));
         } else {
-            note.setVisibility(View.VISIBLE);
-            note.requestFocus();
-            time.setVisibility(View.VISIBLE);
-            date.setVisibility(View.VISIBLE);
-            vDateTimeBackground.setVisibility(View.VISIBLE);
-            InputMethodManager inputMethodManager =
-                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputMethodManager != null) {
-                inputMethodManager.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
-            }
-            fabNewMemo.setImageDrawable(
-                    ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
+            setEditViewsVisible();
         }
+    }
+
+    private void setEditViewsVisible() {
+        note.setVisibility(View.VISIBLE);
+        note.requestFocus();
+        time.setVisibility(View.VISIBLE);
+        date.setVisibility(View.VISIBLE);
+        vDateTimeBackground.setVisibility(View.VISIBLE);
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
+        }
+        fabNewMemo.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
     }
 
     @Override
@@ -256,6 +260,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menuSettings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menuEdit:
+                setEditViewsVisible();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
