@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.example.user.eventest.Memo;
 
@@ -26,6 +27,9 @@ public interface MemoDAO {
 
     @Delete
     void delete(Memo memo);
+
+    @Update
+    void update(Memo memo);
 
     @Query("DELETE FROM memo WHERE memoID = :memoID")
     void deleteByMemoId(long memoID);

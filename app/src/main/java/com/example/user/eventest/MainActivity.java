@@ -160,12 +160,16 @@ public class MainActivity extends AppCompatActivity {
     private void saveMemoAfterEdit(TextView note) {
         Memo memo = new Memo(
                 date.getText().toString(), time.getText().toString(), note.getText().toString());
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
+        if (((Memo) lvEvents.getSelectedItem()).getMemoID() != 0) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
+            }
+            eventsData.addMemo(memo);
+        } else {
+            memo.setMemoID(((Memo) lvEvents.getSelectedItem()).getMemoID());
+            eventsData.updateMemo(memo);
         }
-        eventsData.addMemo(memo);
-
         new UpdateWidgetAsyncTask(this)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -132,6 +132,14 @@ public class EventsData {
         });
     }
 
+    void updateMemo(final Memo memo) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.getMemoDAO().update(memo);
+            }
+        });
+    }
     void deleteByMemoID(final long memoID) {
         new DeleteMemoByIDTask(memoID, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
