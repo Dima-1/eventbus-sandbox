@@ -15,13 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,11 +37,11 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnEditorAction;
 import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity {
     public final static String PREF_TEST_STATE = "test_state";
+    public static final int NEW_MEMO_ID = -1;
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
     @BindView(R.id.tvDate)
@@ -60,10 +58,13 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabNewMemo;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    private Memo selectedMemo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         eventsData = new EventsData(getApplicationContext());
+        selectedMemo = new Memo();
+        selectedMemo.setMemoID(NEW_MEMO_ID);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         return new MultiChoiceModeListener() {
             boolean checked = false;
+
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 mode.getMenuInflater().inflate(R.menu.action_mode_menu, menu);
                 return true;
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                                         + amountDeleted + " memo" + plural,
                                 Snackbar.LENGTH_INDEFINITE)
                                 .setAction("UNDO", snackBarUndoOnClickListener).show();
+                        setEditViewsGone();
                         return false;
 
                     case R.id.menuAmSelectAll:
@@ -140,36 +143,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnItemClick(R.id.lvEvents)
-    void getSelectedMemoToEdit(AdapterView<?> adapter, View v, int position, long id) {
-        Memo memo = memoAdapter.getItem(position);
-        String selectedMemoNote = memo != null ? memo.getNote() : null;
-        String selectedMemoDate = memo != null ? memo.getDateString() : null;
-        String selectedMemoTime = memo != null ? memo.getTimeString() : null;
+    void getSelectedMemoToEdit(int position, long rowID) {
+        System.out.println("================" + String.valueOf(rowID));
+        selectedMemo = memoAdapter.getItem(position);
+        String selectedMemoNote = selectedMemo != null ? selectedMemo.getNote() : null;
+        String selectedMemoDate = selectedMemo != null ? selectedMemo.getDateString() : null;
+        String selectedMemoTime = selectedMemo != null ? selectedMemo.getTimeString() : null;
         note.setText(selectedMemoNote);
         date.setText(selectedMemoDate);
         time.setText(selectedMemoTime);
     }
 
-
-    @OnEditorAction(R.id.etNote)
-    boolean onEditorAction(TextView note, int actionId, KeyEvent event) {
-        saveMemoAfterEdit(note);
-        return false;
-    }
-
-    private void saveMemoAfterEdit(TextView note) {
+    private void saveMemoAfterEdit() {
         Memo memo = new Memo(
                 date.getText().toString(), time.getText().toString(), note.getText().toString());
-        if (((Memo) lvEvents.getSelectedItem()).getMemoID() != 0) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
-            }
+        if (selectedMemo.getMemoID() == NEW_MEMO_ID) {
+
             eventsData.addMemo(memo);
         } else {
-            memo.setMemoID(((Memo) lvEvents.getSelectedItem()).getMemoID());
+            memo.setMemoID(selectedMemo.getMemoID());
             eventsData.updateMemo(memo);
+            selectedMemo.setMemoID(NEW_MEMO_ID);
         }
+
         new UpdateWidgetAsyncTask(this)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -186,19 +182,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.fabNewMemo)
-    void newMemo(View view) {
+    void newMemo() {
         if (note.hasFocus()) {
-            saveMemoAfterEdit(note);
-            note.clearFocus();
-            note.setVisibility(View.GONE);
-            time.setVisibility(View.GONE);
-            date.setVisibility(View.GONE);
-            vDateTimeBackground.setVisibility(View.GONE);
-            fabNewMemo.setImageDrawable(
-                    ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px));
+            saveMemoAfterEdit();
+            setEditViewsGone();
         } else {
             setEditViewsVisible();
         }
+    }
+
+    private void setEditViewsGone() {
+        note.clearFocus();
+        note.setVisibility(View.GONE);
+        time.setVisibility(View.GONE);
+        date.setVisibility(View.GONE);
+        vDateTimeBackground.setVisibility(View.GONE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
+        }
+        fabNewMemo.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px));
     }
 
     private void setEditViewsVisible() {

@@ -133,13 +133,31 @@ public class EventsData {
     }
 
     void updateMemo(final Memo memo) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                db.getMemoDAO().update(memo);
-            }
-        });
+        new UpdateMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    static class UpdateMemoTask extends AsyncTask<Void, Void, Void> {
+        private Memo memo;
+        private AppDatabase db;
+
+        UpdateMemoTask(Memo memo, AppDatabase db) {
+            this.memo = memo;
+            this.db = db;
+        }
+
+        @Override
+        protected Void doInBackground(Void... v) {
+            db.getMemoDAO().update(memo);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            EventBus.getDefault().post(new MemoAdapterRefreshEvent());
+        }
+    }
+
     void deleteByMemoID(final long memoID) {
         new DeleteMemoByIDTask(memoID, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
