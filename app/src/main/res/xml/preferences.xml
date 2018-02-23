@@ -3,6 +3,6 @@
 
     <SwitchPreference
         android:defaultValue="false"
-        android:key="start_new_memo"
+        android:key="@string/start_new_memo"
         android:summary="@string/pref_start_with_new_memo" />
 </PreferenceScreen>

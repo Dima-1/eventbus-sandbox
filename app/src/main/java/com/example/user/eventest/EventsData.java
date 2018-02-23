@@ -28,8 +28,13 @@ public class EventsData {
         db = AppDatabase.getInstance(context);
     }
 
-    SharedPreferences getPreferences() {
+    private SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    boolean isNewMemoOnStart() {
+        return getPreferences()
+                .getBoolean(context.getString(R.string.start_new_memo), false);
     }
 
     Date getDate() {

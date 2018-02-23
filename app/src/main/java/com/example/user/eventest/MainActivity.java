@@ -143,8 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnItemClick(R.id.lvEvents)
-    void getSelectedMemoToEdit(int position, long rowID) {
-        System.out.println("================" + String.valueOf(rowID));
+    void getSelectedMemoToEdit(int position) {
         selectedMemo = memoAdapter.getItem(position);
         String selectedMemoNote = selectedMemo != null ? selectedMemo.getNote() : null;
         String selectedMemoDate = selectedMemo != null ? selectedMemo.getDateString() : null;
@@ -224,6 +223,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        if (eventsData.isNewMemoOnStart()) {
+            setEditViewsVisible();
+        }
     }
 
     @Override
