@@ -14,7 +14,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -143,17 +142,8 @@ public class DateTimeDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        setDialogSizeByAPI();
     }
 
-    private void setDialogSizeByAPI() {
-        int width = getResources().getDimensionPixelSize(R.dimen.popup_width);
-        int height = getResources().getDimensionPixelSize(R.dimen.popup_height);
-        Window window = getDialog().getWindow();
-        if (window != null) {
-            window.setLayout(width, height);
-        }
-    }
 
     @Override
     public void onDestroyView() {

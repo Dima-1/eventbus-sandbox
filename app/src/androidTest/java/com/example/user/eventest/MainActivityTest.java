@@ -84,19 +84,23 @@ public class MainActivityTest {
 
     @Test
     public void checkDateTimeDialog() throws ReflectiveOperationException {
+        onView(withId(R.id.menuEdit)).perform(click());
         EventsData eventsData =
                 new EventsData(mActivityTestRule.getActivity().getApplicationContext());
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
         String testDate = dateFormat.format(eventsData.getDate());
-        onView(allOf(withId(R.id.tvDate),
-                childAtPosition(childAtPosition(withId(android.R.id.content), 0), 2),
-                withText(testDate),
+        onView(allOf(withId(R.id.vDateTimeBackground),
+                childAtPosition(childAtPosition(withId(android.R.id.content), 0), 1),
                 isDisplayed()))
                 .perform(click());
-        onView(allOf(withText(R.string.cancel), isDisplayed())).perform(click());
-        onView(allOf(withId(R.id.tvDate),
-                childAtPosition(childAtPosition(withId(android.R.id.content), 0), 2),
-                withText(testDate),
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(android.R.id.button2)).perform(click());
+        onView(allOf(withId(R.id.vDateTimeBackground),
+                childAtPosition(childAtPosition(withId(android.R.id.content), 0), 1),
                 isDisplayed()))
                 .perform(click());
         onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
@@ -138,6 +142,7 @@ public class MainActivityTest {
     @Test
     public void checkAddMemo() {
         String testString = "Test memo";
+        onView(withId(R.id.menuEdit)).perform(click());
         onView(allOf(withId(R.id.etNote), isDisplayed()))
                 .perform(typeText(testString), pressImeActionButton());
 
