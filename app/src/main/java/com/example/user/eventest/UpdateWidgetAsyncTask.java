@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
 import com.example.user.eventest.widget.WidgetProvider;
@@ -35,6 +36,7 @@ class UpdateWidgetAsyncTask extends AsyncTask<Void, Void, Void> {
         @Subscribe
         public void onDataUpdateEvent(MemoAdapterRefreshEvent event) {
             String TAG = "event receiver " + this.getClass().getName();
+            Log.d(TAG, "WidgetUpdateSubscriber");
             updateWidget();
             EventBus.getDefault().unregister(this);
         }

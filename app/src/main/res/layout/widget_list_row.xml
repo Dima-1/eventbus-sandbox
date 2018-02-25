@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="?android:attr/activatedBackgroundIndicator">
+    android:layout_height="60dp">
 
 
     <TextView
@@ -13,6 +12,7 @@
         android:layout_marginTop="4dp"
         android:singleLine="true"
         android:text="@string/date_event"
+        android:textColor="@android:color/darker_gray"
         android:textSize="12sp" />
 
     <TextView
@@ -23,6 +23,7 @@
         android:layout_below="@+id/tvDate"
         android:singleLine="true"
         android:text="@string/time"
+        android:textColor="@android:color/darker_gray"
         android:textSize="12sp" />
 
     <TextView
@@ -32,6 +33,7 @@
         android:layout_alignStart="@+id/tvDate"
         android:layout_below="@+id/tvTime"
         android:singleLine="true"
+        android:textColor="@android:color/darker_gray"
         android:textSize="12sp" />
 
     <TextView
@@ -44,6 +46,7 @@
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/tvDate"
         android:text="@string/content"
+        android:textColor="@android:color/darker_gray"
         android:textSize="14sp" />
 
 
