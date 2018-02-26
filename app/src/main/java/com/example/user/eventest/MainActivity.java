@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabNewMemo;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.ibAddPhoto)
+    ImageButton ibAddPhoto;
+    @BindView(R.id.ibAddLocation)
+    ImageButton ibAddLocation;
     private Memo selectedMemo;
 
     @Override
@@ -196,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
         time.setVisibility(View.GONE);
         date.setVisibility(View.GONE);
         vDateTimeBackground.setVisibility(View.GONE);
+        ibAddLocation.setVisibility(View.GONE);
+        ibAddPhoto.setVisibility(View.GONE);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
@@ -210,6 +217,8 @@ public class MainActivity extends AppCompatActivity {
         time.setVisibility(View.VISIBLE);
         date.setVisibility(View.VISIBLE);
         vDateTimeBackground.setVisibility(View.VISIBLE);
+        ibAddLocation.setVisibility(View.VISIBLE);
+        ibAddPhoto.setVisibility(View.VISIBLE);
         InputMethodManager inputMethodManager =
                 (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
