@@ -2,7 +2,6 @@ package com.example.user.eventest;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -40,9 +39,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IMainView {
     public final static String PREF_TEST_STATE = "test_state";
-    public static final int NEW_MEMO_ID = -1;
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
     @BindView(R.id.tvDate)
@@ -63,28 +61,25 @@ public class MainActivity extends AppCompatActivity {
     ImageButton ibAddPhoto;
     @BindView(R.id.ibAddLocation)
     ImageButton ibAddLocation;
-    private Memo selectedMemo;
+    @BindView(R.id.my_toolbar)
+    Toolbar mainToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        eventsData = new EventsData(getApplicationContext());
-        selectedMemo = new Memo();
-        selectedMemo.setMemoID(NEW_MEMO_ID);
+        eventsData = new EventsData(this, getApplicationContext());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
+        setSupportActionBar(mainToolbar);
 
         memoAdapter = new MemoAdapter(this, eventsData);
         lvEvents.setAdapter(memoAdapter);
         lvEvents.setSelector(R.color.colorMemoSelect);
         lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lvEvents.setMultiChoiceModeListener(getMemoListMultiChoiceListener());
-
-        date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(eventsData.getDate()));
-        time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(eventsData.getDate()));
     }
 
     @NonNull
@@ -104,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 int amountDeleted = lvEvents.getCheckedItemCount();
-//                if (item.getItemId() == R.id.menuAmDelete) {
                 switch (item.getItemId()) {
                     case R.id.menuAmDelete:
                         for (long id : lvEvents.getCheckedItemIds()) {
@@ -114,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         String plural = amountDeleted > 1 ? "s" : "";
                         Snackbar.make(coordinatorLayout, "Delete "
                                         + amountDeleted + " memo" + plural,
-                                Snackbar.LENGTH_INDEFINITE)
+                                Snackbar.LENGTH_LONG)
                                 .setAction("UNDO", snackBarUndoOnClickListener).show();
                         setEditViewsGone();
                         return false;
@@ -148,30 +142,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnItemClick(R.id.lvEvents)
-    void getSelectedMemoToEdit(int position) {
-        selectedMemo = memoAdapter.getItem(position);
-        String selectedMemoNote = selectedMemo != null ? selectedMemo.getNote() : null;
-        String selectedMemoDate = selectedMemo != null ? selectedMemo.getDateString() : null;
-        String selectedMemoTime = selectedMemo != null ? selectedMemo.getTimeString() : null;
-        note.setText(selectedMemoNote);
-        date.setText(selectedMemoDate);
-        time.setText(selectedMemoTime);
-    }
-
-    private void saveMemoAfterEdit() {
-        Memo memo = new Memo(
-                date.getText().toString(), time.getText().toString(), note.getText().toString());
-        if (selectedMemo.getMemoID() == NEW_MEMO_ID) {
-
-            eventsData.addMemo(memo);
-        } else {
-            memo.setMemoID(selectedMemo.getMemoID());
-            eventsData.updateMemo(memo);
-            selectedMemo.setMemoID(NEW_MEMO_ID);
-        }
-
-        new UpdateWidgetAsyncTask(this)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    public void getSelectedMemoToEdit(int position) {
+        eventsData.setSelectedMemoToEdit(memoAdapter.getItem(position));
     }
 
     @OnClick(R.id.vDateTimeBackground)
@@ -186,16 +158,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.fabNewMemo)
-    void newMemo() {
-        if (note.hasFocus()) {
-            saveMemoAfterEdit();
-            setEditViewsGone();
-        } else {
-            setEditViewsVisible();
-        }
+    void fabClick() {
+        eventsData.fabClick();
     }
 
-    private void setEditViewsGone() {
+    public void setEditViewsGone() {
         note.clearFocus();
         note.setVisibility(View.GONE);
         time.setVisibility(View.GONE);
@@ -211,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px));
     }
 
-    private void setEditViewsVisible() {
+    public void setEditViewsVisible() {
         note.setVisibility(View.VISIBLE);
         note.requestFocus();
         time.setVisibility(View.VISIBLE);
@@ -229,12 +196,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public Memo getEditedMemo() {
+        return new Memo(
+                date.getText().toString(), time.getText().toString(), note.getText().toString());
+    }
+
+    @Override
+    public void setEditedMemo(Memo memo) {
+        note.setText(memo.getNote());
+        date.setText(memo.getDateString());
+        time.setText(memo.getTimeString());
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        if (eventsData.isNewMemoOnStart()) {
-            setEditViewsVisible();
-        }
     }
 
     @Override
@@ -281,10 +258,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.menuEdit:
-                setEditViewsVisible();
+                eventsData.menuEditClick();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean hasFocusNote() {
+        return note.hasFocus();
     }
 }

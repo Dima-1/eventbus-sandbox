@@ -85,10 +85,6 @@ public class MainActivityTest {
     @Test
     public void checkDateTimeDialog() throws ReflectiveOperationException {
         onView(withId(R.id.menuEdit)).perform(click());
-        EventsData eventsData =
-                new EventsData(mActivityTestRule.getActivity().getApplicationContext());
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
-        String testDate = dateFormat.format(eventsData.getDate());
         onView(allOf(withId(R.id.vDateTimeBackground),
                 childAtPosition(childAtPosition(withId(android.R.id.content), 0), 1),
                 isDisplayed()))
