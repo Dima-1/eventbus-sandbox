@@ -44,12 +44,9 @@ public class WidgetProvider extends AppWidgetProvider {
 
     }
 
-    private RemoteViews updateWidgetListView(Context context,
-                                             int appWidgetId) {
+    private RemoteViews updateWidgetListView(Context context, int appWidgetId) {
 
-        //which layout to show on widget
-        RemoteViews remoteViews =
-                new RemoteViews(context.getPackageName(), R.layout.widget);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
         //RemoteViews Service needed to provide adapter for ListView
         Intent svcIntent = new Intent(context, WidgetService.class);
         //passing app widget id to that RemoteViews Service
@@ -63,7 +60,6 @@ public class WidgetProvider extends AppWidgetProvider {
         remoteViews.setEmptyView(R.id.lvItemList, R.id.tvBackground);
         return remoteViews;
     }
-
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {

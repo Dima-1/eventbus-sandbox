@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.user.eventest.model.Memo;
+
 /**
  * Created by User on 11.01.2018.
  * Adapter for list of memo

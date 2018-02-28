@@ -12,6 +12,9 @@ import android.view.ViewParent;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.user.eventest.model.Preferences;
+import com.example.user.eventest.model.RoomRepository;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -55,7 +58,8 @@ public class MainActivityTest {
         Context context = getInstrumentation().getTargetContext();
         int actionBarId = context.getResources().
                 getIdentifier("action_bar_title", "id", context.getPackageName());
-        EventsData eventsData = new EventsData(context);
+        EventsData eventsData = new EventsData(null,
+                new RoomRepository(context), new Preferences(context), context);
         int totalRecords = eventsData.getAllData().size();
 
         onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(click());

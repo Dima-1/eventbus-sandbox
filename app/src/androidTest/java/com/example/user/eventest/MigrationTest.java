@@ -7,6 +7,7 @@ import android.arch.persistence.room.testing.MigrationTestHelper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.user.eventest.model.Memo;
 import com.example.user.eventest.room.AppDatabase;
 import com.example.user.eventest.room.DateConverterDB;
 

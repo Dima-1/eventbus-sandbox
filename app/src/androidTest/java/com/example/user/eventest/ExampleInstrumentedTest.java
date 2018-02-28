@@ -4,6 +4,10 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.user.eventest.model.Memo;
+import com.example.user.eventest.model.Preferences;
+import com.example.user.eventest.model.RoomRepository;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +35,9 @@ public class ExampleInstrumentedTest {
 
     @Before
     public void init() {
-        eventsData = new EventsData(InstrumentationRegistry.getTargetContext());
+        Context context = InstrumentationRegistry.getTargetContext();
+        eventsData = new EventsData(null,
+                new RoomRepository(context), new Preferences(context), context);
         Calendar calendar = Calendar.getInstance();
         calendar.set(2010, 10, 10, 11, 12);
         Date testDate = calendar.getTime();

@@ -27,6 +27,9 @@ import android.widget.Toast;
 
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent;
 import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
+import com.example.user.eventest.model.Memo;
+import com.example.user.eventest.model.Preferences;
+import com.example.user.eventest.model.RoomRepository;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,7 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-public class MainActivity extends AppCompatActivity implements IMainView {
+public class MainActivity extends AppCompatActivity implements MainView {
     public final static String PREF_TEST_STATE = "test_state";
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
@@ -67,11 +70,14 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        eventsData = new EventsData(this, getApplicationContext());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
+        eventsData = new EventsData(this,
+                new RoomRepository(this),
+                new Preferences(getApplicationContext()),
+                getApplicationContext());
 
         setSupportActionBar(mainToolbar);
 
@@ -80,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         lvEvents.setSelector(R.color.colorMemoSelect);
         lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lvEvents.setMultiChoiceModeListener(getMemoListMultiChoiceListener());
+        eventsData.showNewMemoOnStart();
     }
 
     @NonNull

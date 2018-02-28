@@ -1,54 +1,47 @@
 package com.example.user.eventest;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 
 import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
+import com.example.user.eventest.model.Memo;
+import com.example.user.eventest.model.MemoRepository;
+import com.example.user.eventest.model.Preferences;
 import com.example.user.eventest.room.AppDatabase;
-import com.example.user.eventest.room.DateConverterDB;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 /**
- * Created on 24.12.2017.
+ * Created by DR
+ * on 24.12.2017.
  */
 
-public class EventsData implements IMainPresenter {
-    private IMainView view;
+public class EventsData implements MainPresenter {
+    private MainView view;
+    private MemoRepository memoRepository;
+    private MemoRepository.Preferences preferences;
     private Context context;
     private AppDatabase db;
     private static final int NEW_MEMO_ID = -1;
     private Memo selectedMemo;
 
-    EventsData(IMainView view, Context context) {
+    EventsData(MainView view, MemoRepository repository, Preferences preferences, Context context) {
         this.view = view;
         this.context = context;
+        this.memoRepository = repository;
+        this.preferences = preferences;
         db = AppDatabase.getInstance(context);
         selectedMemo = new Memo();
         selectedMemo.setMemoID(NEW_MEMO_ID);
-        if (isNewMemoOnStart()) {
-            view.setEditViewsVisible();
-        }
+
     }
 
-    public EventsData(Context context) {
-        this(null, context);
-    }
-
-    private SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    private boolean isNewMemoOnStart() {
-        return getPreferences()
-                .getBoolean(context.getString(R.string.start_new_memo), false);
+    EventsData(Context context) {
+        this(null, null, null, context);
     }
 
     private void getNewMemoWithCurrentDate() {
@@ -61,14 +54,6 @@ public class EventsData implements IMainPresenter {
         setSelectedMemoToEdit(memo);
     }
 
-    public ArrayList<Memo> getAllData() {
-        try {
-            return new GetAllMemos(db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @Override
     public void fabClick() {
@@ -94,10 +79,16 @@ public class EventsData implements IMainPresenter {
         view.setEditViewsVisible();
     }
 
+    @Override
+    public void showNewMemoOnStart() {
+        if (preferences.isNewMemoOnStart()) {
+            view.setEditViewsVisible();
+        }
+    }
+
     private void saveMemoAfterEdit() {
         Memo memo = view.getEditedMemo();
         if (selectedMemo.getMemoID() == NEW_MEMO_ID) {
-
             addMemo(memo);
         } else {
             memo.setMemoID(selectedMemo.getMemoID());
@@ -108,60 +99,17 @@ public class EventsData implements IMainPresenter {
         new UpdateWidgetAsyncTask(context)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-    static class GetAllMemos extends AsyncTask<AppDatabase, Void, ArrayList<Memo>> {
-
-        private AppDatabase db;
-
-        GetAllMemos(AppDatabase db) {
-            this.db = db;
-        }
-
-        @Override
-        protected ArrayList<Memo> doInBackground(AppDatabase... appDatabases) {
-            return new ArrayList<>(db.getMemoDAO().getAllMemo());
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Memo> memos) {
-            super.onPostExecute(memos);
-        }
-    }
 
     Memo getConcreteMemo(final Memo memo) {
-
-        try {
-            return new GetConcreteMemoTask(memo, db)
-                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    static class GetConcreteMemoTask extends AsyncTask<AppDatabase, Void, Memo> {
-        private Memo memo;
-        private AppDatabase db;
-        DateConverterDB dateConverter = new DateConverterDB();
-
-        GetConcreteMemoTask(Memo memo, AppDatabase db) {
-            this.memo = memo;
-            this.db = db;
-        }
-
-        @Override
-        protected Memo doInBackground(AppDatabase... v) {
-            return db.getMemoDAO().getConcreteMemo(
-                    dateConverter.stringFromDate(memo.getDate()), memo.getNote());
-        }
-
-        @Override
-        protected void onPostExecute(Memo memo) {
-            super.onPostExecute(memo);
-        }
+        return memoRepository.getConcreteMemo(memo);
     }
 
     void addMemo(Memo memo) {
         new AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    ArrayList<Memo> getAllData() {
+        return memoRepository.getAllData();
     }
 
     static class AddMemoTask extends AsyncTask<Void, Void, Void> {

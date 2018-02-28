@@ -4,8 +4,9 @@ import android.util.Log;
 
 import java.util.Calendar;
 
-/*
- * Created by User on 01.01.2018.
+/**
+ * Created by DR
+ * on 01.01.2018.
  */
 
 public class DatePickerUpdateEvent {

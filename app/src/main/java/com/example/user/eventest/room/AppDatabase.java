@@ -8,7 +8,7 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.example.user.eventest.Memo;
+import com.example.user.eventest.model.Memo;
 
 /*
  * Created by User on 27.12.2017.

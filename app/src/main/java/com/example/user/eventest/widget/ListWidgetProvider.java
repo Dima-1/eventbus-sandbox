@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
 
-import com.example.user.eventest.EventsData;
-import com.example.user.eventest.Memo;
 import com.example.user.eventest.R;
+import com.example.user.eventest.model.Memo;
+import com.example.user.eventest.model.RoomRepository;
 
 import java.util.ArrayList;
 
@@ -20,36 +20,34 @@ class ListWidgetProvider implements RemoteViewsFactory {
     private ArrayList<Memo> eventItemList = new ArrayList<>();
     private Context context = null;
     private int appWidgetId;
-    private EventsData eventsData;
+    private WidgetPresenter widgetPresenter;
 
     ListWidgetProvider(Context context, Intent intent) {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-        eventsData = new EventsData(context);
-
+        widgetPresenter = new WidgetData(new RoomRepository(context));
     }
 
-    private void populateListItem() {
-        eventItemList.addAll(eventsData.getAllData());
+    private void populateList() {
+        eventItemList.addAll(widgetPresenter.populateListItem());
     }
 
     @Override
     public void onCreate() {
-        populateListItem();
+        populateList();
 
     }
 
     @Override
     public void onDataSetChanged() {
         eventItemList.clear();
-        populateListItem();
+        populateList();
 
     }
 
     @Override
     public void onDestroy() {
-
     }
 
     @Override

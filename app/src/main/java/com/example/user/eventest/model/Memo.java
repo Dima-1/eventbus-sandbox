@@ -1,4 +1,4 @@
-package com.example.user.eventest;
+package com.example.user.eventest.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;

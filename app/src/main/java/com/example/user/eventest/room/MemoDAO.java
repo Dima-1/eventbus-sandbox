@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.example.user.eventest.Memo;
+import com.example.user.eventest.model.Memo;
 
 import java.util.List;
 
