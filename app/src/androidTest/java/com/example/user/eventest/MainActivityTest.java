@@ -31,15 +31,16 @@ import java.util.Calendar;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
-import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 
@@ -55,6 +56,9 @@ public class MainActivityTest {
 
     @Test
     public void checkListViewAndToolbar() {
+        checkAddMemo();
+        checkAddMemo();
+        checkAddMemo();
         Context context = getInstrumentation().getTargetContext();
         int actionBarId = context.getResources().
                 getIdentifier("action_bar_title", "id", context.getPackageName());
@@ -65,9 +69,29 @@ public class MainActivityTest {
         onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(click());
         onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(longClick());
         onView(withId(actionBarId)).check(matches(withText("1/" + String.valueOf(totalRecords))));
-        onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(click());
+        onView(withId(R.id.menuAmSelectAll)).perform(click());
+        onView(withId(actionBarId)).check(matches(withText(String.valueOf(totalRecords)
+                + "/" + String.valueOf(totalRecords))));
+        onView(withId(R.id.menuAmDelete)).perform(click());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        totalRecords = eventsData.getAllData().size();
+        assertEquals(totalRecords, 0);
     }
 
+    @Test
+    public void checkAboutDialog() {
+        Context context = getInstrumentation().getTargetContext();
+        openActionBarOverflowOrOptionsMenu(context);
+        onView(withText(R.string.about)).perform(click());
+        onView(withText(context.getString(R.string.version)
+                + BuildConfig.VERSION_NAME + " "
+                + BuildConfig.VERSION_CODE)).check(matches(isDisplayed()));
+
+    }
 
     public static Matcher<View> withResourceName(final Matcher<String> resourceNameMatcher) {
         return new TypeSafeMatcher<View>() {
@@ -144,7 +168,8 @@ public class MainActivityTest {
         String testString = "Test memo";
         onView(withId(R.id.menuEdit)).perform(click());
         onView(allOf(withId(R.id.etNote), isDisplayed()))
-                .perform(typeText(testString), pressImeActionButton());
+                .perform(typeText(testString));
+        onView(withId(R.id.fabNewMemo)).perform(click());
 
     }
 
