@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
@@ -20,7 +21,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,12 +60,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     FloatingActionButton fabNewMemo;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.ibAddPhoto)
-    ImageButton ibAddPhoto;
-    @BindView(R.id.ibAddLocation)
-    ImageButton ibAddLocation;
     @BindView(R.id.my_toolbar)
     Toolbar mainToolbar;
+    @BindView(R.id.bottomToolbar)
+    Toolbar bottomToolbar;
+    private ActionMenuView amvMenu;
 
 
     @Override
@@ -80,6 +79,23 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 getApplicationContext());
 
         setSupportActionBar(mainToolbar);
+        amvMenu = bottomToolbar.findViewById(R.id.amvMenu);
+        amvMenu.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menuAddPhoto:
+                        Snackbar.make(coordinatorLayout, "Add photo",
+                                Snackbar.LENGTH_LONG).show();
+                        return true;
+                    case R.id.menuAddLocation:
+                        Snackbar.make(coordinatorLayout, "Add location",
+                                Snackbar.LENGTH_LONG).show();
+                        return true;
+                }
+                return false;
+            }
+        });
 
         memoAdapter = new MemoAdapter(this, eventsData);
         lvEvents.setAdapter(memoAdapter);
@@ -171,12 +187,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     public void setEditViewsGone() {
         note.clearFocus();
-        note.setVisibility(View.GONE);
-        time.setVisibility(View.GONE);
-        date.setVisibility(View.GONE);
-        vDateTimeBackground.setVisibility(View.GONE);
-        ibAddLocation.setVisibility(View.GONE);
-        ibAddPhoto.setVisibility(View.GONE);
+        setEditViewVisibility(View.GONE);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
@@ -186,20 +197,22 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     public void setEditViewsVisible() {
-        note.setVisibility(View.VISIBLE);
+        setEditViewVisibility(View.VISIBLE);
         note.requestFocus();
-        time.setVisibility(View.VISIBLE);
-        date.setVisibility(View.VISIBLE);
-        vDateTimeBackground.setVisibility(View.VISIBLE);
-        ibAddLocation.setVisibility(View.VISIBLE);
-        ibAddPhoto.setVisibility(View.VISIBLE);
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null) {
-            inputMethodManager.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
         }
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
+    }
+
+    private void setEditViewVisibility(int visibility) {
+        note.setVisibility(visibility);
+        time.setVisibility(visibility);
+        date.setVisibility(visibility);
+        vDateTimeBackground.setVisibility(visibility);
+        bottomToolbar.setVisibility(visibility);
     }
 
     @Override
@@ -244,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_menu, menu);
+        getMenuInflater().inflate(R.menu.bottom_menu, amvMenu.getMenu());
         return true;
     }
 
