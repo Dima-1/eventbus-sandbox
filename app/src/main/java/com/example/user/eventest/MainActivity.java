@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     Toolbar mainToolbar;
     @BindView(R.id.bottomToolbar)
     Toolbar bottomToolbar;
-    private ActionMenuView amvMenu;
+    @BindView(R.id.amvMenu)
+    ActionMenuView amvMenu;
 
 
     @Override
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 getApplicationContext());
 
         setSupportActionBar(mainToolbar);
-        amvMenu = bottomToolbar.findViewById(R.id.amvMenu);
         amvMenu.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

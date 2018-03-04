@@ -129,18 +129,16 @@ public class MainActivityTest {
                 .perform(click());
         onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
                 .check(matches(isDisplayed()));
-        onView(allOf(withId(R.id.btnDateTime),
-                withText(R.string.date),
+        onView(allOf(withId(R.id.fabDateTime),
+
                 isDisplayed()))
                 .perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .check(matches(isDisplayed()));
-        onView(allOf(withId(R.id.btnDateTime),
-                withText(R.string.time),
+        onView(allOf(withId(R.id.fabDateTime),
                 isDisplayed()))
                 .perform(click());
-        onView(allOf(withId(R.id.btnDateTime),
-                withText(R.string.date),
+        onView(allOf(withId(R.id.fabDateTime),
                 isDisplayed()))
                 .perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
