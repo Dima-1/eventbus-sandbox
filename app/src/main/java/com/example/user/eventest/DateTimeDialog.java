@@ -113,12 +113,12 @@ public class DateTimeDialog extends DialogFragment {
             datePicker.setVisibility(View.INVISIBLE);
             timePicker.setVisibility(View.VISIBLE);
             fabDateTime.setImageResource(
-                    R.drawable.ic_date_range_black_24px);
+                    R.drawable.ic_date_range_white_24px);
         } else {
             datePicker.setVisibility(View.VISIBLE);
             timePicker.setVisibility(View.INVISIBLE);
             fabDateTime.setImageResource(
-                    R.drawable.ic_access_time_black_24px);
+                    R.drawable.ic_access_time_white_24px);
         }
         isDatePickerShown = !isDatePickerShown;
     }

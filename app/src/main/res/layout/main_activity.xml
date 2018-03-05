@@ -112,7 +112,7 @@
         android:layout_height="42dp"
         android:layout_gravity="start"
         android:background="@drawable/back"
-        android:visibility="visible"
+        android:visibility="gone"
         app:contentInsetStart="0dp"
         app:contentInsetStartWithNavigation="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout"
