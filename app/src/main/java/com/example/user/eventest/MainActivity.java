@@ -163,6 +163,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
             }
         };
     }
+    @Override
+    public void onBackPressed() {
+        if(hasFocusNote()) {
+            setEditViewsGone();
+        }else {
+            super.onBackPressed();
+        }
+    }
 
     @OnItemClick(R.id.lvEvents)
     public void getSelectedMemoToEdit(int position) {
@@ -201,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         note.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(note, InputMethodManager.SHOW_FORCED);
         }
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
