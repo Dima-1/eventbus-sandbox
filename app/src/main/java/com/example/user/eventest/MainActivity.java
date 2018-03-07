@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @BindView(R.id.lvEvents)
     ListView lvEvents;
     @BindView(R.id.etNote)
-    EditText note;
+    EditMemoView note;
     @BindView(R.id.fabNewMemo)
     FloatingActionButton fabNewMemo;
     @BindView(R.id.coordinatorLayout)
@@ -162,14 +161,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 Log.d(TAG, "position = " + position + ", checked = " + checked);
             }
         };
-    }
-    @Override
-    public void onBackPressed() {
-        if(hasFocusNote()) {
-            setEditViewsGone();
-        }else {
-            super.onBackPressed();
-        }
     }
 
     @OnItemClick(R.id.lvEvents)
