@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.transition.AutoTransition;
+import android.support.transition.TransitionManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -65,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     Toolbar bottomToolbar;
     @BindView(R.id.amvMenu)
     ActionMenuView amvMenu;
+    ConstraintLayout myLayout;
+    private ConstraintSet constraintSet1;
+    private ConstraintSet constraintSet2;
 
 
     @Override
@@ -79,6 +86,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 getApplicationContext());
 
         setSupportActionBar(mainToolbar);
+        myLayout = (ConstraintLayout) findViewById(R.id.main_layout);
+        constraintSet1 = new ConstraintSet();
+        constraintSet1.clone(myLayout);
+        constraintSet2 = new ConstraintSet();
+        constraintSet2.clone(this, R.layout.main_activity_edit);
+
+
+
+
         amvMenu.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -185,23 +201,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     public void setEditViewsGone() {
-        note.clearFocus();
-        setEditViewVisibility(View.GONE);
+        AutoTransition transition = new AutoTransition();
+        transition.setStartDelay(1000).setDuration(1000);
+//        note.clearFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
         }
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px));
+        note.clearFocus();
+//        TransitionManager.beginDelayedTransition(myLayout,transition);
+        constraintSet1.applyTo(myLayout);
+        //setEditViewVisibility(View.GONE);
     }
 
     public void setEditViewsVisible() {
-        setEditViewVisibility(View.VISIBLE);
+        AutoTransition transition = new AutoTransition();
+        transition.setDuration(1000);
+        TransitionManager.beginDelayedTransition(myLayout, transition);
+        constraintSet2.applyTo(myLayout);
         note.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.showSoftInput(note, InputMethodManager.SHOW_FORCED);
+            imm.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
         }
+        //setEditViewVisibility(View.VISIBLE);
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
     }
