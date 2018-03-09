@@ -9,7 +9,6 @@ import android.support.constraint.ConstraintSet;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.transition.AutoTransition;
 import android.support.transition.TransitionManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -69,10 +68,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     Toolbar bottomToolbar;
     @BindView(R.id.amvMenu)
     ActionMenuView amvMenu;
-    ConstraintLayout myLayout;
+    private ConstraintLayout myLayout;
     private ConstraintSet constraintSet1;
     private ConstraintSet constraintSet2;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,15 +84,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 getApplicationContext());
 
         setSupportActionBar(mainToolbar);
-        myLayout = (ConstraintLayout) findViewById(R.id.main_layout);
+        myLayout = findViewById(R.id.main_layout);
         constraintSet1 = new ConstraintSet();
         constraintSet1.clone(myLayout);
         constraintSet2 = new ConstraintSet();
         constraintSet2.clone(this, R.layout.main_activity_edit);
-
-
-
-
         amvMenu.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -201,42 +195,29 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     public void setEditViewsGone() {
-        AutoTransition transition = new AutoTransition();
-        transition.setStartDelay(1000).setDuration(1000);
-//        note.clearFocus();
+        note.clearFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
         }
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px));
-        note.clearFocus();
-//        TransitionManager.beginDelayedTransition(myLayout,transition);
+        TransitionManager.beginDelayedTransition(myLayout);
         constraintSet1.applyTo(myLayout);
-        //setEditViewVisibility(View.GONE);
+        note.setEditState(false);
     }
 
     public void setEditViewsVisible() {
-        AutoTransition transition = new AutoTransition();
-        transition.setDuration(1000);
-        TransitionManager.beginDelayedTransition(myLayout, transition);
+        TransitionManager.beginDelayedTransition(myLayout);
         constraintSet2.applyTo(myLayout);
         note.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
         }
-        //setEditViewVisibility(View.VISIBLE);
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
-    }
-
-    private void setEditViewVisibility(int visibility) {
-        note.setVisibility(visibility);
-        time.setVisibility(visibility);
-        date.setVisibility(visibility);
-        vDateTimeBackground.setVisibility(visibility);
-        bottomToolbar.setVisibility(visibility);
+        note.setEditState(true);
     }
 
     @Override
@@ -312,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public boolean hasFocusNote() {
-        return note.hasFocus();
+        System.out.println("MainActivity.hasFocusNote --- return : " + note.hasFocus());
+        return note.isEditState();
     }
 }
