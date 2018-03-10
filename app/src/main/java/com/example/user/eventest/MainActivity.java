@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 return false;
             }
         });
-
+        getMenuInflater().inflate(R.menu.bottom_menu, amvMenu.getMenu());
         memoAdapter = new MemoAdapter(this, eventsData);
         lvEvents.setAdapter(memoAdapter);
         lvEvents.setSelector(R.color.colorMemoSelect);
@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         TransitionManager.beginDelayedTransition(myLayout);
         constraintSet1.applyTo(myLayout);
         note.setEditState(false);
+        invalidateOptionsMenu();
     }
 
     public void setEditViewsVisible() {
@@ -218,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
         note.setEditState(true);
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -262,8 +264,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_menu, menu);
-        getMenuInflater().inflate(R.menu.bottom_menu, amvMenu.getMenu());
-        return true;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menuEdit).setVisible(!hasFocusNote());
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

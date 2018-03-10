@@ -1,12 +1,10 @@
 <resources>
-    <string name="checkbox">CheckBox</string>
     <string name="widget_label">AnEvent</string>
     <string name="widget_title">Memo</string>
-    <string name="test_click">Test click</string>
     <string name="todo_icon">todo_icon</string>
     <string name="content">Content</string>
     <string name="date_event">Date</string>
-    <string name="note">Note</string>
+    <string name="new_memo">New memo</string>
     <string name="date">Date</string>
     <string name="action_undo">undo</string>
     <string name="action_settings">Settings</string>

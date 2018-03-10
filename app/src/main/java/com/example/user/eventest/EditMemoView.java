@@ -12,6 +12,16 @@ import android.view.KeyEvent;
  */
 
 public class EditMemoView extends AppCompatEditText {
+    boolean isEditState;
+
+    public boolean isEditState() {
+        return isEditState;
+    }
+
+    public void setEditState(boolean editState) {
+        isEditState = editState;
+    }
+
     public EditMemoView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -22,7 +32,7 @@ public class EditMemoView extends AppCompatEditText {
             if (getActivity() != null)
                 getActivity().setEditViewsGone();
         }
-        return false;
+        return true;
     }
 
     private MainActivity getActivity() {
