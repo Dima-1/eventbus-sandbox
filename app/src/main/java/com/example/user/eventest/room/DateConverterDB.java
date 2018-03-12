@@ -9,7 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by User on 24.01.2018.
+ * Created by DR
+ * on 24.01.2018.
  */
 
 public class DateConverterDB {

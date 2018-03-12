@@ -11,8 +11,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
-/*
- * Created by User on 25.12.2017.
+/**
+ * Created by DR
+ * on 25.12.2017.
  */
 @Entity
 public class Memo {
