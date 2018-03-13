@@ -54,6 +54,7 @@ import butterknife.OnItemClick;
 public class MainActivity extends AppCompatActivity implements MainView {
     public final static String PREF_TEST_STATE = "test_state";
     private static final int GET_PHOTO_ACTIVITY_REQUEST_CODE = 1;
+    private static final int GET_FILE_ACTIVITY_REQUEST_CODE = 2;
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
     @BindView(R.id.tvDate)
@@ -109,6 +110,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     case R.id.menuAddLocation:
                         Snackbar.make(coordinatorLayout, "Add location",
                                 Snackbar.LENGTH_LONG).show();
+                        addLocation();
+                        return true;
+                    case R.id.menuAddFile:
+                        Snackbar.make(coordinatorLayout, "Add file",
+                                Snackbar.LENGTH_LONG).show();
+                        addFile();
                         return true;
                 }
                 return false;
@@ -121,6 +128,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
         lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lvEvents.setMultiChoiceModeListener(getMemoListMultiChoiceListener());
         eventsData.showNewMemoOnStart();
+    }
+
+    private void addLocation() {
+    }
+
+    private void addFile() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*");
+        startActivityForResult(intent, GET_FILE_ACTIVITY_REQUEST_CODE);
     }
 
     private void addPhoto() {
@@ -146,17 +163,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == GET_PHOTO_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this,
-                        "!!! Picture was taken !!!", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this,
-                        "Picture was not taken", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this,
-                        "Picture was not taken", Toast.LENGTH_SHORT).show();
-            }
+        switch (requestCode) {
+            case GET_PHOTO_ACTIVITY_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(this,
+                            "!!! Picture was taken !!!", Toast.LENGTH_SHORT).show();
+                } else if (resultCode == RESULT_CANCELED) {
+                    Toast.makeText(this,
+                            "Picture was not taken", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this,
+                            "Picture was not taken", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case GET_FILE_ACTIVITY_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(this,
+                            "!!! File was chosen !!!", Toast.LENGTH_SHORT).show();
+                } else if (resultCode == RESULT_CANCELED) {
+                    Toast.makeText(this,
+                            "File was not chosen", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this,
+                            "File was not chosen", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
     }
 

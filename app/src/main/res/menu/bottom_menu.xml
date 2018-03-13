@@ -4,11 +4,22 @@
     <item
         android:id="@+id/menuAddPhoto"
         android:icon="@drawable/ic_add_a_photo_white_24px"
+        android:tint="@color/colorPrimary"
         android:title="@string/add_photo"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menuAddAlarm"
+        android:icon="@drawable/ic_add_alarm_white_24px"
+        android:title="@string/add_remainder"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menuAddFile"
+        android:icon="@drawable/ic_insert_drive_file_white_24px"
+        android:title="@string/add_file"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menuAddLocation"
         android:icon="@drawable/ic_add_location_white_24px"
         android:title="@string/add_location"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="always" />
 </menu>

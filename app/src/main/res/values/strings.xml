@@ -18,4 +18,6 @@
     <string name="start_new_memo">start_new_memo</string>
     <string name="add_photo">+Photo</string>
     <string name="add_location">+Location</string>
+    <string name="add_remainder">Remainder</string>
+    <string name="add_file">+File</string>
 </resources>
