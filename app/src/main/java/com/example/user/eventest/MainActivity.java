@@ -1,8 +1,12 @@
 package com.example.user.eventest;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -36,8 +40,11 @@ import com.example.user.eventest.model.RoomRepository;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.File;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +53,7 @@ import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity implements MainView {
     public final static String PREF_TEST_STATE = "test_state";
+    private static final int GET_PHOTO_ACTIVITY_REQUEST_CODE = 1;
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
     @BindView(R.id.tvDate)
@@ -96,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     case R.id.menuAddPhoto:
                         Snackbar.make(coordinatorLayout, "Add photo",
                                 Snackbar.LENGTH_LONG).show();
+                        addPhoto();
                         return true;
                     case R.id.menuAddLocation:
                         Snackbar.make(coordinatorLayout, "Add location",
@@ -112,6 +121,43 @@ public class MainActivity extends AppCompatActivity implements MainView {
         lvEvents.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lvEvents.setMultiChoiceModeListener(getMemoListMultiChoiceListener());
         eventsData.showNewMemoOnStart();
+    }
+
+    private void addPhoto() {
+        String nameFromDate = new SimpleDateFormat(
+                "yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(new Date());
+        String fileName = "IMG_" + nameFromDate + ".jpg";
+        String filePath = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), fileName).getAbsolutePath();
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, fileName);
+        long dateSeconds = new Date().getTime() / 1000;
+        values.put(MediaStore.Images.Media.DATA, filePath);
+        values.put(MediaStore.Images.Media.DATE_ADDED, dateSeconds);
+        values.put(MediaStore.Images.Media.DATE_MODIFIED, dateSeconds);
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Image capture by camera");
+        Uri imageUri = getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        startActivityForResult(intent, GET_PHOTO_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GET_PHOTO_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this,
+                        "!!! Picture was taken !!!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this,
+                        "Picture was not taken", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this,
+                        "Picture was not taken", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @NonNull
