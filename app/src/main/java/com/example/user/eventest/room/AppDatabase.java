@@ -50,7 +50,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE Attachments (" +
+            database.execSQL("CREATE TABLE IF NOT EXISTS Attachments (" +
                     "attachID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                     "memoID INTEGER NOT NULL," +
                     "pathToAttach TEXT" +

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "593197eda4a463174a53e9fd49ff6336",
+    "identityHash": "174fc9a99981cadd65463544f4d3cd39",
     "entities": [
       {
         "tableName": "Memo",
@@ -35,43 +35,11 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "Attachments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`attachID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `memoID` INTEGER NOT NULL, `pathToAttach` TEXT NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "attachID",
-            "columnName": "attachID",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "memoID",
-            "columnName": "memoID",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "pathToAttach",
-            "columnName": "pathToAttach",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "attachID"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [],
-        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"593197eda4a463174a53e9fd49ff6336\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"174fc9a99981cadd65463544f4d3cd39\")"
     ]
   }
 }

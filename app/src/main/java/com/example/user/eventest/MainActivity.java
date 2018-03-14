@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private void addFile() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
+        intent.setType("*/*");
         startActivityForResult(intent, GET_FILE_ACTIVITY_REQUEST_CODE);
     }
 
