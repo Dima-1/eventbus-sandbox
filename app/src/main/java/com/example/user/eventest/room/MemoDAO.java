@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.example.user.eventest.model.Attachments;
 import com.example.user.eventest.model.Memo;
 
 import java.util.List;
@@ -24,6 +25,9 @@ public interface MemoDAO {
 
     @Insert
     void insert(Memo memo);
+
+    @Insert
+    void insert(Attachments attachments);
 
     @Delete
     void delete(Memo memo);
