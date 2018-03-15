@@ -165,7 +165,7 @@ public class MainActivityTest {
     public void checkAddMemo() {
         String testString = "Test memo";
         onView(withId(R.id.menuEdit)).perform(click());
-        onView(allOf(withId(R.id.etNote), isDisplayed()))
+        onView(allOf(withId(R.id.etMemo), isDisplayed()))
                 .perform(typeText(testString));
         onView(withId(R.id.fabNewMemo)).perform(click());
 

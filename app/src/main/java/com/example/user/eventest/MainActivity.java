@@ -55,18 +55,21 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public final static String PREF_TEST_STATE = "test_state";
     private static final int GET_PHOTO_ACTIVITY_REQUEST_CODE = 1;
     private static final int GET_FILE_ACTIVITY_REQUEST_CODE = 2;
+    public static final String TV_DATE_KEY = "tvDate";
+    public static final String TV_TIME_KEY = "tvTime";
+    public static final String EDIT_MEMO_KEY = "editMemo";
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
     @BindView(R.id.tvDate)
-    TextView date;
+    TextView tvDate;
+    @BindView(R.id.tvTime)
+    TextView tvTime;
+    @BindView(R.id.etMemo)
+    EditMemoView emvMemo;
     @BindView(R.id.vDateTimeBackground)
     View vDateTimeBackground;
-    @BindView(R.id.tvTime)
-    TextView time;
     @BindView(R.id.lvEvents)
     ListView lvEvents;
-    @BindView(R.id.etNote)
-    EditMemoView note;
     @BindView(R.id.fabNewMemo)
     FloatingActionButton fabNewMemo;
     @BindView(R.id.coordinatorLayout)
@@ -192,6 +195,24 @@ public class MainActivity extends AppCompatActivity implements MainView {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(EDIT_MEMO_KEY, hasFocusNote());
+        outState.putString(TV_DATE_KEY, tvDate.getText().toString());
+        outState.putString(TV_TIME_KEY, tvTime.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.getBoolean(EDIT_MEMO_KEY)) setEditViewsVisible();
+        if (savedInstanceState.getString(TV_DATE_KEY) != null)
+            tvDate.setText(savedInstanceState.getString(TV_DATE_KEY));
+        if (savedInstanceState.getString(TV_TIME_KEY) != null)
+            tvTime.setText(savedInstanceState.getString(TV_TIME_KEY));
+    }
+
     @NonNull
     private MultiChoiceModeListener getMemoListMultiChoiceListener() {
 
@@ -259,8 +280,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @OnClick(R.id.vDateTimeBackground)
     void showDateTimeDialog() {
         Bundle bundle = new Bundle();
-        bundle.putString("date", date.getText().toString());
-        bundle.putString("time", time.getText().toString());
+        bundle.putString(TV_DATE_KEY, tvDate.getText().toString());
+        bundle.putString(TV_TIME_KEY, tvTime.getText().toString());
 
         DialogFragment dateTimeDialog = new DateTimeDialog();
         dateTimeDialog.setArguments(bundle);
@@ -273,44 +294,44 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     public void setEditViewsGone() {
-        note.clearFocus();
+        emvMemo.clearFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.hideSoftInputFromWindow(note.getApplicationWindowToken(), 0);
+            imm.hideSoftInputFromWindow(emvMemo.getApplicationWindowToken(), 0);
         }
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px));
         TransitionManager.beginDelayedTransition(myLayout);
         constraintSet1.applyTo(myLayout);
-        note.setEditState(false);
+        emvMemo.setEditState(false);
         invalidateOptionsMenu();
     }
 
     public void setEditViewsVisible() {
         TransitionManager.beginDelayedTransition(myLayout);
         constraintSet2.applyTo(myLayout);
-        note.requestFocus();
+        emvMemo.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.showSoftInput(note, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(emvMemo, InputMethodManager.SHOW_IMPLICIT);
         }
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
-        note.setEditState(true);
+        emvMemo.setEditState(true);
         invalidateOptionsMenu();
     }
 
     @Override
     public Memo getEditedMemo() {
         return new Memo(
-                date.getText().toString(), time.getText().toString(), note.getText().toString());
+                tvDate.getText().toString(), tvTime.getText().toString(), emvMemo.getText().toString());
     }
 
     @Override
     public void setEditedMemo(Memo memo) {
-        note.setText(memo.getNote());
-        date.setText(memo.getDateString());
-        time.setText(memo.getTimeString());
+        emvMemo.setText(memo.getNote());
+        tvDate.setText(memo.getDateString());
+        tvTime.setText(memo.getTimeString());
     }
 
     @Override
@@ -330,8 +351,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         String TAG = "event receiver " + this.getClass().getName();
         Log.d(TAG, event.getMessage().getTime().toString());
         Date tmpDate = event.getMessage().getTime();
-        date.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(tmpDate));
-        time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(tmpDate));
+        tvDate.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(tmpDate));
+        tvTime.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(tmpDate));
     }
 
     @Subscribe
@@ -378,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public boolean hasFocusNote() {
-        System.out.println("MainActivity.hasFocusNote --- return : " + note.hasFocus());
-        return note.isEditState();
+        System.out.println("MainActivity.hasFocusNote --- return : " + emvMemo.hasFocus());
+        return emvMemo.isEditState();
     }
 }

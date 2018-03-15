@@ -46,6 +46,11 @@ public class DateTimeDialog extends DialogFragment {
     private Unbinder unbinder;
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -53,8 +58,8 @@ public class DateTimeDialog extends DialogFragment {
         String date = "";
         String time = "";
         if (bundle != null) {
-            date = bundle.getString("date", "");
-            time = bundle.getString("time", "");
+            date = bundle.getString(MainActivity.TV_DATE_KEY, "");
+            time = bundle.getString(MainActivity.TV_TIME_KEY, "");
         }
         DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         try {
