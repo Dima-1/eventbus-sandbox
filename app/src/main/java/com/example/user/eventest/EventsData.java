@@ -2,14 +2,11 @@ package com.example.user.eventest;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
-import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
 import com.example.user.eventest.model.Memo;
 import com.example.user.eventest.model.MemoRepository;
 import com.example.user.eventest.model.Preferences;
-import com.example.user.eventest.room.AppDatabase;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -25,7 +22,6 @@ public class EventsData implements MainPresenter {
     private MemoRepository memoRepository;
     private MemoRepository.Preferences preferences;
     private Context context;
-    private AppDatabase db;
     private static final int NEW_MEMO_ID = -1;
     private Memo selectedMemo;
 
@@ -34,14 +30,8 @@ public class EventsData implements MainPresenter {
         this.context = context;
         this.memoRepository = repository;
         this.preferences = preferences;
-        db = AppDatabase.getInstance(context);
         selectedMemo = new Memo();
         selectedMemo.setMemoID(NEW_MEMO_ID);
-
-    }
-
-    EventsData(Context context) {
-        this(null, null, null, context);
     }
 
     private void getNewMemoWithCurrentDate() {
@@ -53,7 +43,6 @@ public class EventsData implements MainPresenter {
         memo.setMemoID(NEW_MEMO_ID);
         setSelectedMemoToEdit(memo);
     }
-
 
     @Override
     public void fabClick() {
@@ -67,7 +56,7 @@ public class EventsData implements MainPresenter {
     }
 
     @Override
-    public void setSelectedMemoToEdit(Memo memo) {
+    public void setSelectedMemoToEdit(@NonNull Memo memo) {
         selectedMemo = memo;
         view.setEditedMemo(selectedMemo);
     }
@@ -105,93 +94,22 @@ public class EventsData implements MainPresenter {
     }
 
     void addMemo(Memo memo) {
-        new AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        memoRepository.addMemo(memo);
     }
 
     ArrayList<Memo> getAllData() {
         return memoRepository.getAllData();
     }
 
-    static class AddMemoTask extends AsyncTask<Void, Void, Void> {
-        private Memo memo;
-        private AppDatabase db;
-
-        AddMemoTask(Memo memo, AppDatabase db) {
-            this.memo = memo;
-            this.db = db;
-        }
-
-        @Override
-        protected Void doInBackground(Void... v) {
-            db.getMemoDAO().insert(memo);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            EventBus.getDefault().post(new MemoAdapterRefreshEvent());
-        }
-    }
-
-    void deleteMemo(final Memo memo) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                db.getMemoDAO().delete(memo);
-            }
-        });
+    void deleteMemo(Memo memo) {
+        memoRepository.deleteMemo(memo);
     }
 
     private void updateMemo(final Memo memo) {
-        new UpdateMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    static class UpdateMemoTask extends AsyncTask<Void, Void, Void> {
-        private Memo memo;
-        private AppDatabase db;
-
-        UpdateMemoTask(Memo memo, AppDatabase db) {
-            this.memo = memo;
-            this.db = db;
-        }
-
-        @Override
-        protected Void doInBackground(Void... v) {
-            db.getMemoDAO().update(memo);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            EventBus.getDefault().post(new MemoAdapterRefreshEvent());
-        }
+        memoRepository.updateMemo(memo);
     }
 
     void deleteByMemoID(final long memoID) {
-        new DeleteMemoByIDTask(memoID, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    static class DeleteMemoByIDTask extends AsyncTask<Void, Void, Void> {
-        private long id;
-        private AppDatabase db;
-
-        DeleteMemoByIDTask(long id, AppDatabase db) {
-            this.id = id;
-            this.db = db;
-        }
-
-        @Override
-        protected Void doInBackground(Void... v) {
-            db.getMemoDAO().deleteByMemoId(id);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            super.onPostExecute(v);
-            EventBus.getDefault().post(new MemoAdapterRefreshEvent());
-        }
+        memoRepository.deleteByMemoID(memoID);
     }
 }
