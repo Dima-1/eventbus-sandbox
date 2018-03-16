@@ -4,6 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.example.user.eventest.model.Memo;
  * Created by DR
  * on 27.12.2017.
  */
+@TypeConverters({DateConverterDB.class})
 @Database(entities = {Memo.class, Attachments.class}, version = 4)
 public abstract class AppDatabase extends RoomDatabase {
     public static final String DATABASE_NAME = "database.db";
@@ -61,6 +63,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     ");");
         }
     };
+
     public static AppDatabase getInstance(Context context) {
         synchronized (sLock) {
             if (INSTANCE == null) {
