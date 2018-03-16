@@ -8,7 +8,7 @@ import java.util.*
  * on 01.01.2018.
  */
 
-class DatePickerUpdateEvent(var message: Calendar) {
+class DatePickerUpdateEvent(val message: Calendar) {
     init {
         Log.d(TAG, this.javaClass.canonicalName)
     }

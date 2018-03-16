@@ -11,8 +11,9 @@ import android.support.annotation.NonNull;
 import com.example.user.eventest.model.Attachments;
 import com.example.user.eventest.model.Memo;
 
-/*
- * Created by User on 27.12.2017.
+/**
+ * Created by DR
+ * on 27.12.2017.
  */
 @Database(entities = {Memo.class, Attachments.class}, version = 4)
 public abstract class AppDatabase extends RoomDatabase {
@@ -47,6 +48,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
         }
     };
+    /**
+     * Create attachments table
+     */
     public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
@@ -70,5 +74,4 @@ public abstract class AppDatabase extends RoomDatabase {
             return INSTANCE;
         }
     }
-
 }

@@ -32,8 +32,11 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -52,6 +55,7 @@ public class MainActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule =
             new ActivityTestRule<>(MainActivity.class);
+    private static final String TEST_STRING = "Test memo";
 
 
     @Test
@@ -83,6 +87,17 @@ public class MainActivityTest {
     }
 
     @Test
+    public void checkEditSelectedMemo() {
+        checkAddMemo();
+        onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(click());
+        onView(withId(R.id.menuEdit)).perform(click());
+        pressBack();
+        onView(withId(R.id.menuEdit)).perform(click());
+        onView(allOf(withId(R.id.etMemo), isDisplayed()))
+                .perform(clearText(), replaceText(TEST_STRING));
+        onView(withId(R.id.fabNewMemo)).perform(click());
+    }
+    @Test
     public void checkAboutDialog() {
         Context context = getInstrumentation().getTargetContext();
         openActionBarOverflowOrOptionsMenu(context);
@@ -90,6 +105,16 @@ public class MainActivityTest {
         onView(withText(context.getString(R.string.version)
                 + BuildConfig.VERSION_NAME + " "
                 + BuildConfig.VERSION_CODE)).check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void checkSettingsDialog() {
+        Context context = getInstrumentation().getTargetContext();
+        openActionBarOverflowOrOptionsMenu(context);
+        onView(withText(R.string.action_settings)).perform(click());
+        onView(withText(context.getString(R.string.pref_start_with_new_memo)
+        )).check(matches(isDisplayed()));
 
     }
 
@@ -163,10 +188,9 @@ public class MainActivityTest {
 
     @Test
     public void checkAddMemo() {
-        String testString = "Test memo";
-        onView(withId(R.id.menuEdit)).perform(click());
+        onView(withId(R.id.fabNewMemo)).perform(click());
         onView(allOf(withId(R.id.etMemo), isDisplayed()))
-                .perform(typeText(testString));
+                .perform(clearText(), typeText(TEST_STRING));
         onView(withId(R.id.fabNewMemo)).perform(click());
 
     }

@@ -2,6 +2,7 @@ package com.example.user.eventest.model;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import com.example.user.eventest.room.AppDatabase;
 import com.example.user.eventest.room.DateConverterDB;
@@ -15,12 +16,10 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class RoomRepository implements MemoRepository {
-    private Context context;
     private AppDatabase db;
 
 
     public RoomRepository(Context context) {
-        this.context = context;
         db = AppDatabase.getInstance(context);
     }
 
@@ -57,13 +56,14 @@ public class RoomRepository implements MemoRepository {
         }
     }
 
+    @NonNull
     public ArrayList<Memo> getAllData() {
         try {
             return new GetAllMemos(db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     static class GetAllMemos extends AsyncTask<AppDatabase, Void, ArrayList<Memo>> {

@@ -9,7 +9,7 @@ import java.util.*
  */
 
 interface MemoRepository {
-    fun getConcreteMemo(memo: Memo): Memo
+    fun getConcreteMemo(memo: Memo?): Memo?
     fun getAllData(): ArrayList<Memo>
 
     interface Preferences {

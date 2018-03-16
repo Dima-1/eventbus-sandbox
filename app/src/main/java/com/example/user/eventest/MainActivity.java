@@ -321,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         invalidateOptionsMenu();
     }
 
+    @NonNull
     @Override
     public Memo getEditedMemo() {
         return new Memo(
@@ -328,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void setEditedMemo(Memo memo) {
+    public void setEditedMemo(@NonNull Memo memo) {
         emvMemo.setText(memo.getNote());
         tvDate.setText(memo.getDateString());
         tvTime.setText(memo.getTimeString());
@@ -399,7 +400,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public boolean hasFocusNote() {
-        System.out.println("MainActivity.hasFocusNote --- return : " + emvMemo.hasFocus());
+        String TAG = "MainActivity";
+        Log.d(TAG, "hasFocusNote --- return : " + emvMemo.hasFocus());
         return emvMemo.isEditState();
     }
 }
