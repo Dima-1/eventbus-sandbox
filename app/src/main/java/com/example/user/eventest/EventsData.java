@@ -1,7 +1,5 @@
 package com.example.user.eventest;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.example.user.eventest.model.Memo;
@@ -21,17 +19,14 @@ public class EventsData implements MainPresenter {
     private MainView view;
     private MemoRepository memoRepository;
     private MemoRepository.Preferences preferences;
-    private Context context;
     private static final int NEW_MEMO_ID = -1;
     private Memo selectedMemo;
 
-    EventsData(MainView view, MemoRepository repository, Preferences preferences, Context context) {
+    EventsData(MainView view, MemoRepository repository, Preferences preferences) {
         this.view = view;
-        this.context = context;
         this.memoRepository = repository;
         this.preferences = preferences;
-        selectedMemo = new Memo();
-        selectedMemo.setMemoID(NEW_MEMO_ID);
+        selectedMemo = new Memo(NEW_MEMO_ID, new Date(), "");
     }
 
     private void getNewMemoWithCurrentDate() {
@@ -84,9 +79,6 @@ public class EventsData implements MainPresenter {
             updateMemo(memo);
             selectedMemo.setMemoID(NEW_MEMO_ID);
         }
-
-        new UpdateWidgetAsyncTask(context)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     Memo getConcreteMemo(final Memo memo) {

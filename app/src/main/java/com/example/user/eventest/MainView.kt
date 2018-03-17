@@ -14,4 +14,5 @@ interface MainView {
     fun getEditedMemo(): Memo
     fun setEditedMemo(memo: Memo)
     fun getSelectedMemoToEdit(position: Int)
+    fun updateWidget()
 }

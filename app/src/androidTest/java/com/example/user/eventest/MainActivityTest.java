@@ -67,7 +67,7 @@ public class MainActivityTest {
         int actionBarId = context.getResources().
                 getIdentifier("action_bar_title", "id", context.getPackageName());
         EventsData eventsData = new EventsData(null,
-                new RoomRepository(context), new Preferences(context), context);
+                new RoomRepository(context), new Preferences(context));
         int totalRecords = eventsData.getAllData().size();
 
         onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(click());

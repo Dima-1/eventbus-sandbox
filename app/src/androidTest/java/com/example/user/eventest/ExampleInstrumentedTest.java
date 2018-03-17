@@ -37,7 +37,7 @@ public class ExampleInstrumentedTest {
     public void init() {
         Context context = InstrumentationRegistry.getTargetContext();
         eventsData = new EventsData(null,
-                new RoomRepository(context), new Preferences(context), context);
+                new RoomRepository(context), new Preferences(context));
         Calendar calendar = Calendar.getInstance();
         calendar.set(2010, 10, 10, 11, 12);
         Date testDate = calendar.getTime();

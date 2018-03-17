@@ -1,5 +1,7 @@
 package com.example.user.eventest;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +38,7 @@ import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent;
 import com.example.user.eventest.model.Memo;
 import com.example.user.eventest.model.Preferences;
 import com.example.user.eventest.model.RoomRepository;
+import com.example.user.eventest.widget.WidgetProvider;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -92,8 +95,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         ButterKnife.bind(this);
         eventsData = new EventsData(this,
                 new RoomRepository(this),
-                new Preferences(getApplicationContext()),
-                getApplicationContext());
+                new Preferences(getApplicationContext()));
 
         setSupportActionBar(mainToolbar);
         myLayout = findViewById(R.id.main_layout);
@@ -359,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Subscribe
     public void onMemoAdapterRefreshEvent(MemoAdapterRefreshEvent event) {
         memoAdapter.refreshEvents();
+        updateWidget();
     }
 
     @Override
@@ -403,5 +406,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
         String TAG = "MainActivity";
         Log.d(TAG, "hasFocusNote --- return : " + emvMemo.hasFocus());
         return emvMemo.isEditState();
+    }
+
+    @Override
+    public void updateWidget() {
+        Intent intent = new Intent(this, WidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(this)
+                .getAppWidgetIds(new ComponentName(this, WidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        this.sendBroadcast(intent);
     }
 }

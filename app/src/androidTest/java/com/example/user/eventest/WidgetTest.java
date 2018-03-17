@@ -48,7 +48,7 @@ public class WidgetTest {
         isWidgetShown = mDevice.hasObject(By.pkg(TEST_LAUNCHER_PACKAGE)
                 .clazz(".RelativeLayout"));
         boolean isTestPackageWidget = mDevice.hasObject(By.pkg(TEST_LAUNCHER_PACKAGE)
-                .clazz(".TextView").res(TEST_PACKAGE, "tvAllBackground"));
+                .clazz(".TextView").res(TEST_PACKAGE, "tvBackground"));
         isWidgetShown &= isTestPackageWidget;
 
 
