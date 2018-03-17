@@ -41,6 +41,7 @@ public class WidgetProvider extends AppWidgetProvider {
 
             RemoteViews remoteViews = updateWidgetListView(context, widgetID);
             appWidgetManager.updateAppWidget(widgetID, remoteViews);
+        appWidgetManager.notifyAppWidgetViewDataChanged(widgetID, R.id.lvItemList);
 
     }
 
