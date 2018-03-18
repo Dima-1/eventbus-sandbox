@@ -16,7 +16,7 @@ interface MemoDAO {
     fun getAllMemo(): List<Memo>
 
     @Query("SELECT * FROM memo where date = :date and note = :note")
-    fun getConcreteMemo(date: String, note: String): Memo
+    fun getConcreteMemo(date: String, note: String?): Memo
 
     @Insert
     fun insert(memo: Memo)

@@ -16,8 +16,8 @@ class DateConverterDB {
     private val dateFormat = SimpleDateFormat(DATE_FORMAT)
 
     @TypeConverter
-    fun dateFromString(value: String): Date? = dateFormat.parse(value)
+    fun dateFromString(value: String): Date = dateFormat.parse(value)
 
     @TypeConverter
-    fun stringFromDate(date: Date): String? = dateFormat.format(date)
+    fun stringFromDate(date: Date): String = dateFormat.format(date)
 }

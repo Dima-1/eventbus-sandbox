@@ -14,7 +14,7 @@ import java.util.*
 @Entity
 class Memo(@PrimaryKey(autoGenerate = true)
            var memoID: Long = 0,
-           var date: Date?,
+           var date: Date,
            var note: String?) {
 
     @Ignore
@@ -35,4 +35,5 @@ class Memo(@PrimaryKey(autoGenerate = true)
     fun getDateString(): String = DateFormat.getDateInstance(DateFormat.SHORT).format(date)
 
     fun getTimeString(): String = DateFormat.getTimeInstance(DateFormat.SHORT).format(date)
+
 }
