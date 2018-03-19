@@ -81,7 +81,7 @@ public class EventsData implements MainPresenter {
         }
     }
 
-    Memo getConcreteMemo(final Memo memo) {
+    Memo getConcreteMemo(Memo memo) {
         return memoRepository.getConcreteMemo(memo);
     }
 

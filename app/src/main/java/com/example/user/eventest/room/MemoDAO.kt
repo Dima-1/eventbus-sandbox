@@ -30,6 +30,6 @@ interface MemoDAO {
     @Update
     fun update(memo: Memo)
 
-    @Query("DELETE FROM memo WHERE memoID = :memoID")
+    @Query("DELETE FROM memo WHERE memo_id = :memoID")
     fun deleteByMemoId(memoID: Long)
 }

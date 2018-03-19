@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException
 class RoomRepository(context: Context) : MemoRepository {
     private val db = AppDatabase.getInstance(context)
 
-    override fun getConcreteMemo(memo: Memo): Memo {
+    override fun getConcreteMemo(memo: Memo): Memo? {
         try {
             return GetConcreteMemoTask(memo, db)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, db).get()
@@ -35,6 +35,10 @@ class RoomRepository(context: Context) : MemoRepository {
         override fun doInBackground(vararg v: AppDatabase): Memo {
             return db.memoDAO.getConcreteMemo(
                     dateConverter.stringFromDate(memo.date), memo.note)
+        }
+
+        override fun onPostExecute(memo: Memo) {
+            EventBus.getDefault().post(MemoAdapterRefreshEvent())
         }
     }
 
@@ -66,8 +70,7 @@ class RoomRepository(context: Context) : MemoRepository {
             return null
         }
 
-        override fun onPostExecute(aVoid: Void) {
-            super.onPostExecute(aVoid)
+        override fun onPostExecute(aVoid: Void?) {
             EventBus.getDefault().post(MemoAdapterRefreshEvent())
         }
     }
@@ -93,7 +96,7 @@ class RoomRepository(context: Context) : MemoRepository {
             return null
         }
 
-        override fun onPostExecute(v: Void) {
+        override fun onPostExecute(v: Void?) {
             super.onPostExecute(v)
             EventBus.getDefault().post(MemoAdapterRefreshEvent())
         }

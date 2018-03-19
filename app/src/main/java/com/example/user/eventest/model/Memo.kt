@@ -1,5 +1,6 @@
 package com.example.user.eventest.model
 
+import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
@@ -11,8 +12,9 @@ import java.util.*
  * Created by DR
  * on 25.12.2017.
  */
-@Entity
+@Entity(tableName = "memo")
 class Memo(@PrimaryKey(autoGenerate = true)
+           @ColumnInfo(name = "memo_id")
            var memoID: Long = 0,
            var date: Date,
            var note: String?) {

@@ -56,7 +56,7 @@ public class MigrationTest {
         db.close();
 
         testHelper.runMigrationsAndValidate(
-                AppDatabase.DATABASE_NAME, 3, true, MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4);
+                AppDatabase.DATABASE_NAME, 4, true, MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4);
         Memo dbMemo = getMigratedRoomDatabase(InstrumentationRegistry.getTargetContext()).getMemoDAO()
                 .getConcreteMemo(dateConverterDB.stringFromDate(testMemo.getDate()), testMemo.getNote());
         assertEquals(dbMemo.getNote(), testMemo.getNote());

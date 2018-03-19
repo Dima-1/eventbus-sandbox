@@ -37,16 +37,16 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE Memo RENAME TO orig_Memo;");
-            database.execSQL("CREATE TABLE Memo (" +
-                    "memoID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    "date TEXT," +
-                    "note TEXT" +
+            database.execSQL("ALTER TABLE memo RENAME TO origin_memo;");
+            database.execSQL("CREATE TABLE memo (" +
+                    "memo_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "date   TEXT NOT NULL," +
+                    "note   TEXT" +
                     ");");
-            database.execSQL("INSERT INTO Memo(memoID, date, note) " +
-                    "SELECT memoID, name, note " +
-                    "FROM orig_Memo; ");
-            database.execSQL("DROP TABLE orig_Memo;");
+            database.execSQL("INSERT INTO Memo(memo_id, date, note) " +
+                    "SELECT memo_id, name, note " +
+                    "FROM origin_memo; ");
+            database.execSQL("DROP TABLE origin_memo;");
 
         }
     };
@@ -56,10 +56,10 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS Attachments (" +
-                    "attachID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    "memoID INTEGER NOT NULL," +
-                    "pathToAttach TEXT" +
+            database.execSQL("CREATE TABLE IF NOT EXISTS attachments (" +
+                    "attach_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "memo_id INTEGER NOT NULL," +
+                    "path_to_attach TEXT" +
                     ");");
         }
     };

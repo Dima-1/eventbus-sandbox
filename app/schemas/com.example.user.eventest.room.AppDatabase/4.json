@@ -2,15 +2,15 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "12805baec5c1b78210665f8040efa9e6",
+    "identityHash": "591cc8b84eb8ba5a9cfb78269858a567",
     "entities": [
       {
-        "tableName": "Memo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`memoID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT NOT NULL, `note` TEXT)",
+        "tableName": "memo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`memo_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT NOT NULL, `note` TEXT)",
         "fields": [
           {
             "fieldPath": "memoID",
-            "columnName": "memoID",
+            "columnName": "memo_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -29,7 +29,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "memoID"
+            "memo_id"
           ],
           "autoGenerate": true
         },
@@ -37,31 +37,31 @@
         "foreignKeys": []
       },
       {
-        "tableName": "Attachments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`attachID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `memoID` INTEGER NOT NULL, `pathToAttach` TEXT)",
+        "tableName": "attachments",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`attach_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `memo_id` INTEGER NOT NULL, `path_to_attach` TEXT)",
         "fields": [
           {
             "fieldPath": "attachID",
-            "columnName": "attachID",
+            "columnName": "attach_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "memoID",
-            "columnName": "memoID",
+            "columnName": "memo_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "pathToAttach",
-            "columnName": "pathToAttach",
+            "columnName": "path_to_attach",
             "affinity": "TEXT",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "attachID"
+            "attach_id"
           ],
           "autoGenerate": true
         },
@@ -71,7 +71,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"12805baec5c1b78210665f8040efa9e6\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"591cc8b84eb8ba5a9cfb78269858a567\")"
     ]
   }
 }

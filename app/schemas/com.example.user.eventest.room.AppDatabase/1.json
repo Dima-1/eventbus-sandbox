@@ -5,12 +5,12 @@
     "identityHash": "0080ace704f278beb8131a3ccd810220",
     "entities": [
       {
-        "tableName": "Memo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`memoID` INTEGER NOT NULL, `name` TEXT, `note` TEXT, PRIMARY KEY(`memoID`))",
+        "tableName": "memo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`memo_id` INTEGER NOT NULL, `name` TEXT, `note` TEXT, PRIMARY KEY(`memo_id`))",
         "fields": [
           {
             "fieldPath": "memoID",
-            "columnName": "memoID",
+            "columnName": "memo_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -29,7 +29,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "memoID"
+            "memo_id"
           ],
           "autoGenerate": false
         },
