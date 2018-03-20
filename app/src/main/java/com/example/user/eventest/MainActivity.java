@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private static final int GET_FILE_ACTIVITY_REQUEST_CODE = 2;
     public static final String TV_DATE_KEY = "tvDate";
     public static final String TV_TIME_KEY = "tvTime";
-    public static final String EDIT_MEMO_KEY = "editMemo";
+    private static final String EDIT_MEMO_KEY = "editMemo";
     private EventsData eventsData;
     private MemoAdapter memoAdapter;
     @BindView(R.id.tvDate)

@@ -29,17 +29,15 @@ class RoomRepository(context: Context) : MemoRepository {
         return memo
     }
 
-    class GetConcreteMemoTask(val memo: Memo, val db: AppDatabase) : AsyncTask<AppDatabase, Void, Memo>() {
+    class GetConcreteMemoTask(
+            val memo: Memo, private val db: AppDatabase) : AsyncTask<AppDatabase, Void, Memo>() {
         private val dateConverter = DateConverterDB()
 
-        override fun doInBackground(vararg v: AppDatabase): Memo {
+        override fun doInBackground(vararg v: AppDatabase): Memo? {
             return db.memoDAO.getConcreteMemo(
                     dateConverter.stringFromDate(memo.date), memo.note)
         }
 
-        override fun onPostExecute(memo: Memo) {
-            EventBus.getDefault().post(MemoAdapterRefreshEvent())
-        }
     }
 
     override fun getAllData(): ArrayList<Memo> {
@@ -53,7 +51,7 @@ class RoomRepository(context: Context) : MemoRepository {
         return ArrayList()
     }
 
-    class GetAllMemos(val db: AppDatabase) : AsyncTask<AppDatabase, Void, ArrayList<Memo>>() {
+    class GetAllMemos(private val db: AppDatabase) : AsyncTask<AppDatabase, Void, ArrayList<Memo>>() {
         override fun doInBackground(vararg appDatabase: AppDatabase): ArrayList<Memo> {
             return ArrayList(db.memoDAO.getAllMemo())
         }
@@ -63,7 +61,7 @@ class RoomRepository(context: Context) : MemoRepository {
         AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    class AddMemoTask(val memo: Memo, val db: AppDatabase) : AsyncTask<Void, Void, Void>() {
+    class AddMemoTask(val memo: Memo, private val db: AppDatabase) : AsyncTask<Void, Void, Void>() {
 
         override fun doInBackground(vararg params: Void?): Void? {
             db.memoDAO.insert(memo)
@@ -89,7 +87,7 @@ class RoomRepository(context: Context) : MemoRepository {
         DeleteMemoByIDTask(memoID, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    class DeleteMemoByIDTask(val id: Long, val db: AppDatabase) : AsyncTask<Void, Void, Void>() {
+    class DeleteMemoByIDTask(val id: Long, private val db: AppDatabase) : AsyncTask<Void, Void, Void>() {
 
         override fun doInBackground(vararg v: Void?): Void? {
             db.memoDAO.deleteByMemoId(id)
@@ -106,14 +104,14 @@ class RoomRepository(context: Context) : MemoRepository {
         UpdateMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    class UpdateMemoTask(val memo: Memo, val db: AppDatabase) : AsyncTask<Void, Void, Void>() {
+    class UpdateMemoTask(val memo: Memo, private val db: AppDatabase) : AsyncTask<Void, Void, Void?>() {
 
         override fun doInBackground(vararg v: Void?): Void? {
             db.memoDAO.update(memo)
             return null
         }
 
-        override fun onPostExecute(aVoid: Void) {
+        override fun onPostExecute(aVoid: Void?) {
             super.onPostExecute(aVoid)
             EventBus.getDefault().post(MemoAdapterRefreshEvent())
         }

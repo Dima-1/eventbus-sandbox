@@ -10,7 +10,7 @@ import android.widget.RemoteViews
 import com.example.user.eventest.R
 import java.util.*
 
-private val TAG = "TestWidgetLogs"
+private const val TAG = "TestWidgetLogs"
 
 class WidgetProvider : AppWidgetProvider() {
 
@@ -30,8 +30,7 @@ class WidgetProvider : AppWidgetProvider() {
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetID: Int) {
-        val updateIntent: Intent =
-                Intent(context, WidgetProvider::class.java)
+        val updateIntent = Intent(context, WidgetProvider::class.java)
         updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetID))
         val remoteViews =

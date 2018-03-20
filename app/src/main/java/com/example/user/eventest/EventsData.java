@@ -15,7 +15,7 @@ import java.util.Date;
  * on 24.12.2017.
  */
 
-public class EventsData implements MainPresenter {
+class EventsData implements MainPresenter {
     private MainView view;
     private MemoRepository memoRepository;
     private MemoRepository.Preferences preferences;

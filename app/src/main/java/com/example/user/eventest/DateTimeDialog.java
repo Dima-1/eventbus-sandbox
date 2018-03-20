@@ -36,7 +36,7 @@ import butterknife.Unbinder;
 
 public class DateTimeDialog extends DialogFragment {
     private Date mDate;
-    boolean isDatePickerShown = false;
+    private boolean isDatePickerShown = false;
     @BindView(R.id.datePicker)
     DatePicker datePicker;
     @BindView(R.id.timePicker)
