@@ -1,15 +1,15 @@
 package com.example.user.eventest;
 
-import android.content.Context;
-
+import com.example.user.eventest.model.Memo;
+import com.example.user.eventest.model.MemoRepository;
 import com.example.user.eventest.model.Preferences;
-import com.example.user.eventest.model.RoomRepository;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,9 +23,7 @@ public class ExampleUnitTest {
     @Mock
     private MainView view;
     @Mock
-    private RoomRepository movieRepo;
-    @Mock
-    private Context context;
+    private MemoRepository movieRepo;
     @Mock
     private Preferences preferences;
 
@@ -34,7 +32,7 @@ public class ExampleUnitTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        eventsData = new EventsData(view, movieRepo, preferences, context);
+        eventsData = new EventsData(view, movieRepo, preferences);
     }
 
     @Test
@@ -49,5 +47,11 @@ public class ExampleUnitTest {
         when(preferences.isNewMemoOnStart()).thenReturn(false);
         eventsData.showNewMemoOnStart();
         verify(view, never()).setEditViewsVisible();
+    }
+
+    @Test
+    public void setSelectedMemoToEdit_test() {
+        eventsData.setSelectedMemoToEdit(null);
+        verify(view).setEditedMemo(any(Memo.class));
     }
 }

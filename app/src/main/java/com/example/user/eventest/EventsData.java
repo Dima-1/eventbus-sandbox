@@ -1,10 +1,9 @@
 package com.example.user.eventest;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.example.user.eventest.model.Memo;
 import com.example.user.eventest.model.MemoRepository;
-import com.example.user.eventest.model.Preferences;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ class EventsData implements MainPresenter {
     private static final int NEW_MEMO_ID = -1;
     private Memo selectedMemo;
 
-    EventsData(MainView view, MemoRepository repository, Preferences preferences) {
+    EventsData(MainView view, MemoRepository repository, MemoRepository.Preferences preferences) {
         this.view = view;
         this.memoRepository = repository;
         this.preferences = preferences;
@@ -51,8 +50,8 @@ class EventsData implements MainPresenter {
     }
 
     @Override
-    public void setSelectedMemoToEdit(@NonNull Memo memo) {
-        selectedMemo = memo;
+    public void setSelectedMemoToEdit(@Nullable Memo memo) {
+        selectedMemo = (memo != null) ? memo : new Memo(new Date(), "");
         view.setEditedMemo(selectedMemo);
     }
 
