@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException
  */
 
 class RoomRepository(context: Context) : MemoRepository {
+
     private val db = AppDatabase.getInstance(context)
 
     override fun getConcreteMemo(memo: Memo): Memo? {
@@ -29,15 +30,15 @@ class RoomRepository(context: Context) : MemoRepository {
         return memo
     }
 
-    class GetConcreteMemoTask(
-            val memo: Memo, private val db: AppDatabase) : AsyncTask<AppDatabase, Void, Memo>() {
+    class GetConcreteMemoTask(val memo: Memo, private val db: AppDatabase) :
+            AsyncTask<AppDatabase, Void, Memo>() {
+
         private val dateConverter = DateConverterDB()
 
         override fun doInBackground(vararg v: AppDatabase): Memo? {
-            return db.memoDAO.getConcreteMemo(
+            return db.getMemoDAO().getConcreteMemo(
                     dateConverter.stringFromDate(memo.date), memo.note)
         }
-
     }
 
     override fun getAllData(): ArrayList<Memo> {
@@ -51,9 +52,11 @@ class RoomRepository(context: Context) : MemoRepository {
         return ArrayList()
     }
 
-    class GetAllMemos(private val db: AppDatabase) : AsyncTask<AppDatabase, Void, ArrayList<Memo>>() {
+    class GetAllMemos(private val db: AppDatabase) :
+            AsyncTask<AppDatabase, Void, ArrayList<Memo>>() {
+
         override fun doInBackground(vararg appDatabase: AppDatabase): ArrayList<Memo> {
-            return ArrayList(db.memoDAO.getAllMemo())
+            return ArrayList(db.getMemoDAO().getAllMemo())
         }
     }
 
@@ -61,10 +64,11 @@ class RoomRepository(context: Context) : MemoRepository {
         AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    class AddMemoTask(val memo: Memo, private val db: AppDatabase) : AsyncTask<Void, Void, Void>() {
+    class AddMemoTask(val memo: Memo, private val db: AppDatabase) :
+            AsyncTask<Void, Void, Void>() {
 
         override fun doInBackground(vararg params: Void?): Void? {
-            db.memoDAO.insert(memo)
+            db.getMemoDAO().insert(memo)
             return null
         }
 
@@ -77,7 +81,7 @@ class RoomRepository(context: Context) : MemoRepository {
         deleteByMemoID(memo.memoID)
         AsyncTask.execute({
             run {
-                db.memoDAO.delete(memo)
+                db.getMemoDAO().delete(memo)
             }
         })
     }
@@ -87,10 +91,11 @@ class RoomRepository(context: Context) : MemoRepository {
         DeleteMemoByIDTask(memoID, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    class DeleteMemoByIDTask(val id: Long, private val db: AppDatabase) : AsyncTask<Void, Void, Void>() {
+    class DeleteMemoByIDTask(val id: Long, private val db: AppDatabase) :
+            AsyncTask<Void, Void, Void>() {
 
         override fun doInBackground(vararg v: Void?): Void? {
-            db.memoDAO.deleteByMemoId(id)
+            db.getMemoDAO().deleteByMemoId(id)
             return null
         }
 
@@ -104,10 +109,11 @@ class RoomRepository(context: Context) : MemoRepository {
         UpdateMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    class UpdateMemoTask(val memo: Memo, private val db: AppDatabase) : AsyncTask<Void, Void, Void?>() {
+    class UpdateMemoTask(val memo: Memo, private val db: AppDatabase) :
+            AsyncTask<Void, Void, Void?>() {
 
         override fun doInBackground(vararg v: Void?): Void? {
-            db.memoDAO.update(memo)
+            db.getMemoDAO().update(memo)
             return null
         }
 
