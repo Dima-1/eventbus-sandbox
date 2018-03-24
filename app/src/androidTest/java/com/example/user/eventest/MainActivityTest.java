@@ -52,6 +52,8 @@ import static org.hamcrest.Matchers.anything;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
+    private MockMainView mainView = new MockMainView();
+
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule =
             new ActivityTestRule<>(MainActivity.class);
@@ -60,13 +62,15 @@ public class MainActivityTest {
 
     @Test
     public void checkListViewAndToolbar() {
+
+
         checkAddMemo();
         checkAddMemo();
         checkAddMemo();
         Context context = getInstrumentation().getTargetContext();
         int actionBarId = context.getResources().
                 getIdentifier("action_bar_title", "id", context.getPackageName());
-        EventsData eventsData = new EventsData(null,
+        EventsData eventsData = new EventsData(mainView,
                 new RoomRepository(context), new Preferences(context));
         int totalRecords = eventsData.getAllData().size();
 
@@ -97,6 +101,7 @@ public class MainActivityTest {
                 .perform(clearText(), replaceText(TEST_STRING));
         onView(withId(R.id.fabNewMemo)).perform(click());
     }
+
     @Test
     public void checkAboutDialog() {
         Context context = getInstrumentation().getTargetContext();

@@ -32,11 +32,12 @@ public class ExampleInstrumentedTest {
 
     private EventsData eventsData;
     private Memo testMemo;
+    private MockMainView mainView = new MockMainView();
 
     @Before
     public void init() {
         Context context = InstrumentationRegistry.getTargetContext();
-        eventsData = new EventsData(null,
+        eventsData = new EventsData(mainView,
                 new RoomRepository(context), new Preferences(context));
         Calendar calendar = Calendar.getInstance();
         calendar.set(2010, 10, 10, 11, 12);

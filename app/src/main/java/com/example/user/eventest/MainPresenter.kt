@@ -9,7 +9,7 @@ import com.example.user.eventest.model.Memo
 
 interface MainPresenter {
     fun fabClick()
-    fun setSelectedMemoToEdit(item: Memo)
+    fun setSelectedMemoToEdit(memo: Memo)
     fun menuEditClick()
     fun showNewMemoOnStart()
 }
