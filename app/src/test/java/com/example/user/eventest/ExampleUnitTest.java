@@ -26,6 +26,8 @@ public class ExampleUnitTest {
     private MemoRepository movieRepo;
     @Mock
     private Preferences preferences;
+    @Mock
+    private Memo memo;
 
     private EventsData eventsData;
 
@@ -51,7 +53,7 @@ public class ExampleUnitTest {
 
     @Test
     public void setSelectedMemoToEdit_test() {
-        eventsData.setSelectedMemoToEdit(null);
+        eventsData.setSelectedMemoToEdit(memo);
         verify(view).setEditedMemo(any(Memo.class));
     }
 }

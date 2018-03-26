@@ -1,7 +1,10 @@
 package com.example.user.eventest;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -39,6 +42,7 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -57,7 +61,7 @@ public class MainActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule =
             new ActivityTestRule<>(MainActivity.class);
-    private static final String TEST_STRING = "Test memo";
+    private static final String TEST_STRING = "Test memo " + Calendar.getInstance().getTimeInMillis();
 
 
     @Test
@@ -100,6 +104,8 @@ public class MainActivityTest {
         onView(allOf(withId(R.id.etMemo), isDisplayed()))
                 .perform(clearText(), replaceText(TEST_STRING));
         onView(withId(R.id.fabNewMemo)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0)
+                .check(matches(hasDescendant(withText(TEST_STRING))));
     }
 
     @Test
@@ -197,7 +203,12 @@ public class MainActivityTest {
         onView(allOf(withId(R.id.etMemo), isDisplayed()))
                 .perform(clearText(), typeText(TEST_STRING));
         onView(withId(R.id.fabNewMemo)).perform(click());
+    }
 
+    @Test
+    public void makeRotateScreen() {
+        rotateScreen();
+        onView(withId(R.id.fabNewMemo)).perform(click());
     }
 
     private static Matcher<View> childAtPosition(
@@ -217,5 +228,17 @@ public class MainActivityTest {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+    private void rotateScreen() {
+        Context context = getInstrumentation().getTargetContext();
+        ;
+        int orientation = context.getResources().getConfiguration().orientation;
+
+        Activity activity = mActivityTestRule.getActivity();
+        activity.setRequestedOrientation(
+                (orientation == Configuration.ORIENTATION_PORTRAIT) ?
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE :
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 }

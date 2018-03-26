@@ -39,7 +39,8 @@ class EventsData(private val view: MainView,
     }
 
     override fun setSelectedMemoToEdit(memo: Memo) {
-        view.setEditedMemo(memo)
+        selectedMemo = memo
+        view.setEditedMemo(selectedMemo)
     }
 
     override fun menuEditClick() {

@@ -59,4 +59,14 @@ public class IntentTest {
                 hasExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
         ));
     }
+
+    @Test
+    public void GetLocationTest() {
+        onView(withId(R.id.fabNewMemo)).perform(click());
+        onView(withId(R.id.menuAddLocation)).perform(click());
+//        intended(allOf(
+//                hasAction(MediaStore.ACTION_IMAGE_CAPTURE),
+//                hasExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
+//        ));
+    }
 }
