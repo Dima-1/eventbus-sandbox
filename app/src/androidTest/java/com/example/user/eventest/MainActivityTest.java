@@ -166,7 +166,6 @@ public class MainActivityTest {
         onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
                 .check(matches(isDisplayed()));
         onView(allOf(withId(R.id.fabDateTime),
-
                 isDisplayed()))
                 .perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
@@ -193,8 +192,19 @@ public class MainActivityTest {
                         withId(android.R.id.content),
                         0),
                 2), isDisplayed())).check(matches(withText(sdf.format(calendar.getTime()))));
-
-
+        pressBack();
+        rotateScreen();
+        onView(withId(R.id.menuEdit)).perform(click());
+        onView(allOf(withId(R.id.vDateTimeBackground),
+                childAtPosition(childAtPosition(withId(android.R.id.content), 0), 1),
+                isDisplayed()))
+                .perform(click());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(android.R.id.button2)).perform(click());
     }
 
     @Test
@@ -232,9 +242,7 @@ public class MainActivityTest {
 
     private void rotateScreen() {
         Context context = getInstrumentation().getTargetContext();
-        ;
         int orientation = context.getResources().getConfiguration().orientation;
-
         Activity activity = mActivityTestRule.getActivity();
         activity.setRequestedOrientation(
                 (orientation == Configuration.ORIENTATION_PORTRAIT) ?
