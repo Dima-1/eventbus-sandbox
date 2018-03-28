@@ -45,6 +45,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
@@ -126,6 +127,8 @@ public class MainActivityTest {
         onView(withText(R.string.action_settings)).perform(click());
         onView(withText(context.getString(R.string.pref_start_with_new_memo)
         )).check(matches(isDisplayed()));
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+        onView(withId(R.id.menuEdit)).check(matches(isDisplayed()));
 
     }
 

@@ -44,6 +44,8 @@ public class MigrationTest {
     public void testMigration() throws IOException {
         SupportSQLiteDatabase db =
                 testHelper.createDatabase(AppDatabase.DATABASE_NAME, 1);
+        testHelper.closeWhenFinished(db);
+
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2032, 11, 21, 12, 30);
