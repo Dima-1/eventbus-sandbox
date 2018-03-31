@@ -12,7 +12,7 @@ import android.view.KeyEvent
  */
 
 class EditMemoView(context: Context, attrs: AttributeSet) : AppCompatEditText(context, attrs) {
-    var isEditState: Boolean = false
+    var editState: Boolean = false
 
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent): Boolean {

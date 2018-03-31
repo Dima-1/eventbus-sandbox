@@ -45,8 +45,8 @@ class DateTimeDialog : DialogFragment() {
         var date = ""
         var time = ""
         if (bundle != null) {
-            date = bundle.getString(MainActivity.TV_DATE_KEY, "")
-            time = bundle.getString(MainActivity.TV_TIME_KEY, "")
+            date = bundle.getString(TV_DATE_KEY, "")
+            time = bundle.getString(TV_TIME_KEY, "")
         }
         val dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
         try {

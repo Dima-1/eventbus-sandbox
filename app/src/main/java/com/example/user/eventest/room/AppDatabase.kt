@@ -37,15 +37,15 @@ abstract class AppDatabase : RoomDatabase() {
         @JvmField
         val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE memo RENAME TO origin_memo;")
-                database.execSQL("CREATE TABLE memo (" +
-                        "memo_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                        "date   TEXT NOT NULL," +
-                        "note   TEXT" +
-                        ");")
-                database.execSQL("INSERT INTO Memo(memo_id, date, note) " +
-                        "SELECT memo_id, name, note " +
-                        "FROM origin_memo; ")
+                database.execSQL("""ALTER TABLE memo RENAME TO origin_memo;""")
+                database.execSQL("""CREATE TABLE memo (
+                        memo_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        date   TEXT NOT NULL,
+                        note   TEXT);""")
+                database.execSQL(
+                        """INSERT INTO Memo(memo_id, date, note) 
+                        SELECT memo_id, name, note 
+                        FROM origin_memo; """)
                 database.execSQL("DROP TABLE origin_memo;")
             }
         }

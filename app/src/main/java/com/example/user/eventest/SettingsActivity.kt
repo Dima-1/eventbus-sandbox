@@ -106,6 +106,6 @@ class SettingsActivity : PreferenceActivity() {
         if (delegate == null) {
             delegate = AppCompatDelegate.create(this, null)
         }
-        return this!!.delegate!!
+        return this.delegate!!
     }
 }

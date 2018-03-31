@@ -37,12 +37,10 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
             tmpView = convertView
             viewHolder = tmpView.tag as ViewHolder
         }
-        val memo = getItem(position)
-        if (memo != null) {
-            viewHolder.tvContent.text = memo.note
-            viewHolder.tvDate.text = memo.getDateString()
-            viewHolder.tvTime.text = memo.getTimeString()
-        }
+        val memo: Memo = getItem(position)
+        viewHolder.tvContent.text = memo.note
+        viewHolder.tvDate.text = memo.getDateString()
+        viewHolder.tvTime.text = memo.getTimeString()
         return tmpView
     }
 
