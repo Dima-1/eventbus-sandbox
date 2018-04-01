@@ -40,7 +40,6 @@ import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -67,27 +66,41 @@ public class MainActivityTest {
 
     @Test
     public void checkListViewAndToolbar() {
-
-
-        checkAddMemo();
-        checkAddMemo();
-        checkAddMemo();
         Context context = getInstrumentation().getTargetContext();
+        int totalRecords;
         int actionBarId = context.getResources().
                 getIdentifier("action_bar_title", "id", context.getPackageName());
         EventsData eventsData = new EventsData(mainView,
                 new RoomRepository(context), new Preferences(context));
-        int totalRecords = eventsData.getAllData().size();
+        checkAddMemo();
+        totalRecords = eventsData.getAllData().size();
+        onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(longClick());
+        onView(withId(R.id.menuAmDelete)).perform(click());
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        int remainingRecords = eventsData.getAllData().size();
+        assertEquals(remainingRecords, totalRecords - 1);
+        checkAddMemo();
+        checkAddMemo();
+        checkAddMemo();
+
+        totalRecords = eventsData.getAllData().size();
 
         onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(click());
         onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(longClick());
         onView(withId(actionBarId)).check(matches(withText("1/" + String.valueOf(totalRecords))));
         onView(withId(R.id.menuAmSelectAll)).perform(click());
+        onView(withId(R.id.menuAmSelectAll)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0).perform(longClick());
+        onView(withId(R.id.menuAmSelectAll)).perform(click());
         onView(withId(actionBarId)).check(matches(withText(String.valueOf(totalRecords)
                 + "/" + String.valueOf(totalRecords))));
         onView(withId(R.id.menuAmDelete)).perform(click());
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -102,7 +115,7 @@ public class MainActivityTest {
         onView(withId(R.id.menuEdit)).perform(click());
         pressBack();
         onView(withId(R.id.menuEdit)).perform(click());
-        onView(allOf(withId(R.id.etMemo), isDisplayed()))
+        onView(allOf(withId(R.id.emvMemo), isDisplayed()))
                 .perform(clearText(), replaceText(TEST_STRING));
         onView(withId(R.id.fabNewMemo)).perform(click());
         onData(anything()).inAdapterView(withId(R.id.lvEvents)).atPosition(0)
@@ -213,8 +226,8 @@ public class MainActivityTest {
     @Test
     public void checkAddMemo() {
         onView(withId(R.id.fabNewMemo)).perform(click());
-        onView(allOf(withId(R.id.etMemo), isDisplayed()))
-                .perform(clearText(), typeText(TEST_STRING));
+        onView(allOf(withId(R.id.emvMemo), isDisplayed()))
+                .perform(clearText(), replaceText(TEST_STRING));
         onView(withId(R.id.fabNewMemo)).perform(click());
     }
 

@@ -10,13 +10,9 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
-import android.widget.TimePicker
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.Unbinder
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent
+import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.date_time_picker.view.*
 import org.greenrobot.eventbus.EventBus
 import java.text.DateFormat
 import java.text.ParseException
@@ -30,14 +26,8 @@ import java.util.*
 class DateTimeDialog : DialogFragment() {
     private var mDate: Date = Date()
     private var isDatePickerShown = false
-    @BindView(R.id.datePicker)
-    lateinit var datePicker: DatePicker
-    @BindView(R.id.timePicker)
-    lateinit var timePicker: TimePicker
-    @BindView(R.id.fabDateTime)
-    lateinit var fabDateTime: FloatingActionButton
-    private var unbinder: Unbinder? = null
-
+    private lateinit var fabDateTime: FloatingActionButton
+    private lateinit var dateTimeLayout: View
     @Suppress("DEPRECATION")
     @Override
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -54,12 +44,10 @@ class DateTimeDialog : DialogFragment() {
         } catch (e: ParseException) {
             e.printStackTrace()
         }
-
         val calendarDate = Calendar.getInstance()
         calendarDate.time = mDate
         val li = LayoutInflater.from(activity)
-        val dateTimeLayout = li.inflate(R.layout.date_time_picker, null)
-        unbinder = ButterKnife.bind(this, dateTimeLayout)
+        dateTimeLayout = li.inflate(R.layout.date_time_picker, null)
 
         updateDatePicker(calendarDate)
         updateTimePicker(calendarDate)
@@ -74,37 +62,36 @@ class DateTimeDialog : DialogFragment() {
                             val hour: Int
                             val minute: Int
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                                hour = timePicker.currentHour
-                                minute = timePicker.currentMinute
+                                hour = dateTimeLayout.timePicker.currentHour
+                                minute = dateTimeLayout.timePicker.currentMinute
                             } else {
-                                hour = timePicker.hour
-                                minute = timePicker.minute
+                                hour = dateTimeLayout.timePicker.hour
+                                minute = dateTimeLayout.timePicker.minute
                             }
-                            calendar.set(datePicker.year,
-                                    datePicker.month,
-                                    datePicker.dayOfMonth,
+                            calendar.set(dateTimeLayout.datePicker.year,
+                                    dateTimeLayout.datePicker.month,
+                                    dateTimeLayout.datePicker.dayOfMonth,
                                     hour, minute)
                             EventBus.getDefault().post(DatePickerUpdateEvent(calendar))
                         })
                 .setNegativeButton(R.string.cancel, { dialog, _ -> dialog.cancel() })
         val alertDialog = alertDialogBuilder.create()
         alertDialog.window.attributes.windowAnimations = R.style.DateTimeDialogTheme
-
+        dateTimeLayout.fabDateTime.setOnClickListener { switchPickers() }
         return alertDialog
-
     }
 
-    @OnClick(R.id.fabDateTime)
-    fun switchPickers() {
+    private fun switchPickers() {
+        clearFindViewByIdCache()
         if (isDatePickerShown) {
-            datePicker.visibility = View.INVISIBLE
-            timePicker.visibility = View.VISIBLE
-            fabDateTime.setImageResource(
+            dateTimeLayout.datePicker.visibility = View.INVISIBLE
+            dateTimeLayout.timePicker.visibility = View.VISIBLE
+            dateTimeLayout.fabDateTime.setImageResource(
                     R.drawable.ic_date_range_white_24px)
         } else {
-            datePicker.visibility = View.VISIBLE
-            timePicker.visibility = View.INVISIBLE
-            fabDateTime.setImageResource(
+            dateTimeLayout.datePicker.visibility = View.VISIBLE
+            dateTimeLayout.timePicker.visibility = View.INVISIBLE
+            dateTimeLayout.fabDateTime.setImageResource(
                     R.drawable.ic_access_time_white_24px)
         }
         isDatePickerShown = !isDatePickerShown
@@ -112,17 +99,19 @@ class DateTimeDialog : DialogFragment() {
 
     @Suppress("DEPRECATION")
     private fun updateTimePicker(c: Calendar) {
+        clearFindViewByIdCache()
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            timePicker.currentHour = c.get(Calendar.HOUR)
-            timePicker.currentMinute = c.get(Calendar.MINUTE)
+            dateTimeLayout.timePicker.currentHour = c.get(Calendar.HOUR)
+            dateTimeLayout.timePicker.currentMinute = c.get(Calendar.MINUTE)
         } else {
-            timePicker.hour = c.get(Calendar.HOUR)
-            timePicker.minute = c.get(Calendar.MINUTE)
+            dateTimeLayout.timePicker.hour = c.get(Calendar.HOUR)
+            dateTimeLayout.timePicker.minute = c.get(Calendar.MINUTE)
         }
     }
 
     private fun updateDatePicker(c: Calendar) {
-        datePicker.updateDate(
+        clearFindViewByIdCache()
+        dateTimeLayout.datePicker.updateDate(
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
                 c.get(Calendar.DAY_OF_MONTH))
@@ -138,11 +127,5 @@ class DateTimeDialog : DialogFragment() {
 
         }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder?.unbind()
-    }
-
 }
 

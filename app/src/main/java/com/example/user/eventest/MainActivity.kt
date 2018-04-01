@@ -8,17 +8,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.transition.TransitionManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.ActionMenuView
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
@@ -27,9 +23,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
-import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.OnItemClick
@@ -39,6 +33,7 @@ import com.example.user.eventest.model.Memo
 import com.example.user.eventest.model.Preferences
 import com.example.user.eventest.model.RoomRepository
 import com.example.user.eventest.widget.WidgetProvider
+import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
@@ -54,29 +49,8 @@ private const val GET_FILE_ACTIVITY_REQUEST_CODE = 2
 private const val EDIT_MEMO_KEY = "editMemo"
 
 class MainActivity : AppCompatActivity(), MainView {
-    lateinit var eventsData: EventsData
+    private lateinit var eventsData: EventsData
     private lateinit var memoAdapter: MemoAdapter
-    @BindView(R.id.tvDate)
-    lateinit var tvDate: TextView
-    @BindView(R.id.tvTime)
-    lateinit var tvTime: TextView
-    @BindView(R.id.etMemo)
-    lateinit var emvMemo: EditMemoView
-    @BindView(R.id.vDateTimeBackground)
-    lateinit var vDateTimeBackground: View
-    @BindView(R.id.lvEvents)
-    lateinit var lvEvents: ListView
-    @BindView(R.id.fabNewMemo)
-    lateinit var fabNewMemo: FloatingActionButton
-    @BindView(R.id.coordinatorLayout)
-    lateinit var coordinatorLayout: CoordinatorLayout
-    @BindView(R.id.my_toolbar)
-    lateinit var mainToolbar: Toolbar
-    @BindView(R.id.bottomToolbar)
-    lateinit var bottomToolbar: Toolbar
-    @BindView(R.id.amvMenu)
-    lateinit var amvMenu: ActionMenuView
-    private lateinit var myLayout: ConstraintLayout
     private val constraintSet1 = ConstraintSet()
     private val constraintSet2 = ConstraintSet()
     private val TAG: String = this.javaClass.simpleName
@@ -89,9 +63,8 @@ class MainActivity : AppCompatActivity(), MainView {
         ButterKnife.bind(this)
         eventsData = EventsData(this,
                 RoomRepository(this), Preferences(applicationContext))
-        setSupportActionBar(mainToolbar)
-        myLayout = findViewById(R.id.main_layout)
-        constraintSet1.clone(myLayout)
+        setSupportActionBar(my_toolbar)
+        constraintSet1.clone(main_layout)
         constraintSet2.clone(this, R.layout.main_activity_edit)
         amvMenu.setOnMenuItemClickListener(ActionMenuView.OnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -279,15 +252,15 @@ class MainActivity : AppCompatActivity(), MainView {
         imm.hideSoftInputFromWindow(emvMemo.applicationWindowToken, 0)
         fabNewMemo.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_add_white_24px))
-        TransitionManager.beginDelayedTransition(myLayout)
-        constraintSet1.applyTo(myLayout)
+        TransitionManager.beginDelayedTransition(main_layout)
+        constraintSet1.applyTo(main_layout)
         emvMemo.editState = false
         invalidateOptionsMenu()
     }
 
     override fun setEditViewsVisible() {
-        TransitionManager.beginDelayedTransition(myLayout)
-        constraintSet2.applyTo(myLayout)
+        TransitionManager.beginDelayedTransition(main_layout)
+        constraintSet2.applyTo(main_layout)
         emvMemo.requestFocus()
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(emvMemo, InputMethodManager.SHOW_IMPLICIT)
