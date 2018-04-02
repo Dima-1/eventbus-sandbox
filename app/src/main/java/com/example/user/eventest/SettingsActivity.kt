@@ -16,10 +16,8 @@ import android.view.ViewGroup
 /**
  * Created by DR 12.02.2018.
  */
-
 class SettingsActivity : PreferenceActivity() {
-
-
+    private val component: AppCompatComponent = DaggerAppCompatComponent.builder().mainAppModule(MainAppModule(this)).build()
     private var delegate: AppCompatDelegate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +102,8 @@ class SettingsActivity : PreferenceActivity() {
 
     private fun getDelegate(): AppCompatDelegate {
         if (delegate == null) {
-            delegate = AppCompatDelegate.create(this, null)
+            delegate = component.provideAppCompatDelegate()
+//            delegate = AppCompatDelegate.create(this, null)
         }
         return this.delegate!!
     }
