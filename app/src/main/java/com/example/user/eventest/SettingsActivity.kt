@@ -17,7 +17,8 @@ import android.view.ViewGroup
  * Created by DR 12.02.2018.
  */
 class SettingsActivity : PreferenceActivity() {
-    private val component: AppCompatComponent = DaggerAppCompatComponent.builder().mainAppModule(MainAppModule(this)).build()
+    private val component: AppCompatComponent = DaggerAppCompatComponent.builder()
+            .mainAppModule(MainAppModule(this)).build()
     private var delegate: AppCompatDelegate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

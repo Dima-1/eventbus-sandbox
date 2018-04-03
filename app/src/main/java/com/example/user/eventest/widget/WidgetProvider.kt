@@ -1,5 +1,6 @@
 package com.example.user.eventest.widget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.RemoteViews
+import com.example.user.eventest.MainActivity
 import com.example.user.eventest.R
 import java.util.*
 
@@ -31,13 +33,16 @@ class WidgetProvider : AppWidgetProvider() {
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetID: Int) {
         val updateIntent = Intent(context, WidgetProvider::class.java)
+        val intentMainActivity = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intentMainActivity, 0)
         updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetID))
         val remoteViews =
                 updateWidgetListView(context, widgetID)
+        remoteViews.setOnClickPendingIntent(R.id.tvTitle, pendingIntent)
+        remoteViews.setPendingIntentTemplate(R.id.lvItemList, pendingIntent)
         appWidgetManager.updateAppWidget(widgetID, remoteViews)
         appWidgetManager.notifyAppWidgetViewDataChanged(widgetID, R.id.lvItemList)
-
     }
 
     private fun updateWidgetListView(context: Context, appWidgetId: Int): RemoteViews {

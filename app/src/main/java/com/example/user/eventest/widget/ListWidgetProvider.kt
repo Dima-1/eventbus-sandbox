@@ -48,7 +48,9 @@ class ListWidgetProvider(val context: Context, intent: Intent) : RemoteViewsFact
         remoteView.setTextViewText(R.id.tvTime, listItem.getTimeString())
         remoteView.setTextViewText(R.id.tvAmount, "")
         remoteView.setTextViewText(R.id.tvContent, listItem.note)
-
+        val fillInIntent = Intent()
+        fillInIntent.putExtra(Intent.EXTRA_TEXT, position)
+        remoteView.setOnClickFillInIntent(R.id.tvContent, fillInIntent)
         return remoteView
     }
 
