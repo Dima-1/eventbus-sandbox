@@ -22,4 +22,9 @@
         android:icon="@drawable/ic_add_location_white_24px"
         android:title="@string/add_location"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/menuAddTimeStamp"
+        android:icon="@drawable/ic_access_time_white_24px"
+        android:title="@string/add_timestamp"
+        app:showAsAction="always" />
 </menu>

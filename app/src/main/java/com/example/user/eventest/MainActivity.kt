@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.ActionMenuView
+import android.text.Selection
 import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
@@ -88,6 +89,13 @@ class MainActivity : AppCompatActivity(), MainView {
                     addFile()
                     return@OnMenuItemClickListener true
                 }
+                R.id.menuAddTimeStamp -> {
+                    Snackbar.make(coordinatorLayout, "Add timestamp",
+                            Snackbar.LENGTH_LONG)
+                            .show()
+                    addTimestamp()
+                    return@OnMenuItemClickListener true
+                }
             }
             false
         })
@@ -131,6 +139,16 @@ class MainActivity : AppCompatActivity(), MainView {
         startActivityForResult(intent, GET_PHOTO_ACTIVITY_REQUEST_CODE)
     }
 
+    private fun addTimestamp() {
+        val editable = emvMemo.text
+        val position = emvMemo.selectionStart
+        val dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+        var dateStamp = dateFormat.format(Date().time) + " "
+        val leadSpace = if (position == 0) "" else " "
+        dateStamp = leadSpace + dateStamp
+        editable.insert(position, dateStamp)
+        Selection.setSelection(editable, position + dateStamp.length)
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             GET_PHOTO_ACTIVITY_REQUEST_CODE ->
