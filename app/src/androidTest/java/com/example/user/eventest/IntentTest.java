@@ -17,7 +17,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasType;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -54,11 +53,10 @@ public class IntentTest {
     public void GetPhotoTest() {
         onView(withId(R.id.fabNewMemo)).perform(click());
         onView(withId(R.id.menuAddPhoto)).perform(click());
-        intended(allOf(
-                hasAction(MediaStore.ACTION_IMAGE_CAPTURE),
-                hasExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
-        ));
+        intended(
+                hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
     }
+
 
     @Test
     public void GetLocationTest() {

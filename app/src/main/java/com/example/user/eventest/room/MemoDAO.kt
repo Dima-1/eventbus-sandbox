@@ -3,7 +3,6 @@ package com.example.user.eventest.room
 import android.arch.persistence.room.*
 import com.example.user.eventest.model.Attachments
 import com.example.user.eventest.model.Memo
-import java.util.List
 
 /**
  * Created by DR
@@ -12,7 +11,7 @@ import java.util.List
 
 @Dao
 interface MemoDAO {
-    @Query("SELECT * FROM memo")
+    @Query("SELECT * FROM memo order by date desc")
     fun getAllMemo(): List<Memo>
 
     @Query("SELECT * FROM memo where date = :date and note = :note")
