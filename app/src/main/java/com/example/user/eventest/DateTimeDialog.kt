@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
@@ -26,9 +25,8 @@ import java.util.*
 class DateTimeDialog : DialogFragment() {
     private var mDate: Date = Date()
     private var isDatePickerShown = false
-    private lateinit var fabDateTime: FloatingActionButton
     private lateinit var dateTimeLayout: View
-    @Suppress("DEPRECATION")
+
     @Override
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bundle = arguments
@@ -51,70 +49,84 @@ class DateTimeDialog : DialogFragment() {
 
         updateDatePicker(calendarDate)
         updateTimePicker(calendarDate)
+        repaintPickers()
 
         val alertDialogBuilder = AlertDialog.Builder(dateTimeLayout.context)
         alertDialogBuilder
                 .setView(dateTimeLayout)
                 .setCancelable(false)
-                .setPositiveButton(R.string.OK,
-                        { _, _ ->
-                            val calendar = Calendar.getInstance()
-                            val hour: Int
-                            val minute: Int
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                                hour = dateTimeLayout.timePicker.currentHour
-                                minute = dateTimeLayout.timePicker.currentMinute
-                            } else {
-                                hour = dateTimeLayout.timePicker.hour
-                                minute = dateTimeLayout.timePicker.minute
-                            }
-                            calendar.set(dateTimeLayout.datePicker.year,
-                                    dateTimeLayout.datePicker.month,
-                                    dateTimeLayout.datePicker.dayOfMonth,
-                                    hour, minute)
-                            EventBus.getDefault().post(DatePickerUpdateEvent(calendar))
-                        })
-                .setNegativeButton(R.string.cancel, { dialog, _ -> dialog.cancel() })
         val alertDialog = alertDialogBuilder.create()
         alertDialog.window.attributes.windowAnimations = R.style.DateTimeDialogTheme
-        dateTimeLayout.fabDateTime.setOnClickListener { switchPickers() }
+        dateTimeLayout.btnOK.setOnClickListener {
+            val calendar = getCalendarFromPickers()
+            EventBus.getDefault().post(DatePickerUpdateEvent(calendar))
+            dialog.cancel()
+        }
+        dateTimeLayout.btnCancel.setOnClickListener { dialog.cancel() }
+        dateTimeLayout.fabDateTime.setOnClickListener {
+            isDatePickerShown = !isDatePickerShown
+            repaintPickers()
+        }
         return alertDialog
     }
 
-    private fun switchPickers() {
+    @Suppress("DEPRECATION")
+    private fun getCalendarFromPickers(): Calendar {
+        val hour: Int
+        val minute: Int
+        val calendar = Calendar.getInstance()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            hour = dateTimeLayout.timePicker.currentHour
+            minute = dateTimeLayout.timePicker.currentMinute
+        } else {
+            hour = dateTimeLayout.timePicker.hour
+            minute = dateTimeLayout.timePicker.minute
+        }
+        calendar.set(dateTimeLayout.datePicker.year,
+                dateTimeLayout.datePicker.month,
+                dateTimeLayout.datePicker.dayOfMonth,
+                hour, minute)
+        return calendar
+    }
+
+    private fun repaintPickers() {
         clearFindViewByIdCache()
         if (isDatePickerShown) {
-            dateTimeLayout.datePicker.visibility = View.INVISIBLE
-            dateTimeLayout.timePicker.visibility = View.VISIBLE
-            dateTimeLayout.fabDateTime.setImageResource(
-                    R.drawable.ic_date_range_white_24px)
-        } else {
             dateTimeLayout.datePicker.visibility = View.VISIBLE
             dateTimeLayout.timePicker.visibility = View.INVISIBLE
             dateTimeLayout.fabDateTime.setImageResource(
                     R.drawable.ic_access_time_white_24px)
+            dateTimeLayout.tvNow.text = DateFormat.getTimeInstance(DateFormat.SHORT)
+                    .format(getCalendarFromPickers().time)
+        } else {
+            dateTimeLayout.datePicker.visibility = View.INVISIBLE
+            dateTimeLayout.timePicker.visibility = View.VISIBLE
+            dateTimeLayout.fabDateTime.setImageResource(
+                    R.drawable.ic_date_range_white_24px)
+            dateTimeLayout.tvNow.text = DateFormat.getDateInstance(DateFormat.SHORT)
+                    .format(getCalendarFromPickers().time)
         }
-        isDatePickerShown = !isDatePickerShown
+
     }
 
     @Suppress("DEPRECATION")
     private fun updateTimePicker(c: Calendar) {
         clearFindViewByIdCache()
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            dateTimeLayout.timePicker.currentHour = c.get(Calendar.HOUR)
-            dateTimeLayout.timePicker.currentMinute = c.get(Calendar.MINUTE)
+            dateTimeLayout.timePicker.currentHour = c[Calendar.HOUR]
+            dateTimeLayout.timePicker.currentMinute = c[Calendar.MINUTE]
         } else {
-            dateTimeLayout.timePicker.hour = c.get(Calendar.HOUR)
-            dateTimeLayout.timePicker.minute = c.get(Calendar.MINUTE)
+            dateTimeLayout.timePicker.hour = c[Calendar.HOUR]
+            dateTimeLayout.timePicker.minute = c[Calendar.MINUTE]
         }
     }
 
     private fun updateDatePicker(c: Calendar) {
         clearFindViewByIdCache()
         dateTimeLayout.datePicker.updateDate(
-                c.get(Calendar.YEAR),
-                c.get(Calendar.MONTH),
-                c.get(Calendar.DAY_OF_MONTH))
+                c[Calendar.YEAR],
+                c[Calendar.MONTH],
+                c[Calendar.DAY_OF_MONTH])
     }
 
     override fun onStart() {
@@ -124,7 +136,6 @@ class DateTimeDialog : DialogFragment() {
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             dialog.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT)
-
         }
     }
 }

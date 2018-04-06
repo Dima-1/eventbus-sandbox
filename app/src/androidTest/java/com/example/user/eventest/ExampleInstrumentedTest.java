@@ -8,6 +8,7 @@ import com.example.user.eventest.model.Memo;
 import com.example.user.eventest.model.Preferences;
 import com.example.user.eventest.model.RoomRepository;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,9 +46,16 @@ public class ExampleInstrumentedTest {
         testMemo = new Memo(testDate, "Memo " + Calendar.getInstance().getTimeInMillis());
     }
 
+    @After
+    public void afterTest() {
+        ArrayList<Memo> arrayList = eventsData.getAllData();
+        for (Memo memo : arrayList) {
+            eventsData.deleteMemo(memo);
+        }
+    }
+
     @Test
-    public void useAppContext() throws Exception {
-        // Context of the app under test.
+    public void useAppContext() {
         Context appContext = InstrumentationRegistry.getTargetContext();
         assertEquals(BuildConfig.APPLICATION_ID, appContext.getPackageName());
     }
