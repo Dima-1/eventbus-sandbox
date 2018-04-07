@@ -12,14 +12,19 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasType;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 
@@ -31,7 +36,8 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class IntentTest {
     @Rule
-    public IntentsTestRule<MainActivity> mActivityRule = new IntentsTestRule<>(MainActivity.class);
+    public IntentsTestRule<MainActivity> mActivityTestRule =
+            new IntentsTestRule<>(MainActivity.class);
 
     @Before
     public void stubAllExternalIntents() {
@@ -41,7 +47,7 @@ public class IntentTest {
     }
 
     @Test
-    public void GetFileTest() {
+    public void getFileTest() {
         onView(withId(R.id.fabNewMemo)).perform(click());
         onView(withId(R.id.menuAddFile)).perform(click());
         intended(allOf(
@@ -50,7 +56,7 @@ public class IntentTest {
     }
 
     @Test
-    public void GetPhotoTest() {
+    public void getPhotoTest() {
         onView(withId(R.id.fabNewMemo)).perform(click());
         onView(withId(R.id.menuAddPhoto)).perform(click());
         intended(
@@ -59,12 +65,21 @@ public class IntentTest {
 
 
     @Test
-    public void GetLocationTest() {
+    public void getLocationTest() {
         onView(withId(R.id.fabNewMemo)).perform(click());
         onView(withId(R.id.menuAddLocation)).perform(click());
 //        intended(allOf(
 //                hasAction(MediaStore.ACTION_IMAGE_CAPTURE),
 //                hasExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
 //        ));
+    }
+
+    @Test
+    public void addTimeStamp() {
+        onView(withId(R.id.fabNewMemo)).perform(click());
+        onView(withId(R.id.menuAddTimeStamp)).perform(click());
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        String dateStamp = dateFormat.format(new Date().getTime()) + " ";
+        onView(withId(R.id.emvMemo)).check(matches(withText(dateStamp)));
     }
 }
