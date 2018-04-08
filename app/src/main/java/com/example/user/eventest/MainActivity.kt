@@ -149,6 +149,7 @@ class MainActivity : AppCompatActivity(), MainView {
         editable.insert(position, dateStamp)
         Selection.setSelection(editable, position + dateStamp.length)
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             GET_PHOTO_ACTIVITY_REQUEST_CODE ->

@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.provider.MediaStore;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,6 +20,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -23,6 +28,8 @@ import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasType;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -81,5 +88,43 @@ public class IntentTest {
         DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         String dateStamp = dateFormat.format(new Date().getTime()) + " ";
         onView(withId(R.id.emvMemo)).check(matches(withText(dateStamp)));
+        pressBack();
+        try {
+            final int SNACKBAR_DELAY = 2000;
+            Thread.sleep(SNACKBAR_DELAY);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.fabNewMemo)).perform(click());
+        String testString = "Test lead space";
+
+        onView(withId(R.id.emvMemo)).perform(setEditMemoViewText(testString));
+
+        onView(withId(R.id.menuAddTimeStamp)).perform(click());
+        dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        dateStamp = testString + " " + dateFormat.format(new Date().getTime()) + " ";
+        onView(withId(R.id.emvMemo)).check(matches(withText(dateStamp)));
+    }
+
+    /*Custom ViewAction for move cursor to the end*/
+    public static ViewAction setEditMemoViewText(
+            final String newText) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return allOf(isDisplayed(), isAssignableFrom(EditMemoView.class));
+            }
+
+            @Override
+            public String getDescription() {
+                return "Update the text from the custom EditText";
+            }
+
+            @Override
+            public void perform(final UiController uiController, final View view) {
+                ((EditMemoView) view).setText(newText);
+                ((EditMemoView) view).setSelection(newText.length());
+            }
+        };
     }
 }
