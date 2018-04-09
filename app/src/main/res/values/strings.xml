@@ -21,4 +21,8 @@
     <string name="add_remainder">Remainder</string>
     <string name="add_file">+File</string>
     <string name="add_timestamp">+Add Timestamp</string>
+    <string name="file_not_chosen">File was not chosen</string>
+    <string name="file_chosen">!!! File was chosen !!!</string>
+    <string name="photo_taken">!!! Photo was taken !!!</string>
+    <string name="photo_not_taken">Photo was not taken</string>
 </resources>

@@ -155,20 +155,20 @@ class MainActivity : AppCompatActivity(), MainView {
             GET_PHOTO_ACTIVITY_REQUEST_CODE ->
                 when (resultCode) {
                     RESULT_OK -> Toast.makeText(this,
-                            "!!! Picture was taken !!!", Toast.LENGTH_SHORT).show()
+                            getString(R.string.photo_taken), Toast.LENGTH_SHORT).show()
                     RESULT_CANCELED -> Toast.makeText(this,
-                            "Picture was not taken", Toast.LENGTH_SHORT).show()
+                            getString(R.string.photo_not_taken), Toast.LENGTH_SHORT).show()
                     else -> Toast.makeText(this,
-                            "Picture was not taken", Toast.LENGTH_SHORT).show()
+                            getString(R.string.photo_not_taken), Toast.LENGTH_SHORT).show()
                 }
             GET_FILE_ACTIVITY_REQUEST_CODE ->
                 when (resultCode) {
                     RESULT_OK -> Toast.makeText(this,
-                            "!!! File was chosen !!!", Toast.LENGTH_SHORT).show()
+                            getString(R.string.file_chosen), Toast.LENGTH_SHORT).show()
                     RESULT_CANCELED -> Toast.makeText(this,
-                            "File was not chosen", Toast.LENGTH_SHORT).show()
+                            getString(R.string.file_not_chosen), Toast.LENGTH_SHORT).show()
                     else -> Toast.makeText(this,
-                            "File was not chosen", Toast.LENGTH_SHORT).show()
+                            getString(R.string.file_not_chosen), Toast.LENGTH_SHORT).show()
                 }
         }
     }
@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity(), MainView {
     private fun getMemoListMultiChoiceListener(): MultiChoiceModeListener {
 
         return object : MultiChoiceModeListener {
-            var checked = false
+            private var checked = false
 
             override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
                 mode.menuInflater.inflate(R.menu.action_mode_menu, menu)
@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity(), MainView {
                         return false
                     }
                     R.id.menuAmSelectAll -> {
-                        checked = !checked
+                        checked = checked.not()// = !checked
                         for (i in 0 until lvEvents.count)
                             lvEvents.setItemChecked(i, checked)
                         return false
