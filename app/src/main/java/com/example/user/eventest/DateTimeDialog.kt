@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus
 import java.text.DateFormat
 import java.text.ParseException
 import java.util.*
+import kotlin.properties.Delegates
 
 /**
  * Created by DR
@@ -25,7 +26,7 @@ import java.util.*
 class DateTimeDialog : DialogFragment() {
     private var mDate: Date = Date()
     private var isDatePickerShown = false
-    private lateinit var dateTimeLayout: View
+    private var dateTimeLayout: View by Delegates.notNull()
 
     @Override
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -51,7 +52,7 @@ class DateTimeDialog : DialogFragment() {
         updateTimePicker(calendarDate)
         repaintPickers()
 
-        val alertDialogBuilder = AlertDialog.Builder(dateTimeLayout.context)
+        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(dateTimeLayout.context)
         alertDialogBuilder
                 .setView(dateTimeLayout)
                 .setCancelable(false)

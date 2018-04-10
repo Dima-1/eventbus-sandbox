@@ -41,6 +41,7 @@ import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.properties.Delegates
 
 const val PREF_TEST_STATE = "test_state"
 const val TV_DATE_KEY = "tvDate"
@@ -50,8 +51,8 @@ private const val GET_FILE_ACTIVITY_REQUEST_CODE = 2
 private const val EDIT_MEMO_KEY = "editMemo"
 
 class MainActivity : AppCompatActivity(), MainView {
-    private lateinit var eventsData: EventsData
-    private lateinit var memoAdapter: MemoAdapter
+    private var eventsData: EventsData by Delegates.notNull()
+    private var memoAdapter: MemoAdapter by Delegates.notNull()
     private val constraintSet1 = ConstraintSet()
     private val constraintSet2 = ConstraintSet()
     private val TAG: String = this.javaClass.simpleName
@@ -220,7 +221,7 @@ class MainActivity : AppCompatActivity(), MainView {
                         return false
                     }
                     R.id.menuAmSelectAll -> {
-                        checked = checked.not()// = !checked
+                        checked = !checked
                         for (i in 0 until lvEvents.count)
                             lvEvents.setItemChecked(i, checked)
                         return false

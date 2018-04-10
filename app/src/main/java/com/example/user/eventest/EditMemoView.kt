@@ -5,12 +5,14 @@ import android.content.ContextWrapper
 import android.support.v7.widget.AppCompatEditText
 import android.util.AttributeSet
 import android.view.KeyEvent
+import kotlinx.android.extensions.CacheImplementation
+import kotlinx.android.extensions.ContainerOptions
 
 /**
  * Created by DR
  * on 07.03.2018.
  */
-
+@ContainerOptions(CacheImplementation.NO_CACHE)
 class EditMemoView(context: Context, attrs: AttributeSet) : AppCompatEditText(context, attrs) {
     var editState: Boolean = false
 

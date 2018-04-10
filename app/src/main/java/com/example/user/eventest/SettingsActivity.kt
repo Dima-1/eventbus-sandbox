@@ -11,11 +11,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.extensions.CacheImplementation
+import kotlinx.android.extensions.ContainerOptions
 
 
 /**
  * Created by DR 12.02.2018.
  */
+@ContainerOptions(CacheImplementation.NO_CACHE)
 class SettingsActivity : PreferenceActivity() {
     private val component: AppCompatComponent = DaggerAppCompatComponent.builder()
             .mainAppModule(MainAppModule(this)).build()
