@@ -8,10 +8,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.support.annotation.ColorRes
 import android.support.constraint.ConstraintSet
 import android.support.design.widget.Snackbar
 import android.support.transition.TransitionManager
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.ActionMenuView
@@ -101,12 +104,23 @@ class MainActivity : AppCompatActivity(), MainView {
             false
         })
         menuInflater.inflate(R.menu.bottom_menu, amvMenu.menu)
+        tintMenuIcons(amvMenu.menu, R.color.colorIconTint)
         memoAdapter = MemoAdapter(this, eventsData)
         lvEvents.adapter = memoAdapter
         lvEvents.setSelector(R.color.colorMemoSelect)
         lvEvents.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         lvEvents.setMultiChoiceModeListener(getMemoListMultiChoiceListener())
         eventsData.showNewMemoOnStart()
+    }
+
+    private fun tintMenuIcons(menu: Menu, @ColorRes color: Int) {
+        for (i in 0 until menu.size()) {
+            val menuItem = menu.getItem(i)
+            val normalDrawable = menuItem.icon
+            val wrapDrawable = DrawableCompat.wrap(normalDrawable)
+            DrawableCompat.setTint(wrapDrawable, ResourcesCompat.getColor(resources, color, null))
+            menuItem.icon = wrapDrawable
+        }
     }
 
     private fun addLocation() {
