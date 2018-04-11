@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -26,6 +27,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AbsListView.MultiChoiceModeListener
+import android.widget.ImageView
 import android.widget.ListView
 import android.widget.Toast
 import butterknife.ButterKnife
@@ -41,6 +43,7 @@ import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
+import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -169,8 +172,22 @@ class MainActivity : AppCompatActivity(), MainView {
         when (requestCode) {
             GET_PHOTO_ACTIVITY_REQUEST_CODE ->
                 when (resultCode) {
-                    RESULT_OK -> Toast.makeText(this,
-                            getString(R.string.photo_taken), Toast.LENGTH_SHORT).show()
+                    RESULT_OK ->
+                        if (data?.data != null) {
+                            Toast.makeText(this,
+                                    getString(R.string.photo_taken) + data.toString(), Toast.LENGTH_SHORT).show()
+                            val uri = data.data
+                            try {
+                                var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                                // Log.d(TAG, String.valueOf(bitmap));
+                                bitmap = data.extras.get("data") as Bitmap?
+                                val imageView: ImageView = findViewById(R.id.imageView)
+                                imageView.setImageBitmap(bitmap)
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            }
+                        }
+
                     RESULT_CANCELED -> Toast.makeText(this,
                             getString(R.string.photo_not_taken), Toast.LENGTH_SHORT).show()
                     else -> Toast.makeText(this,
@@ -178,8 +195,21 @@ class MainActivity : AppCompatActivity(), MainView {
                 }
             GET_FILE_ACTIVITY_REQUEST_CODE ->
                 when (resultCode) {
-                    RESULT_OK -> Toast.makeText(this,
-                            getString(R.string.file_chosen), Toast.LENGTH_SHORT).show()
+                    RESULT_OK ->
+                        if (data?.data != null) {
+                            Toast.makeText(this,
+                                    getString(R.string.file_chosen) + data.toString(), Toast.LENGTH_LONG).show()
+                            val uri = data.data
+                            try {
+                                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                                // Log.d(TAG, String.valueOf(bitmap));
+
+                                val imageView: ImageView = findViewById(R.id.imageView)
+                                imageView.setImageBitmap(bitmap)
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            }
+                        }
                     RESULT_CANCELED -> Toast.makeText(this,
                             getString(R.string.file_not_chosen), Toast.LENGTH_SHORT).show()
                     else -> Toast.makeText(this,
