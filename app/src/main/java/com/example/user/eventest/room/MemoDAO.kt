@@ -17,6 +17,9 @@ interface MemoDAO {
     @Query("SELECT * FROM memo where date = :date and note = :note")
     fun getConcreteMemo(date: String, note: String?): Memo
 
+    @Query("SELECT * FROM attachments where memo_id = :memo_id ")
+    fun getAttachmentByMemoID(memo_id: Long): Attachments
+
     @Insert
     fun insert(memo: Memo)
 

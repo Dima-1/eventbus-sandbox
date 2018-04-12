@@ -1,5 +1,6 @@
 package com.example.user.eventest
 
+import com.example.user.eventest.model.Attachments
 import com.example.user.eventest.model.Memo
 import com.example.user.eventest.model.MemoRepository
 import java.text.DateFormat
@@ -88,5 +89,9 @@ class EventsData(private val view: MainView,
 
     fun deleteByMemoID(memoID: Long) {
         memoRepository.deleteByMemoID(memoID)
+    }
+
+    fun addAttachment(attachments: Attachments) {
+        memoRepository.addAttachment(attachments)
     }
 }

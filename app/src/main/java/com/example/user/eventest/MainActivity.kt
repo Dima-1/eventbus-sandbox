@@ -35,6 +35,7 @@ import butterknife.OnClick
 import butterknife.OnItemClick
 import com.example.user.eventest.eventbus.events.DatePickerUpdateEvent
 import com.example.user.eventest.eventbus.events.MemoAdapterRefreshEvent
+import com.example.user.eventest.model.Attachments
 import com.example.user.eventest.model.Memo
 import com.example.user.eventest.model.Preferences
 import com.example.user.eventest.model.RoomRepository
@@ -200,6 +201,8 @@ class MainActivity : AppCompatActivity(), MainView {
                             Toast.makeText(this,
                                     getString(R.string.file_chosen) + data.toString(), Toast.LENGTH_LONG).show()
                             val uri = data.data
+                            val attachments = Attachments(memoID = 1, pathToAttach = uri.path)
+                            eventsData.addAttachment(attachments)
                             try {
                                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                                 // Log.d(TAG, String.valueOf(bitmap));

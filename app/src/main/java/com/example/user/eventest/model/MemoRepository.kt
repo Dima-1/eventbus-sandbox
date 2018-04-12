@@ -15,6 +15,7 @@ interface MemoRepository {
     fun deleteMemo(memo: Memo)
     fun updateMemo(memo: Memo)
     fun deleteByMemoID(memoID: Long)
+    fun addAttachment(attachments: Attachments)
 
     interface Preferences {
         fun getPreferences(): SharedPreferences
