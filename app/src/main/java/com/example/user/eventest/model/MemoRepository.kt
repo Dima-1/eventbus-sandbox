@@ -11,7 +11,7 @@ import java.util.*
 interface MemoRepository {
     fun getConcreteMemo(memo: Memo): Memo?
     fun getAllData(): ArrayList<Memo>
-    fun addMemo(memo: Memo)
+    fun addMemo(memo: Memo): Long
     fun deleteMemo(memo: Memo)
     fun updateMemo(memo: Memo)
     fun deleteByMemoID(memoID: Long)

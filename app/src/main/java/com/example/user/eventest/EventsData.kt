@@ -17,6 +17,7 @@ class EventsData(private val view: MainView,
                  private val preferences: MemoRepository.Preferences) : MainPresenter {
 
     private var selectedMemo = Memo(NEW_MEMO_ID, Date(), "")
+    private var attachments = Attachments(memoID = NEW_MEMO_ID, pathToAttach = null)
 
 
     private fun getNewMemoWithCurrentDate() {
@@ -71,8 +72,11 @@ class EventsData(private val view: MainView,
         return memoRepository.getConcreteMemo(memo)
     }
 
-    fun addMemo(memo: Memo) {
-        memoRepository.addMemo(memo)
+    fun addMemo(memo: Memo): Long {
+        val memoID = memoRepository.addMemo(memo)
+        attachments.memoID = memoID
+        memoRepository.addAttachment(attachments)
+        return memoID
     }
 
     fun getAllData(): ArrayList<Memo> {
@@ -91,7 +95,7 @@ class EventsData(private val view: MainView,
         memoRepository.deleteByMemoID(memoID)
     }
 
-    fun addAttachment(attachments: Attachments) {
-        memoRepository.addAttachment(attachments)
+    fun addAttachment(path: String) {
+        attachments.pathToAttach = path
     }
 }

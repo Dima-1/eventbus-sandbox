@@ -61,19 +61,20 @@ class RoomRepository(context: Context) : MemoRepository {
         }
     }
 
-    override fun addMemo(memo: Memo) {
-        AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    override fun addMemo(memo: Memo): Long {
+        val memoID = AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()
+
+        return memoID
     }
 
     class AddMemoTask(private val memo: Memo, private val db: AppDatabase) :
-            AsyncTask<Void, Void, Void>() {
+            AsyncTask<Void, Void, Long>() {
 
-        override fun doInBackground(vararg params: Void?): Void? {
-            db.getMemoDAO().insert(memo)
-            return null
+        override fun doInBackground(vararg params: Void?): Long {
+            return db.getMemoDAO().insert(memo)
         }
 
-        override fun onPostExecute(aVoid: Void?) {
+        override fun onPostExecute(result: Long?) {
             EventBus.getDefault().post(MemoAdapterRefreshEvent())
         }
     }

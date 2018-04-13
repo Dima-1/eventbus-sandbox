@@ -21,7 +21,7 @@ interface MemoDAO {
     fun getAttachmentByMemoID(memo_id: Long): Attachments
 
     @Insert
-    fun insert(memo: Memo)
+    fun insert(memo: Memo): Long
 
     @Insert
     fun insert(attachments: Attachments)
