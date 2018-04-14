@@ -15,8 +15,6 @@ import java.util.concurrent.ExecutionException
  */
 
 class RoomRepository(context: Context) : MemoRepository {
-
-
     private val db = AppDatabase.getInstance(context)
 
     override fun getConcreteMemo(memo: Memo): Memo? {
@@ -62,9 +60,7 @@ class RoomRepository(context: Context) : MemoRepository {
     }
 
     override fun addMemo(memo: Memo): Long {
-        val memoID = AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()
-
-        return memoID
+        return AddMemoTask(memo, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()
     }
 
     class AddMemoTask(private val memo: Memo, private val db: AppDatabase) :
@@ -139,6 +135,17 @@ class RoomRepository(context: Context) : MemoRepository {
 
         override fun onPostExecute(aVoid: Void?) {
             EventBus.getDefault().post(MemoAdapterRefreshEvent())
+        }
+    }
+
+    override fun getAttachments(memoID: Long): Attachments? {
+        return GetAttachmentTask(memoID, db).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()
+    }
+
+    class GetAttachmentTask(private val memoID: Long, private val db: AppDatabase) :
+            AsyncTask<Void, Void, Attachments?>() {
+        override fun doInBackground(vararg v: Void?): Attachments? {
+            return db.getMemoDAO().getAttachmentByMemoID(memoID)
         }
     }
 }

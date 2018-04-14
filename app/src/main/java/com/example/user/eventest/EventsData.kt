@@ -74,8 +74,10 @@ class EventsData(private val view: MainView,
 
     fun addMemo(memo: Memo): Long {
         val memoID = memoRepository.addMemo(memo)
-        attachments.memoID = memoID
-        memoRepository.addAttachment(attachments)
+        if (attachments.pathToAttach != null) {
+            attachments.memoID = memoID
+            memoRepository.addAttachment(attachments)
+        }
         return memoID
     }
 
@@ -97,5 +99,9 @@ class EventsData(private val view: MainView,
 
     fun addAttachment(path: String) {
         attachments.pathToAttach = path
+    }
+
+    override fun getAttachments(memoID: Long): Attachments? {
+        return memoRepository.getAttachments(memoID)
     }
 }

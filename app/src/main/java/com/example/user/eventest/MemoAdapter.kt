@@ -1,10 +1,12 @@
 package com.example.user.eventest
 
 import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.user.eventest.model.Memo
 
@@ -31,16 +33,21 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
                     .inflate(R.layout.list_row, parent, false)
             viewHolder = ViewHolder(tmpView.findViewById(R.id.tvContent),
                     tmpView.findViewById(R.id.tvDate),
-                    tmpView.findViewById(R.id.tvTime))
+                    tmpView.findViewById(R.id.tvTime),
+                    tmpView.findViewById(R.id.imageView))
             tmpView.tag = viewHolder
         } else {
             tmpView = convertView
             viewHolder = tmpView.tag as ViewHolder
         }
         val memo: Memo = getItem(position)
+        val attachments = eventsData.getAttachments(memo.memoID)
         viewHolder.tvContent.text = memo.note
         viewHolder.tvDate.text = memo.getDateString()
         viewHolder.tvTime.text = memo.getTimeString()
+        if (attachments != null) {
+            viewHolder.imageView.setImageURI(Uri.parse(attachments.pathToAttach))
+        }
         return tmpView
     }
 
@@ -50,5 +57,6 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
         notifyDataSetChanged()
     }
 
-    class ViewHolder(val tvContent: TextView, val tvDate: TextView, val tvTime: TextView)
+    class ViewHolder(val tvContent: TextView, val tvDate: TextView, val tvTime: TextView,
+                     val imageView: ImageView)
 }

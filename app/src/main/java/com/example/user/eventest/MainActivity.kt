@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -131,7 +132,13 @@ class MainActivity : AppCompatActivity(), MainView {
 
     private fun addFile() {
         val intent = Intent()
-        intent.action = Intent.ACTION_GET_CONTENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.action = Intent.ACTION_OPEN_DOCUMENT
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+        } else {
+            intent.action = Intent.ACTION_GET_CONTENT
+        }
         intent.type = "*/*"
         startActivityForResult(intent, GET_FILE_ACTIVITY_REQUEST_CODE)
     }
@@ -200,7 +207,7 @@ class MainActivity : AppCompatActivity(), MainView {
                             Toast.makeText(this,
                                     getString(R.string.file_chosen) + data.toString(), Toast.LENGTH_LONG).show()
                             val uri = data.data
-                            eventsData.addAttachment(uri.path)
+                            eventsData.addAttachment(uri.toString())
                             try {
                                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                                 // Log.d(TAG, String.valueOf(bitmap));

@@ -1,5 +1,6 @@
 package com.example.user.eventest
 
+import com.example.user.eventest.model.Attachments
 import com.example.user.eventest.model.Memo
 
 /**
@@ -12,4 +13,5 @@ interface MainPresenter {
     fun setSelectedMemoToEdit(memo: Memo)
     fun menuEditClick()
     fun showNewMemoOnStart()
+    fun getAttachments(memoID: Long): Attachments?
 }
