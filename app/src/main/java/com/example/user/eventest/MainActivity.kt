@@ -104,6 +104,13 @@ class MainActivity : AppCompatActivity(), MainView {
                     addTimestamp()
                     return@OnMenuItemClickListener true
                 }
+                R.id.menuAddAlarm -> {
+                    Snackbar.make(coordinatorLayout, "Add notification",
+                            Snackbar.LENGTH_LONG)
+                            .show()
+                    addNotification()
+                    return@OnMenuItemClickListener true
+                }
             }
             false
         })
@@ -117,6 +124,11 @@ class MainActivity : AppCompatActivity(), MainView {
         eventsData.showNewMemoOnStart()
     }
 
+    private fun addNotification() {
+        notImplemented()
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun tintMenuIcons(menu: Menu, @ColorRes color: Int) {
         for (i in 0 until menu.size()) {
             val menuItem = menu.getItem(i)
@@ -128,6 +140,13 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     private fun addLocation() {
+        notImplemented()
+        TODO("not implemented")
+    }
+
+    private fun notImplemented() {
+        Toast.makeText(this,
+                "This feature is under development", Toast.LENGTH_LONG).show()
     }
 
     private fun addFile() {
@@ -283,7 +302,8 @@ class MainActivity : AppCompatActivity(), MainView {
             }
 
             val snackBarUndoOnClickListener = View.OnClickListener {
-                Toast.makeText(applicationContext, "OK!", Toast.LENGTH_LONG).show()
+                notImplemented()
+                TODO("not implemented")
             }
 
             override fun onDestroyActionMode(mode: ActionMode) {
