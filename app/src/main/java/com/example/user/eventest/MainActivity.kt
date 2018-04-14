@@ -1,5 +1,6 @@
 package com.example.user.eventest
 
+import android.app.ActivityManager
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.ContentValues
@@ -68,6 +69,9 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
+        systemInfo()
+
         setContentView(R.layout.main_activity)
         ButterKnife.bind(this)
         eventsData = EventsData(this,
@@ -122,6 +126,26 @@ class MainActivity : AppCompatActivity(), MainView {
         lvEvents.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         lvEvents.setMultiChoiceModeListener(getMemoListMultiChoiceListener())
         eventsData.showNewMemoOnStart()
+
+
+    }
+
+    private fun availableHeap() {
+        val runtime = Runtime.getRuntime()
+        val usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / 1048576L
+        val maxHeapSizeInMB = runtime.maxMemory() / 1048576L
+        val availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB
+        Log.i(TAG, String.format("Avail heap size: %d MB", availHeapSizeInMB))
+    }
+
+    private fun systemInfo() {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        Log.i(TAG, String.format("Max heap size: %f MB",
+                Runtime.getRuntime().totalMemory() / 1024f / 1024f))
+        Log.i(TAG, String.format("Memory class: %d MB", activityManager.memoryClass))
+        Log.i(TAG, String.format("Large memory class: %d MB", activityManager.largeMemoryClass))
+        val configurationInfo = activityManager.deviceConfigurationInfo
+        Log.i(TAG, String.format("GLES Version: %h", configurationInfo.reqGlEsVersion))
     }
 
     private fun addNotification() {
@@ -400,6 +424,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.action_bar_menu, menu)
+        availableHeap()
         return super.onCreateOptionsMenu(menu)
     }
 
