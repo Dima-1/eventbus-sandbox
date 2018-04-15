@@ -1,7 +1,11 @@
 package com.example.user.eventest
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.media.ThumbnailUtils
 import android.net.Uri
+import android.os.AsyncTask
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.user.eventest.model.Memo
+
 
 /**
  * Created by User on 11.01.2018.
@@ -40,14 +45,33 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
             tmpView = convertView
             viewHolder = tmpView.tag as ViewHolder
         }
+
         val memo: Memo = getItem(position)
         val attachments = eventsData.getAttachments(memo.memoID)
+        if (attachments != null) {
+            class AsyncLoadImage : AsyncTask<ViewHolder, Void, Bitmap>() {
+                @Override
+                override fun doInBackground(vararg params: ViewHolder): Bitmap {
+
+                    var resized = MediaStore.Images.Media.getBitmap(context.contentResolver,
+                            Uri.parse(attachments.pathToAttach).normalizeScheme())
+                    resized = ThumbnailUtils.extractThumbnail(resized, 68, 68)
+                    return resized
+                }
+
+                @Override
+                override fun onPostExecute(result: Bitmap) {
+                    super.onPostExecute(result)
+                    viewHolder.imageView.setImageBitmap(result)
+                }
+            }
+
+            val asyncLoadImage = AsyncLoadImage()
+            asyncLoadImage.execute(viewHolder)
+        }
         viewHolder.tvContent.text = memo.note
         viewHolder.tvDate.text = memo.getDateString()
         viewHolder.tvTime.text = memo.getTimeString()
-        if (attachments != null) {
-            viewHolder.imageView.setImageURI(Uri.parse(attachments.pathToAttach))
-        }
         return tmpView
     }
 
