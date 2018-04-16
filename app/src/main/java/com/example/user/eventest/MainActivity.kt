@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
     private fun addNotification() {
         notImplemented()
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun tintMenuIcons(menu: Menu, @ColorRes color: Int) {
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
     private fun addLocation() {
         notImplemented()
-        TODO("not implemented")
+//        TODO("not implemented")
     }
 
     private fun notImplemented() {
@@ -327,7 +327,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
             val snackBarUndoOnClickListener = View.OnClickListener {
                 notImplemented()
-                TODO("not implemented")
+//              TODO("not implemented")
             }
 
             override fun onDestroyActionMode(mode: ActionMode) {

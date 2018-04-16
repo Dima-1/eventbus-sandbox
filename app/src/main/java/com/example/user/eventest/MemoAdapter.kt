@@ -6,6 +6,7 @@ import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.AsyncTask
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,8 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
             viewHolder = ViewHolder(tmpView.findViewById(R.id.tvContent),
                     tmpView.findViewById(R.id.tvDate),
                     tmpView.findViewById(R.id.tvTime),
-                    tmpView.findViewById(R.id.imageView))
+                    tmpView.findViewById(R.id.imageView),
+                    position)
             tmpView.tag = viewHolder
         } else {
             tmpView = convertView
@@ -47,10 +49,11 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
         }
 
         val memo: Memo = getItem(position)
+        Log.i("MemoAdapter", "p $position id ${memo.memoID}")
         val attachments = eventsData.getAttachments(memo.memoID)
         if (attachments != null) {
+            //            todo check mime type
             class AsyncLoadImage : AsyncTask<ViewHolder, Void, Bitmap>() {
-                @Override
                 override fun doInBackground(vararg params: ViewHolder): Bitmap {
 
                     var resized = MediaStore.Images.Media.getBitmap(context.contentResolver,
@@ -59,19 +62,25 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
                     return resized
                 }
 
-                @Override
                 override fun onPostExecute(result: Bitmap) {
                     super.onPostExecute(result)
-                    viewHolder.imageView.setImageBitmap(result)
+                    Log.i("MemoAdapter", "pe vhp${viewHolder.position} p $position " +
+                            "id ${memo.memoID} pta:${attachments.pathToAttach}")
+                    if (viewHolder.position == position) {
+                        viewHolder.imageView.setImageBitmap(result)
+                    }
                 }
             }
 
             val asyncLoadImage = AsyncLoadImage()
             asyncLoadImage.execute(viewHolder)
+        } else {
+            viewHolder.imageView.setImageResource(R.drawable.ic_launcher_background)
         }
         viewHolder.tvContent.text = memo.note
         viewHolder.tvDate.text = memo.getDateString()
         viewHolder.tvTime.text = memo.getTimeString()
+        viewHolder.position = position
         return tmpView
     }
 
@@ -82,5 +91,5 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
     }
 
     class ViewHolder(val tvContent: TextView, val tvDate: TextView, val tvTime: TextView,
-                     val imageView: ImageView)
+                     val imageView: ImageView, var position: Int)
 }
