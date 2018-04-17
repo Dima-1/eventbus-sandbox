@@ -1,5 +1,6 @@
 package com.example.user.eventest
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.media.ThumbnailUtils
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
@@ -52,28 +54,33 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
         Log.i("MemoAdapter", "p $position id ${memo.memoID}")
         val attachments = eventsData.getAttachments(memo.memoID)
         if (attachments != null) {
-            //            todo check mime type
-            class AsyncLoadImage : AsyncTask<ViewHolder, Void, Bitmap>() {
-                override fun doInBackground(vararg params: ViewHolder): Bitmap {
 
-                    var resized = MediaStore.Images.Media.getBitmap(context.contentResolver,
-                            Uri.parse(attachments.pathToAttach).normalizeScheme())
-                    resized = ThumbnailUtils.extractThumbnail(resized, 68, 68)
-                    return resized
-                }
+            if (getMimeType(attachments.pathToAttach).startsWith("image/")) {
+                class AsyncLoadImage : AsyncTask<ViewHolder, Void, Bitmap>() {
+                    override fun doInBackground(vararg params: ViewHolder): Bitmap {
 
-                override fun onPostExecute(result: Bitmap) {
-                    super.onPostExecute(result)
-                    Log.i("MemoAdapter", "pe vhp${viewHolder.position} p $position " +
-                            "id ${memo.memoID} pta:${attachments.pathToAttach}")
-                    if (viewHolder.position == position) {
-                        viewHolder.imageView.setImageBitmap(result)
+                        var resized = MediaStore.Images.Media.getBitmap(context.contentResolver,
+                                Uri.parse(attachments.pathToAttach).normalizeScheme())
+                        resized = ThumbnailUtils.extractThumbnail(resized, 68, 68)
+                        return resized
+                    }
+
+                    override fun onPostExecute(result: Bitmap) {
+                        super.onPostExecute(result)
+                        Log.i("MemoAdapter", "pe vhp${viewHolder.position} p $position " +
+                                "id ${memo.memoID} pta:${attachments.pathToAttach}")
+                        if (viewHolder.position == position) {
+                            viewHolder.imageView.setImageBitmap(result)
+                        }
                     }
                 }
-            }
 
-            val asyncLoadImage = AsyncLoadImage()
-            asyncLoadImage.execute(viewHolder)
+                val asyncLoadImage = AsyncLoadImage()
+                asyncLoadImage.execute(viewHolder)
+            } else {
+                viewHolder.imageView.setImageResource(R.drawable.ic_insert_drive_file_white_24px)
+//                 todo check non image mime type
+            }
         } else {
             viewHolder.imageView.setImageResource(R.drawable.ic_launcher_background)
         }
@@ -82,6 +89,19 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
         viewHolder.tvTime.text = memo.getTimeString()
         viewHolder.position = position
         return tmpView
+    }
+
+    private fun getMimeType(url: String?): String {
+        val uri = Uri.parse(url)
+        val mimeType = if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
+            context.contentResolver.getType(uri)
+        } else {
+            val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                    fileExtension.toLowerCase())
+        }
+        println("type = $mimeType")
+        return mimeType
     }
 
     fun refreshEvents() {
