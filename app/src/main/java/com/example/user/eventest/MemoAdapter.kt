@@ -15,6 +15,7 @@ import android.webkit.MimeTypeMap
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.user.eventest.eventbus.events.TAG
 import com.example.user.eventest.model.Memo
 
 
@@ -78,11 +79,13 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
                 val asyncLoadImage = AsyncLoadImage()
                 asyncLoadImage.execute(viewHolder)
             } else {
+                Log.i(TAG, "type = not image")
                 viewHolder.imageView.setImageResource(R.drawable.ic_insert_drive_file_white_24px)
 //                 todo check non image mime type
             }
+            viewHolder.imageView.visibility = View.VISIBLE
         } else {
-            viewHolder.imageView.setImageResource(R.drawable.ic_launcher_background)
+            viewHolder.imageView.visibility = View.GONE
         }
         viewHolder.tvContent.text = memo.note
         viewHolder.tvDate.text = memo.getDateString()
@@ -100,7 +103,7 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
             MimeTypeMap.getSingleton().getMimeTypeFromExtension(
                     fileExtension.toLowerCase())
         }
-        println("type = $mimeType")
+        Log.i(TAG, "type = $mimeType")
         return mimeType
     }
 
