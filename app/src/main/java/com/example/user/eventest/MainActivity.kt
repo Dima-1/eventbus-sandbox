@@ -199,10 +199,10 @@ class MainActivity : AppCompatActivity(), MainView {
         values.put(MediaStore.Images.Media.DATE_ADDED, dateSeconds)
         values.put(MediaStore.Images.Media.DATE_MODIFIED, dateSeconds)
         values.put(MediaStore.Images.Media.DESCRIPTION, "Image capture by camera")
-        val imageUri = contentResolver.insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+//        val imageUri = contentResolver.insert(
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
         startActivityForResult(intent, GET_PHOTO_ACTIVITY_REQUEST_CODE)
     }
@@ -227,6 +227,7 @@ class MainActivity : AppCompatActivity(), MainView {
                             Toast.makeText(this,
                                     getString(R.string.photo_taken) + data.toString(), Toast.LENGTH_SHORT).show()
                             val uri = data.data
+                            eventsData.addAttachment(uri.toString())
                             try {
                                 var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                                 // Log.d(TAG, String.valueOf(bitmap));

@@ -54,6 +54,7 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
         val memo: Memo = getItem(position)
         Log.i("MemoAdapter", "p $position id ${memo.memoID}")
         val attachments = eventsData.getAttachments(memo.memoID)
+        viewHolder.imageView.visibility = View.GONE
         if (attachments != null) {
 
             if (getMimeType(attachments.pathToAttach).startsWith("image/")) {
@@ -72,6 +73,7 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
                                 "id ${memo.memoID} pta:${attachments.pathToAttach}")
                         if (viewHolder.position == position) {
                             viewHolder.imageView.setImageBitmap(result)
+                            viewHolder.imageView.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -81,11 +83,9 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
             } else {
                 Log.i(TAG, "type = not image")
                 viewHolder.imageView.setImageResource(R.drawable.ic_insert_drive_file_white_24px)
+                viewHolder.imageView.visibility = View.VISIBLE
 //                 todo check non image mime type
             }
-            viewHolder.imageView.visibility = View.VISIBLE
-        } else {
-            viewHolder.imageView.visibility = View.GONE
         }
         viewHolder.tvContent.text = memo.note
         viewHolder.tvDate.text = memo.getDateString()
@@ -104,7 +104,7 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
                     fileExtension.toLowerCase())
         }
         Log.i(TAG, "type = $mimeType")
-        return mimeType
+        return mimeType ?: ""
     }
 
     fun refreshEvents() {
