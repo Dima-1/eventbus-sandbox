@@ -64,7 +64,6 @@ class EventsData(private val view: MainView,
         } else {
             memo.memoID = selectedMemo.memoID
             updateMemo(memo)
-            selectedMemo.memoID = NEW_MEMO_ID
         }
     }
 

@@ -63,7 +63,9 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
 
                         var resized = MediaStore.Images.Media.getBitmap(context.contentResolver,
                                 Uri.parse(attachments.pathToAttach).normalizeScheme())
-                        resized = ThumbnailUtils.extractThumbnail(resized, 68, 68)
+                        val thumbSize = (context.resources.getDimension(R.dimen.list_layout_height)
+                                / context.resources.displayMetrics.density).toInt()
+                        resized = ThumbnailUtils.extractThumbnail(resized, thumbSize, thumbSize)
                         return resized
                     }
 
