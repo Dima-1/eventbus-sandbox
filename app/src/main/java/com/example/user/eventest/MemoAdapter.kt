@@ -1,7 +1,9 @@
 package com.example.user.eventest
 
+import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.media.ThumbnailUtils
 import android.net.Uri
@@ -15,6 +17,7 @@ import android.webkit.MimeTypeMap
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.example.user.eventest.eventbus.events.TAG
 import com.example.user.eventest.model.Memo
 
@@ -71,11 +74,29 @@ class MemoAdapter(context: Context, private val eventsData: EventsData) :
 
                     override fun onPostExecute(result: Bitmap) {
                         super.onPostExecute(result)
-                        Log.i("MemoAdapter", "pe vhp${viewHolder.position} p $position " +
-                                "id ${memo.memoID} pta:${attachments.pathToAttach}")
+
                         if (viewHolder.position == position) {
                             viewHolder.imageView.setImageBitmap(result)
                             viewHolder.imageView.visibility = View.VISIBLE
+                            viewHolder.imageView.tag = attachments.pathToAttach
+                            viewHolder.imageView.setOnClickListener { v ->
+                                run {
+                                    Toast.makeText(context, viewHolder.imageView.tag.toString(), Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(Intent.ACTION_VIEW)
+                                    intent.type = "image/*"
+                                    intent.data = Uri.parse(attachments.pathToAttach).normalizeScheme()
+                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    Log.i("MemoAdapter", "id ${memo.memoID} pta:${attachments.pathToAttach}")
+                                    try {
+                                        v.context.startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        Toast.makeText(context, "No                                                                       Application available to view Image",
+                                                Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }
+                            }
                         }
                     }
                 }

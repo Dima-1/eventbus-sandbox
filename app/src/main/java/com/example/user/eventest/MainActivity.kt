@@ -7,6 +7,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.PorterDuff
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -17,7 +19,6 @@ import android.support.design.widget.Snackbar
 import android.support.transition.TransitionManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.ActionMenuView
@@ -156,10 +157,8 @@ class MainActivity : AppCompatActivity(), MainView {
     private fun tintMenuIcons(menu: Menu, @ColorRes color: Int) {
         for (i in 0 until menu.size()) {
             val menuItem = menu.getItem(i)
-            val normalDrawable = menuItem.icon
-            val wrapDrawable = DrawableCompat.wrap(normalDrawable)
-            DrawableCompat.setTint(wrapDrawable, ResourcesCompat.getColor(resources, color, null))
-            menuItem.icon = wrapDrawable
+            menuItem.icon.setColorFilter(
+                    ResourcesCompat.getColor(resources, color, null), PorterDuff.Mode.SRC_IN)
         }
     }
 
@@ -227,7 +226,7 @@ class MainActivity : AppCompatActivity(), MainView {
                             Toast.makeText(this,
                                     getString(R.string.photo_taken) + data.toString(), Toast.LENGTH_SHORT).show()
                             val uri = data.data
-                            eventsData.addAttachment(uri.toString())
+                            eventsData.addAttachment(Uri.decode(uri.toString()))
                             try {
                                 var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                                 // Log.d(TAG, String.valueOf(bitmap));
@@ -251,7 +250,7 @@ class MainActivity : AppCompatActivity(), MainView {
                             Toast.makeText(this,
                                     getString(R.string.file_chosen) + data.toString(), Toast.LENGTH_LONG).show()
                             val uri = data.data
-                            eventsData.addAttachment(uri.toString())
+                            eventsData.addAttachment(Uri.decode(uri.toString()))
                             try {
                                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                                 // Log.d(TAG, String.valueOf(bitmap));
@@ -435,7 +434,7 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
+        Log.d(TAG, "onOptionsItemSelected --- return : " + item.itemId)
         when (item.itemId) {
             R.id.menuAbout -> {
                 val builder = AlertDialog.Builder(this)
